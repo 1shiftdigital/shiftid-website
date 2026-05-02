@@ -365,8 +365,39 @@ function showAnalysing(){
       }).catch(()=>{}); // Silent fail — never block the user experience
     }
 
-    const params=new URLSearchParams({name:userName,country:userCountry,dept:userDept,role:userRole,pattern,mirror:mirrorText.substring(0,200),a1:answers[1]||0,a2:answers[2]||0,a3:answers[3]||0,a4:answers[4]||0,a6:answers[6]||0,a7:answers[7]||0,a8:answers[8]||0,a9:answers[9]||0,a10:answers[10]||0,a11:answers[11]||0});
-    window.location.href='https://shiftid.ai/id-result.html?'+params.toString();
+    // ── PABBLY WEBHOOK — quiz completion lead capture ──
+    // Replace PABBLY_WEBHOOK_URL_QUIZ with your Pabbly Connect webhook URL
+    const PABBLY_WEBHOOK_QUIZ = 'PABBLY_WEBHOOK_URL_QUIZ';
+    if(PABBLY_WEBHOOK_QUIZ !== 'PABBLY_WEBHOOK_URL_QUIZ'){
+      fetch(PABBLY_WEBHOOK_QUIZ, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'shiftid_quiz',
+          first_name: userName,
+          country: userCountry,
+          department: userDept,
+          role: userRole,
+          identity_pattern: pattern,
+          timestamp: new Date().toISOString()
+        })
+      }).catch(()=>{}); // Silent fail — never block the user experience
+    }
+
+    // Store full data in sessionStorage — much more reliable on mobile than long URLs
+    try {
+      sessionStorage.setItem('shiftid_result', JSON.stringify({
+        name: userName,
+        pattern: pattern,
+        mirror: mirrorText.substring(0,200),
+        a1:answers[1]||0, a2:answers[2]||0, a3:answers[3]||0,
+        a4:answers[4]||0, a6:answers[6]||0, a7:answers[7]||0,
+        a8:answers[8]||0, a9:answers[9]||0, a10:answers[10]||0, a11:answers[11]||0
+      }));
+    } catch(e){}
+
+    // Short URL — just name and pattern as fallback
+    window.location.href='https://shiftid.ai/id-result.html?p='+encodeURIComponent(pattern)+'&n='+encodeURIComponent(userName);
   },4500);
 }
 

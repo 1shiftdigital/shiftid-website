@@ -309,18 +309,30 @@ const patterns = {
   }
 };
 
-// ── PARSE URL PARAMS ──
-const params = new URLSearchParams(window.location.search);
-const userName = params.get('name') || 'Your';
-const userRole = params.get('role') || '';
-const userCountry = params.get('country') || '';
-const userDept = params.get('dept') || '';
-const patternKey = params.get('pattern') || 'expert';
+// ── PARSE DATA — sessionStorage first, URL params as fallback ──
+let userName, patternKey;
+try {
+  const stored = sessionStorage.getItem('shiftid_result');
+  if(stored){
+    const d = JSON.parse(stored);
+    userName = d.name || 'Your';
+    patternKey = d.pattern || 'expert';
+    sessionStorage.removeItem('shiftid_result');
+  } else {
+    const params = new URLSearchParams(window.location.search);
+    userName = params.get('n') || params.get('name') || 'Your';
+    patternKey = params.get('p') || params.get('pattern') || 'expert';
+  }
+} catch(e) {
+  const params = new URLSearchParams(window.location.search);
+  userName = params.get('n') || params.get('name') || 'Your';
+  patternKey = params.get('p') || params.get('pattern') || 'expert';
+}
+const userRole = '';
 const pattern = patterns[patternKey] || patterns.expert;
 const today = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-
-const roleDisplay = userRole ? userRole : 'Professional';
-const locationDisplay = userCountry ? ` · ${userCountry}` : '';
+const roleDisplay = 'Professional';
+const locationDisplay = '';
 
 // ── BUILD THE REPORT ──
 const report = document.getElementById('report-content');
@@ -467,7 +479,7 @@ report.innerHTML = `
 
   <!-- FINAL CTA -->
   <div class="final-cta">
-    <h2>${pattern.ctaTitle.includes("'") ? pattern.ctaTitle : `<em>${pattern.ctaTitle}</em>`}</h2>
+    <h2 id="cta-title-h2"></h2>
     <p>${pattern.ctaSub}</p>
     <a href="#" class="cta-btn" id="stage-btn">Go deeper with Stage 2 →</a>
     <div class="curiosity-line">Most people who read this come back within 48 hours.<br>Not because we asked them to — but because the question doesn't leave you alone.</div>
@@ -484,6 +496,9 @@ setTimeout(()=>{
   document.querySelectorAll('.bar-fill[data-width]').forEach(el=>{
     el.style.width = el.getAttribute('data-width');
   });
+  // Set CTA title safely
+  const ctaH2 = document.getElementById('cta-title-h2');
+  if(ctaH2) ctaH2.innerHTML = pattern.ctaTitle;
 },200);
 
 // Stage btn label for shifter/leader
