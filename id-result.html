@@ -419,6 +419,9 @@ report.innerHTML = `
     <button class="personalise-btn" id="personalise-btn" onclick="applyPersonalisation()" disabled>Update my prompts →</button>
   </div>
 
+  <!-- PROMPTS INTRO — appears after role selection -->
+  <div id="prompt-intro" style="display:none;background:var(--bg2);border:1px solid rgba(212,168,75,0.18);border-left:3px solid var(--gold);border-radius:0 14px 14px 0;padding:20px 24px;margin-bottom:24px;font-size:15px;font-weight:300;color:var(--text2);line-height:1.75;animation:fadeUp 0.5s ease"></div>
+
   <!-- PROMPTS -->
   <div class="prompts-section" id="prompts-section">
     <div class="prompts-header">
@@ -546,33 +549,308 @@ function onPersonaliseChange(){
   document.getElementById('personalise-btn').disabled = !(country && role);
 }
 
+// ── FULL PROMPT DATA — 12 departments × 4 patterns ──
+const promptData = {
+  'Software Engineering': {
+    agents: ['GitHub Copilot','Cursor'],
+    intros: {
+      expert: "You\'re a [ROLE] — you\'ve built your career on technical expertise that took years to develop. [A1] and [A2] now write, review and debug code in real time. Your pattern shows your identity is closely tied to that expertise. These prompts are built for the pressure that creates.",
+      doubter: "You\'re a [ROLE] — and you\'ve felt the quiet unease about where AI is taking your craft, even if you haven\'t said it out loud. [A1] and [A2] are already in your world. Your pattern shows the anxiety is there but unnamed. These prompts are built to help you name it clearly.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking about what\'s next. You\'ve seen what [A1] and [A2] can do. You\'re not waiting. Your pattern shows you\'re already moving. These prompts are built to give that movement more structure.",
+      leader: "You\'re a [ROLE] — and you have something most engineers don\'t right now: a clear sense of who you are beyond the code. You see [A1] and [A2] as tools, not threats. These prompts help you lead others through what you\'ve navigated yourself."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI coding tools including [A1] and [A2] now write, complete and review code in real time. My core technical skill is being commoditised. Help me identify and articulate what I provide that these tools cannot: specifically around system architecture judgement, cross-team technical communication, and experience-based instincts from years of debugging complex systems. Give me 5 specific statements I can use in my next performance review or promotion conversation.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are now doing much of what I was hired to do. I have a quiet but persistent concern about my professional future that I haven\'t fully articulated. Help me name it precisely: (1) what is the specific threat to my role, (2) is this fear rational given where AI capability actually is today, (3) what one concrete action this week would give me more clarity. Be direct — do not reassure me, help me think clearly.",
+      shifter: "I am a [ROLE] who is actively thinking about what comes after coding as my primary value. I\'ve seen what [A1] and [A2] can do. I want to transition toward something with longer-term strategic value. Help me: (1) identify the transferable capabilities I\'ve built beyond writing code, (2) name 3 directions I could pivot toward, (3) tell me what I should be doing in the next 90 days.",
+      leader: "I am a [ROLE] with a stable sense of my own identity beyond my technical output. I use [A1] and [A2] as tools that amplify my work. My colleagues are struggling with what AI means for their identity as engineers. Help me: (1) design a conversation I can have with engineers who feel threatened, (2) identify the 3 most common identity fears I\'m seeing, (3) write an opening question that opens this conversation safely."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly technical tasks: [LIST YOUR TASKS]. For each one tell me: (1) can [A1], [A2] or Devin do this today, (2) how long before it does it better than me, (3) what uniquely human technical judgement remains. Be completely direct. Do not soften the assessment.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my career in the next 12 months: [LIST THEM]. For each concern, help me separate what is factually happening right now from what I am projecting or fearing. Then give me one question I should sit with about each.",
+      shifter: "I am a [ROLE] who has watched [A1] and [A2] change how engineering teams work. I understand the technical and human side of this shift. Help me: (1) articulate this perspective in a way that resonates at leadership level, (2) write a 3-sentence positioning statement for LinkedIn, (3) identify where this expertise is most needed right now.",
+      leader: "I am a [ROLE] who sees AI tools as amplifiers. I want to develop thought leadership around the human side of AI in engineering. Help me: (1) define my specific angle, (2) write 3 LinkedIn post hooks, (3) identify the audiences who most need to hear this."
+    }
+  },
+  'Data & Analytics': {
+    agents: ['Julius AI','Tableau AI'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on turning data into decisions others couldn\'t make. [A1] and [A2] now generate dashboards, write SQL and surface insights without an analyst. Your pattern shows your identity is closely tied to being the person who makes data make sense. These prompts are built for that tension.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens to your role when [A1] and [A2] can do in seconds what used to take you hours. Your pattern shows the anxiety is real. These prompts are built to help you articulate it and act.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond dashboards and SQL. You\'ve seen what [A1] and [A2] can automate. You\'re not waiting. These prompts are built to sharpen that direction.",
+      leader: "You\'re a [ROLE] — and you already know your value isn\'t in the dashboard. It\'s in the question behind it. You use [A1] and [A2] to go faster. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. Tools including [A1] and [A2] now generate dashboards, write SQL and explain data findings in plain English without a human analyst. Help me clearly articulate what I provide that these tools cannot: specifically around framing the right business question, translating insight into decisions for non-technical stakeholders, and the business context that gives data its meaning. Give me 5 specific statements I can use with my leadership team.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are now doing much of what justified my role. I have a quiet but persistent concern I haven\'t named. Help me: (1) identify the specific threat to my role, (2) separate what is happening now from what I fear might happen, (3) give me one concrete action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from producing analysis to shaping strategy. I\'ve seen what [A1] and [A2] can automate. Help me: (1) identify the capabilities I\'ve built that go beyond technical analysis, (2) name 3 directions I could move toward, (3) tell me what to do in the next 90 days.",
+      leader: "I am a [ROLE] who knows my value is in the business question behind the data. I use [A1] and [A2] to move faster. My colleagues are struggling with what AI means for their analyst identity. Help me design a conversation that helps them see their value more clearly."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or ThoughtSpot do this today, (2) how long before it does it better, (3) what business judgement does it still require. Be direct and honest.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my career: [LIST THEM]. Separate what is factually happening from what I am projecting. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who has watched [A1] and [A2] change what analytical roles mean. Help me: (1) articulate what I know about AI and data that most business leaders don\'t, (2) write a 3-sentence LinkedIn positioning statement, (3) identify where this expertise is most valuable.",
+      leader: "I am a [ROLE] who sees AI analytics tools as accelerators. Help me develop thought leadership around what data roles become when AI handles production: (1) define my specific angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Marketing & Content': {
+    agents: ['Jasper','Copy.ai'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on knowing what to say, to whom, and when. [A1] and [A2] now generate campaigns, write copy and optimise messaging at scale. Your pattern shows your identity is closely tied to your creative and strategic expertise. These prompts are built for the pressure that creates.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens to your creative value when [A1] and [A2] can produce content in seconds. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond content production. You\'ve seen what [A1] and [A2] can generate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value isn\'t in the copy, it\'s in the strategy behind it. You use [A1] and [A2] as production tools. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now generate on-brand content, write ad copy and optimise messaging autonomously. Help me clearly articulate what I provide that these tools cannot: specifically around brand positioning judgement, cultural moment recognition, agency relationships and the strategic instincts that come from understanding audiences deeply. Give me 5 specific statements I can use with senior leadership.",
+      doubter: "I am a [ROLE]. [A1] and [A2] can produce in minutes what used to take me hours. I have a quiet concern about my professional future I haven\'t named. Help me: (1) identify the specific threat to my creative value, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from content production to brand strategy. Help me: (1) identify my transferable strategic capabilities, (2) name 3 directions I could move toward, (3) tell me what to do in the next 90 days to make that real.",
+      leader: "I am a [ROLE] who uses [A1] and [A2] as production tools while I focus on strategy. My colleagues are anxious about AI replacing their creative work. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Smartly.io do this today, (2) how long before it does it better, (3) what creative or strategic judgement remains. Show me which parts are commoditised and where my irreplaceable value lives.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my creative career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who has watched [A1] and [A2] change content creation. Help me: (1) articulate what I know about AI and brand that most marketing leaders don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI content tools as amplifiers. Help me develop thought leadership around what marketing becomes when AI handles production: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Finance & Accounting': {
+    agents: ['Planful','Workiva AI'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on financial precision, analytical rigour and the trust that comes from getting the numbers right. [A1] and [A2] now handle forecasting, reporting and reconciliation autonomously. Your pattern shows your identity is closely tied to being the person the business relies on for financial truth. These prompts are built for that pressure.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] can close the books faster than you can. Your pattern shows the anxiety is real. These prompts help you name it and act.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking about moving from financial production to financial strategy. You\'ve seen what [A1] and [A2] can automate. These prompts are built to give your movement more direction.",
+      leader: "You\'re a [ROLE] — and you already know your value isn\'t in the model, it\'s in the judgement behind it. You use [A1] and [A2] to move faster. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now automate financial planning, reporting, forecasting and reconciliation end-to-end. Help me clearly articulate what I provide that these tools cannot: specifically around complex financial judgement in ambiguous situations, board-level narrative construction, regulatory interpretation and the business partnering relationships numbers alone cannot build. Give me 5 specific statements I can use with my CFO.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are now doing much of the analytical work that has historically justified my role. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from financial production to strategic business partnering. Help me: (1) identify my transferable capabilities beyond technical analysis, (2) name 3 directions to move toward, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in financial judgement not financial production. My finance colleagues are anxious about automation. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Botkeeper do this today, (2) how long before it does it better, (3) what financial judgement does it still require. Be completely honest.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my finance career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both financial rigour and AI capability. Help me: (1) articulate what I know that most CFOs don\'t about AI and finance, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI finance tools as accelerators. Help me develop thought leadership around what finance roles become when AI handles production: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'HR & People': {
+    agents: ['Workday AI','Eightfold'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on understanding people, building culture and navigating human complexity at work. [A1] and [A2] now automate hiring, performance management and employee queries without an HR professional. Your pattern shows your identity is closely tied to being the person who holds the human side of the organisation together. These prompts are built for that tension.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] handle the transactional work that has historically filled your days. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking about moving from HR operations to organisational culture leadership. You\'ve seen what [A1] and [A2] can automate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value is in human judgment, not HR process. You use [A1] and [A2] as tools. These prompts help you lead others to that understanding."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now automate CV screening, performance reviews, onboarding and employee query handling. Help me clearly articulate what I provide that these tools cannot: specifically around complex employee relations, culture building, leadership coaching and the human judgment required in sensitive people situations. Give me 5 specific statements I can use with my CHRO.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are automating the transactional parts of HR that have historically filled my role. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from HR operations to organisational culture and leadership development. Help me: (1) identify my transferable capabilities, (2) name 3 directions, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in human judgment and culture, not HR process. My HR colleagues are anxious. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Leena AI do this today, (2) how long before it does it better, (3) what human judgment does it still require. Be completely honest.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my HR career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both people dynamics and AI capability in HR. Help me: (1) articulate what I know that most CHROs don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI HR tools as amplifiers. Help me develop thought leadership around what people roles become when AI handles administration: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Legal & Compliance': {
+    agents: ['Harvey AI','Ironclad'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on legal expertise, risk judgement and the trust that comes from navigating complex regulatory environments. [A1] and [A2] now draft contracts, review documents and conduct legal research without a lawyer. Your pattern shows your identity is closely tied to being the expert the organisation relies on for legal certainty. These prompts are built for that pressure.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] can draft a contract faster than you can. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond document production. You\'ve seen what [A1] and [A2] can automate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value is in legal judgment, not document production. You use [A1] and [A2] as tools. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now draft contracts, review documents, conduct legal research and flag risk autonomously. Help me clearly articulate what I provide that they cannot: specifically around complex negotiation judgement, novel legal argument construction, client trust and relationship depth, and regulatory interpretation in genuinely ambiguous situations. Give me 5 specific statements I can use with senior leadership or clients.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are automating the document work that has historically defined my role. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from legal document production to strategic legal counsel. Help me: (1) identify my transferable capabilities, (2) name 3 directions, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in legal judgment not document production. My legal colleagues are anxious. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Luminance do this today, (2) how long before it does it better, (3) what legal judgment does it still require. Be completely honest.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my legal career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both legal rigour and AI capability. Help me: (1) articulate what I know that most General Counsels don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI legal tools as amplifiers. Help me develop thought leadership around what legal roles become when AI handles document production: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Product Management': {
+    agents: ['Productboard AI','Amplitude AI'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on knowing which problems to solve, which users to listen to and which bets to make. [A1] and [A2] now synthesise feedback, prioritise features and generate product insights without a PM. Your pattern shows your identity is closely tied to being the person who shapes product direction. These prompts are built for that tension.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] can generate a roadmap faster than you can facilitate a discovery session. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond roadmaps and sprint planning. You\'ve seen what [A1] and [A2] can automate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value is in the vision and the customer relationship, not the backlog. You use [A1] and [A2] as tools. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now automate user feedback synthesis, feature prioritisation, roadmap generation and product analytics. Help me clearly articulate what I provide that these tools cannot: specifically around strategic product vision, customer relationship depth, cross-functional alignment and the judgement of knowing which user problem actually matters. Give me 5 specific statements I can use with my CPO.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are automating the analytical work that has justified my role. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from product management to product strategy and vision. Help me: (1) identify my transferable capabilities, (2) name 3 directions, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in vision and customer insight not backlog management. My PM colleagues are anxious. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Linear AI do this today, (2) how long before it does it better, (3) what product judgment does it still require. Be completely direct.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my PM career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both product thinking and AI capability. Help me: (1) articulate what I know that most CPOs don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI product tools as amplifiers. Help me develop thought leadership around what product roles become when AI handles analytics: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Sales & Business Dev': {
+    agents: ['Gong','Salesforce Einstein'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on relationships, persuasion and the instinct to know when to push and when to listen. [A1] and [A2] now analyse calls, score opportunities and write follow-ups autonomously. Your pattern shows your identity is closely tied to being the person who closes. These prompts are built for that pressure.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] can do your follow-ups better than you can. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond pipeline management. You\'ve seen what [A1] and [A2] can automate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value is in the relationship and the room, not the CRM entry. You use [A1] and [A2] as tools. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now analyse every sales call, score opportunities, write personalised follow-ups and manage pipeline forecasting autonomously. Help me clearly articulate what I provide that these tools cannot: specifically around executive relationship building, complex deal negotiation, reading emotional cues in live conversations and navigating enterprise sales politics. Give me 5 specific statements I can use in my next leadership conversation.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are automating the follow-up and pipeline work that has historically defined my activity. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from account management to strategic revenue leadership. Help me: (1) identify my transferable capabilities, (2) name 3 directions, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in the relationship and the room. My sales colleagues are anxious about [A1] and [A2]. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Apollo.io AI do this today, (2) how long before it does it better, (3) what relationship depth or human judgment does it still require. Be honest.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my sales career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both revenue strategy and AI capability in sales. Help me: (1) articulate what I know that most CROs don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI sales tools as amplifiers. Help me develop thought leadership around what sales roles become when AI handles the operational work: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Operations': {
+    agents: ['Celonis','UiPath'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on making complex systems run smoothly and keeping the organisation moving. [A1] and [A2] now map processes, execute repetitive tasks and manage operational workflows without an operations professional. Your pattern shows your identity is closely tied to being the person who makes things work. These prompts are built for that tension.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] can run the processes you\'ve spent years optimising. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond process management. You\'ve seen what [A1] and [A2] can automate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value is in the leadership and judgment, not the process map. You use [A1] and [A2] as tools. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now automate process mapping, repetitive task execution, project tracking and operational reporting. Help me clearly articulate what I provide that these tools cannot: specifically around cross-team leadership, vendor relationship management, crisis and exception management and the cultural dimension of operational leadership. Give me 5 specific statements I can use with my COO.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are automating the operational work that has historically filled my role. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from operational execution to operational strategy. Help me: (1) identify my transferable capabilities, (2) name 3 directions, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in leadership and judgment not process execution. My operations colleagues are anxious. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Monday.com AI do this today, (2) how long before it does it better, (3) what operational judgment does it still require. Be completely honest.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my operations career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both operational excellence and AI capability. Help me: (1) articulate what I know that most COOs don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI operations tools as amplifiers. Help me develop thought leadership around what operations roles become when AI handles process work: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Consulting & Strategy': {
+    agents: ['Perplexity Pro','ChatGPT Enterprise'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on analytical rigour, structured thinking and the ability to turn ambiguous problems into clear recommendations. [A1] and [A2] now conduct research, synthesise information and build slide decks without a consultant. Your pattern shows your identity is closely tied to being the expert in the room. These prompts are built for that pressure.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] can produce a strategy deck faster than your team can. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond research and slide production. You\'ve seen what [A1] and [A2] can automate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value is in the client relationship and the judgment, not the deck. You use [A1] and [A2] as research tools. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now conduct deep research, synthesise findings, generate strategic frameworks and produce presentation-ready outputs. Help me clearly articulate what I provide that they cannot: specifically around client relationship and trust, novel problem framing, creative hypothesis generation and the senior stakeholder influence that comes from years of consulting. Give me 5 specific statements I can use with clients or my leadership team.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are automating the analytical production work that has historically defined my contribution. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from analytical production to strategic advisory. Help me: (1) identify my transferable capabilities, (2) name 3 directions, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in judgment and client trust not slide production. My consulting colleagues are anxious. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Tableau AI do this today, (2) how long before it does it better, (3) what consulting judgment does it still require. Be honest.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my consulting career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both strategic thinking and AI capability. Help me: (1) articulate what I know that most senior partners don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI research tools as amplifiers. Help me develop thought leadership around what consulting becomes when AI handles analytical production: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Healthcare & Clinical': {
+    agents: ['Nuance AI','Epic AI'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on clinical knowledge, patient safety judgment and the trust that comes from years of navigating complex healthcare environments. [A1] and [A2] now handle clinical documentation, coding and administrative workflows autonomously. Your pattern shows your identity is closely tied to your clinical expertise and the responsibility that comes with it. These prompts are built for that tension.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] can document faster and code more accurately than you can. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond clinical administration. You\'ve seen what [A1] and [A2] can automate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value is in clinical judgment and patient relationship, not documentation. You use [A1] and [A2] as tools. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now automate clinical documentation, medical coding, prior authorisations and administrative workflows. Help me clearly articulate what I provide that these tools cannot: specifically around patient safety judgment in complex cases, clinical context that AI cannot access, regulatory navigation in ambiguous situations and the human relationship that underpins patient trust. Give me 5 specific statements I can use with my clinical leadership team.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are automating the documentation and administrative work that has historically filled much of my role. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from clinical administration to clinical strategy and innovation. Help me: (1) identify my transferable capabilities, (2) name 3 directions, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in clinical judgment and patient relationship not documentation. My clinical colleagues are anxious about AI. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Olive AI do this today, (2) how long before it does it better, (3) what clinical judgment does it still require. Be completely honest.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my clinical career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both clinical practice and AI capability in healthcare. Help me: (1) articulate what I know that most clinical leaders don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI clinical tools as amplifiers. Help me develop thought leadership around what clinical roles become when AI handles documentation: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  },
+  'Education & Training': {
+    agents: ['Articulate AI','Synthesia'],
+    intros: {
+      expert: "You\'re a [ROLE] — your value has been built on helping people learn, change behaviour and grow. [A1] and [A2] now generate courses, create training videos and build learning pathways without an L&D professional. Your pattern shows your identity is closely tied to being the person who enables others to develop. These prompts are built for the pressure that creates.",
+      doubter: "You\'re a [ROLE] — and you\'ve quietly wondered what happens when [A1] and [A2] can produce a training course faster than you can design a workshop. Your pattern shows the anxiety is real. These prompts help you name it.",
+      shifter: "You\'re a [ROLE] — and you\'re already thinking beyond content creation. You\'ve seen what [A1] and [A2] can generate. These prompts are built to sharpen your direction.",
+      leader: "You\'re a [ROLE] — and you already know your value is in behavioural change and learning culture, not course production. You use [A1] and [A2] as tools. These prompts help you lead others to that clarity."
+    },
+    p1: {
+      expert: "I am a [ROLE]. AI tools including [A1] and [A2] now generate course content, create training videos and build personalised learning pathways autonomously. Help me clearly articulate what I provide that they cannot: specifically around facilitation of complex behavioural change, senior leader development, learning culture strategy and the human relationship that makes learning actually stick. Give me 5 specific statements I can use with my CLO or leadership team.",
+      doubter: "I am a [ROLE]. [A1] and [A2] are automating the content creation work that has historically defined my contribution. I have a quiet concern I haven\'t named. Help me: (1) identify the specific threat, (2) separate fact from fear, (3) give me one action this week that creates more clarity.",
+      shifter: "I am a [ROLE] who wants to move from content creation to learning strategy and culture change. Help me: (1) identify my transferable capabilities, (2) name 3 directions, (3) what to do in the next 90 days.",
+      leader: "I am a [ROLE] with a clear sense that my value is in behavioural change and learning culture not content production. My L&D colleagues are anxious. Help me design a conversation that reframes their value and give me the questions to open it."
+    },
+    p2: {
+      expert: "I am a [ROLE]. Here are my 10 most common weekly tasks: [LIST YOUR TASKS]. For each one: (1) can [A1], [A2] or Docebo AI do this today, (2) how long before it does it better, (3) what facilitation depth or human relationship does it still require. Be direct.",
+      doubter: "I work as a [ROLE]. Here are my three biggest concerns about AI and my L&D career: [LIST THEM]. Separate fact from fear. Give me one question to sit with about each.",
+      shifter: "I am a [ROLE] who understands both learning science and AI capability. Help me: (1) articulate what I know that most CLOs don\'t, (2) write a 3-sentence positioning statement, (3) identify where this is most valuable.",
+      leader: "I am a [ROLE] who sees AI learning tools as amplifiers. Help me develop thought leadership around what L&D becomes when AI handles content production: (1) define my angle, (2) write 3 LinkedIn hooks, (3) identify my best audiences."
+    }
+  }
+};
+
 function applyPersonalisation(){
   const country = document.getElementById('p-country').value;
   const dept = document.getElementById('p-dept').value;
   const role = document.getElementById('p-role').value;
-  if(!country || !role) return;
+  if(!country || !role || !dept) return;
+
+  const deptData = promptData[dept];
+  if(!deptData) return;
+
+  const a1 = deptData.agents[0];
+  const a2 = deptData.agents[1];
+
+  function sub(text){
+    return text
+      .replace(/\[ROLE\]/g, role)
+      .replace(/\[A1\]/g, a1)
+      .replace(/\[A2\]/g, a2);
+  }
+
+  // Show intro paragraph
+  const introEl = document.getElementById('prompt-intro');
+  if(introEl){
+    introEl.textContent = sub(deptData.intros[patternKey] || deptData.intros.expert);
+    introEl.style.display = 'block';
+  }
 
   // Update prompts title
-  document.getElementById('prompts-title').textContent = `Built for ${role} · ${pattern.name}`;
-  document.getElementById('prompts-sub').textContent = `Pre-filled for your role and pattern — use directly in ChatGPT or Claude. No editing needed.`;
+  document.getElementById('prompts-title').textContent = 'Built for ' + role + ' \u00b7 ' + pattern.name;
+  document.getElementById('prompts-sub').textContent = 'Pre-filled for your role and pattern — use directly in ChatGPT or Claude. No editing needed.';
 
-  // Update free prompt texts with role injected
-  pattern.prompts.free.forEach((p,i)=>{
-    const el = document.getElementById('prompt-text-'+i);
-    if(el){
-      el.textContent = p.text.replace(/\[YOUR ROLE\]/g, role).replace(/\[ROLE\]/g, role);
-    }
-  });
+  // Update free prompt texts
+  const p1text = sub(deptData.p1[patternKey] || deptData.p1.expert);
+  const p2text = sub(deptData.p2[patternKey] || deptData.p2.expert);
+  const p1el = document.getElementById('prompt-text-0');
+  const p2el = document.getElementById('prompt-text-1');
+  if(p1el) p1el.textContent = p1text;
+  if(p2el) p2el.textContent = p2text;
 
   // Update button
   const btn = document.getElementById('personalise-btn');
-  btn.textContent = '✓ Prompts updated for ' + role;
+  btn.textContent = '\u2713 Prompts updated for ' + role;
   btn.style.color = 'var(--green)';
   btn.style.borderColor = 'rgba(62,200,138,0.3)';
   btn.disabled = true;
 
-  // ── PABBLY WEBHOOK — result page personalisation ──
-  // Replace with your Pabbly Connect webhook URL
+  // ── PABBLY WEBHOOK ──
   const PABBLY_WEBHOOK_RESULT = 'PABBLY_WEBHOOK_URL_RESULT';
   if(PABBLY_WEBHOOK_RESULT !== 'PABBLY_WEBHOOK_URL_RESULT'){
     fetch(PABBLY_WEBHOOK_RESULT, {
@@ -590,10 +868,11 @@ function applyPersonalisation(){
     }).catch(()=>{});
   }
 
-  // Scroll to prompts
+  // Scroll to intro
   setTimeout(()=>{
-    document.getElementById('prompts-section').scrollIntoView({behavior:'smooth',block:'start'});
-  }, 100);
+    const introEl2 = document.getElementById('prompt-intro');
+    if(introEl2) introEl2.scrollIntoView({behavior:'smooth',block:'start'});
+  }, 150);
 }
 
 // ── COPY PROMPT — triggers feedback card ──
