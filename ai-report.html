@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShiftID — AI Role Exposure Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07060D;--bg2:#0D0C18;--bg3:#13121E;
+  --border:rgba(255,255,255,0.07);
+  --gold:#D4A84B;--gold2:#F0CB6A;--goldDim:rgba(212,168,75,0.10);
+  --red:#E05050;--redDim:rgba(224,80,80,0.06);
+  --green:#3EC88A;--greenDim:rgba(62,200,138,0.06);
+  --amber:#F0A030;
+  --text:#EAE8F2;--text2:#9994B0;--text3:#5A5570;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'Outfit',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 65% 45% at 50% 0%,rgba(212,168,75,0.06) 0%,transparent 60%);pointer-events:none}
+.page{position:relative;z-index:1}
+
+/* ANNOUNCEMENT BAR */
+.announce-bar{background:rgba(212,168,75,0.12);border-bottom:1px solid rgba(212,168,75,0.2);padding:10px 24px;text-align:center;cursor:pointer;transition:background 0.2s}
+.announce-bar:hover{background:rgba(212,168,75,0.18)}
+.announce-text{font-size:13px;font-weight:500;color:var(--gold);display:inline-flex;align-items:center;gap:8px}
+.announce-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* NAV */
+nav{padding:14px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(7,6,13,0.9);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+.logo{font-size:19px;font-weight:700;color:var(--gold)}
+.logo span{color:var(--text);font-weight:300}
+.nav-links{display:flex;align-items:center;gap:20px}
+.nav-link{font-size:14px;color:var(--text2);text-decoration:none;transition:color 0.2s}
+.nav-link:hover{color:var(--text)}
+.nav-btn{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--bg);background:var(--gold);padding:9px 22px;border-radius:60px;text-decoration:none;transition:all 0.25s}
+.nav-btn:hover{background:var(--gold2);transform:translateY(-1px)}
+
+/* HERO */
+.hero{padding:80px 24px 60px;text-align:center;max-width:760px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:var(--goldDim);border:1px solid rgba(212,168,75,0.2);padding:6px 16px;border-radius:40px;margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-size:clamp(32px,5vw,54px);font-weight:400;line-height:1.12;margin-bottom:16px}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero-sub{font-size:clamp(15px,1.8vw,17px);font-weight:300;color:var(--text2);line-height:1.7;max-width:560px;margin:0 auto 16px}
+.data-note{font-size:12px;color:var(--text3);margin-top:8px}
+
+/* SELECTOR */
+.selector-section{max-width:800px;margin:0 auto;padding:0 24px 60px}
+.selector-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:36px}
+.selector-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:24px;text-align:center}
+.selects-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:28px}
+.select-wrap{display:flex;flex-direction:column;gap:8px}
+.select-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.sel{width:100%;background:var(--bg3);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:13px 16px;font-family:var(--sans);font-size:14px;color:var(--text);outline:none;cursor:pointer;appearance:none;transition:border-color 0.2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239994B0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.sel:focus{border-color:rgba(212,168,75,0.4)}
+.sel option{background:var(--bg3)}
+
+/* TEASER RESULT */
+.teaser-result{display:none;margin-top:0;animation:fadeUp 0.5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.score-banner{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:24px}
+.score-big{font-size:52px;font-weight:700;line-height:1}
+.score-big.high{color:var(--red)}
+.score-big.mid{color:var(--amber)}
+.score-big.low{color:var(--green)}
+.score-info h3{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:4px}
+.score-info p{font-size:13px;color:var(--text2);line-height:1.55}
+.score-badge{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border-radius:20px;white-space:nowrap}
+.badge-high{background:var(--redDim);color:var(--red);border:1px solid rgba(224,80,80,0.2)}
+.badge-mid{background:rgba(240,160,48,0.1);color:var(--amber);border:1px solid rgba(240,160,48,0.2)}
+.badge-low{background:var(--greenDim);color:var(--green);border:1px solid rgba(62,200,138,0.2)}
+
+/* DIMENSION BARS */
+.dim-bars{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.dim-row{display:grid;grid-template-columns:160px 1fr 44px;gap:12px;align-items:center}
+.dim-label{font-size:13px;color:var(--text2)}
+.dim-track{height:7px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+.dim-fill{height:100%;border-radius:4px;transition:width 0.8s ease}
+.fill-red{background:var(--red)}
+.fill-amber{background:var(--amber)}
+.fill-green{background:var(--green)}
+.dim-pct{font-size:12px;color:var(--text2);text-align:right}
+
+/* FREE TASKS */
+.free-tasks{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:24px}
+.tasks-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.task-item:last-child{border-bottom:none;padding-bottom:0}
+.task-icon{width:24px;height:24px;border-radius:50%;background:var(--redDim);border:1px solid rgba(224,80,80,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.task-icon svg{width:11px;height:11px}
+.task-text{font-size:14px;color:var(--text2);line-height:1.55}
+.task-text strong{color:var(--text);font-weight:500}
+
+/* GATE */
+.gate-section{background:linear-gradient(135deg,rgba(212,168,75,0.08) 0%,rgba(212,168,75,0.03) 100%);border:1px solid rgba(212,168,75,0.18);border-radius:18px;padding:32px;margin-bottom:24px;text-align:center}
+.gate-title{font-family:var(--serif);font-size:clamp(22px,3vw,28px);font-weight:400;margin-bottom:8px}
+.gate-title em{color:var(--gold);font-style:italic}
+.gate-sub{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:24px;max-width:420px;margin-left:auto;margin-right:auto}
+.gate-form{display:flex;flex-direction:column;gap:12px;max-width:380px;margin:0 auto}
+.gate-input{background:var(--bg);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 18px;font-family:var(--sans);font-size:15px;color:var(--text);outline:none;transition:border-color 0.2s;width:100%}
+.gate-input::placeholder{color:var(--text3)}
+.gate-input:focus{border-color:rgba(212,168,75,0.4)}
+.gate-btn{background:var(--gold);color:var(--bg);font-family:var(--sans);font-size:16px;font-weight:700;padding:16px 32px;border-radius:80px;border:none;cursor:pointer;transition:all 0.25s;width:100%}
+.gate-btn:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 8px 28px rgba(212,168,75,0.28)}
+.gate-privacy{font-size:11px;color:var(--text3);margin-top:8px}
+
+/* FULL REPORT — locked initially */
+.full-report{display:none}
+.full-report.unlocked{display:block;animation:fadeUp 0.6s ease}
+
+.agents-section{margin-bottom:28px}
+.agents-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.agent-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:10px}
+.agent-name{font-size:15px;font-weight:600;color:var(--gold);margin-bottom:4px}
+.agent-workflow{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:6px}
+.agent-users{font-size:11px;color:var(--text3);font-weight:500}
+
+.human-edge{background:var(--greenDim);border:1px solid rgba(62,200,138,0.14);border-radius:14px;padding:22px 24px;margin-bottom:24px}
+.edge-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:14px}
+.edge-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(62,200,138,0.08)}
+.edge-item:last-child{border-bottom:none}
+.edge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:6px}
+.edge-text{font-size:14px;color:var(--text2);line-height:1.55}
+
+.timeline-section{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:28px}
+.timeline-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:16px}
+.timeline-row{display:grid;grid-template-columns:100px 1fr;gap:12px;align-items:center;margin-bottom:10px}
+.timeline-row:last-child{margin-bottom:0}
+.t-period{font-size:12px;font-weight:600;color:var(--text3)}
+.t-bar-track{height:28px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;position:relative}
+.t-bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:12px;font-weight:500;transition:width 1s ease}
+.t-fill-now{background:rgba(224,80,80,0.25);color:var(--red);border:1px solid rgba(224,80,80,0.2)}
+.t-fill-6m{background:rgba(240,160,48,0.2);color:var(--amber);border:1px solid rgba(240,160,48,0.15)}
+.t-fill-18m{background:rgba(212,168,75,0.15);color:var(--gold);border:1px solid rgba(212,168,75,0.12)}
+
+/* FINAL CTA */
+.report-cta{text-align:center;padding:36px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;margin-top:8px}
+.report-cta h3{font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-weight:400;margin-bottom:10px}
+.report-cta h3 em{color:var(--gold);font-style:italic}
+.report-cta p{font-size:15px;color:var(--text2);line-height:1.65;margin-bottom:28px;max-width:420px;margin-left:auto;margin-right:auto}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-size:17px;font-weight:700;color:var(--bg);background:var(--gold);padding:19px 56px;border-radius:80px;text-decoration:none;transition:all 0.28s}
+.cta-btn:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 10px 36px rgba(212,168,75,0.32)}
+.cta-trust{font-size:12px;color:var(--text3);margin-top:14px}
+
+/* DISCLAIMER */
+.disclaimer{font-size:11px;color:var(--text3);line-height:1.7;text-align:center;padding:24px;border-top:1px solid var(--border);margin-top:40px;max-width:600px;margin-left:auto;margin-right:auto}
+
+footer{padding:28px 24px;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--text3)}
+footer a{color:var(--text3);text-decoration:none}
+
+@media(max-width:680px){
+  .selects-row{grid-template-columns:1fr}
+  .score-banner{grid-template-columns:1fr;text-align:center}
+  .dim-row{grid-template-columns:120px 1fr 36px}
+  nav{padding:12px 16px}
+  .nav-links{gap:12px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announce-bar" onclick="window.location.href='id-quiz.html'">
+  <span class="announce-text" id="announce-text">
+    <span class="announce-dot"></span>
+    <span id="announce-msg">New: See which AI agents are targeting your role right now →</span>
+  </span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Shift<span>ID</span></div>
+  <div class="nav-links">
+    <a href="https://shiftid.ai" class="nav-link">Home</a>
+    <a href="https://shiftid.ai/ai-report.html" class="nav-link">AI Report</a>
+    <a href="https://shiftid.ai/id-quiz.html" class="nav-btn">Take the Quiz →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">
+    <span class="announce-dot"></span>
+    Free Report · Updated 2025
+  </div>
+  <h1>How exposed is your role<br>to <em>agentic AI</em> right now?</h1>
+  <p class="hero-sub">Select your country, department and role. See your AI Readiness Score — and the specific agents already automating your workflow.</p>
+  <p class="data-note">Based on WEF Future of Jobs 2025, McKinsey Global Institute and Goldman Sachs AI Displacement Research</p>
+</div>
+
+<!-- SELECTOR -->
+<div class="selector-section">
+  <div class="selector-card">
+    <div class="selector-title">Choose your role to see your exposure score</div>
+    <div class="selects-row">
+      <div class="select-wrap">
+        <div class="select-label">Country</div>
+        <select class="sel" id="sel-country" onchange="onSelChange()">
+          <option value="">Select country</option>
+          <option>United States</option>
+          <option>United Kingdom</option>
+          <option>Canada</option>
+          <option>Australia</option>
+          <option>Ireland</option>
+          <option>India</option>
+          <option>Germany</option>
+          <option>France</option>
+          <option>Netherlands</option>
+          <option>Sweden</option>
+          <option>Switzerland</option>
+          <option>Spain</option>
+          <option>Italy</option>
+          <option>Singapore</option>
+          <option>UAE</option>
+          <option>New Zealand</option>
+          <option>South Africa</option>
+        </select>
+      </div>
+      <div class="select-wrap">
+        <div class="select-label">Department</div>
+        <select class="sel" id="sel-dept" onchange="onDeptChange()">
+          <option value="">Select department</option>
+          <option>Software Engineering</option>
+          <option>Data & Analytics</option>
+          <option>Marketing & Content</option>
+          <option>Finance & Accounting</option>
+          <option>HR & People</option>
+          <option>Legal & Compliance</option>
+          <option>Product Management</option>
+          <option>Sales & Business Dev</option>
+          <option>Operations</option>
+          <option>Consulting & Strategy</option>
+          <option>Healthcare & Clinical</option>
+          <option>Education & Training</option>
+        </select>
+      </div>
+      <div class="select-wrap">
+        <div class="select-label">Role / Title</div>
+        <select class="sel" id="sel-role" onchange="onRoleChange()">
+          <option value="">Select role</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- TEASER RESULT -->
+    <div class="teaser-result" id="teaser-result">
+
+      <!-- SCORE BANNER -->
+      <div class="score-banner" id="score-banner">
+        <div class="score-big" id="score-num">--</div>
+        <div class="score-info">
+          <h3 id="score-title">AI Readiness Score</h3>
+          <p id="score-desc">Select your role to see your exposure level</p>
+        </div>
+        <div class="score-badge" id="score-badge">--</div>
+      </div>
+
+      <!-- DIMENSION BARS -->
+      <div class="dim-bars">
+        <div class="dim-row">
+          <div class="dim-label">Task Automation</div>
+          <div class="dim-track"><div class="dim-fill" id="bar-task" style="width:0%"></div></div>
+          <div class="dim-pct" id="pct-task">0%</div>
+        </div>
+        <div class="dim-row">
+          <div class="dim-label">Decision Autonomy</div>
+          <div class="dim-track"><div class="dim-fill" id="bar-decision" style="width:0%"></div></div>
+          <div class="dim-pct" id="pct-decision">0%</div>
+        </div>
+        <div class="dim-row">
+          <div class="dim-label">Relationship Risk</div>
+          <div class="dim-track"><div class="dim-fill" id="bar-relation" style="width:0%"></div></div>
+          <div class="dim-pct" id="pct-relation">0%</div>
+        </div>
+        <div class="dim-row">
+          <div class="dim-label">Creative Requirement</div>
+          <div class="dim-track"><div class="dim-fill" id="bar-creative" style="width:0%"></div></div>
+          <div class="dim-pct" id="pct-creative">0%</div>
+        </div>
+        <div class="dim-row">
+          <div class="dim-label">Regulatory Barrier</div>
+          <div class="dim-track"><div class="dim-fill" id="bar-reg" style="width:0%"></div></div>
+          <div class="dim-pct" id="pct-reg">0%</div>
+        </div>
+      </div>
+
+      <!-- FREE TASKS -->
+      <div class="free-tasks">
+        <div class="tasks-label">Already automated in this role today</div>
+        <div id="free-tasks-list"></div>
+      </div>
+
+      <!-- GATE -->
+      <div class="gate-section" id="gate-section">
+        <h2 class="gate-title">See which AI agents are <em>already</em><br>automating your role</h2>
+        <p class="gate-sub">Get the full breakdown — named AI agents, what they do, and what parts of your role still need you. Free.</p>
+        <div class="gate-form">
+          <input class="gate-input" type="text" id="gate-name" placeholder="Your first name" maxlength="40">
+          <input class="gate-input" type="email" id="gate-email" placeholder="Your work email" maxlength="80">
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-align:left">
+            <input type="checkbox" id="gate-consent" style="margin-top:3px;accent-color:#D4A84B;flex-shrink:0;width:16px;height:16px">
+            <span style="font-size:12px;color:#9994B0;line-height:1.6">I agree to ShiftID's <a href="https://shiftid.ai/privacy.html" target="_blank" style="color:#D4A84B">Privacy Policy</a> and consent to receiving occasional emails about my report and relevant ShiftID content. Unsubscribe anytime.</span>
+          </label>
+          <button class="gate-btn" onclick="unlockReport()">Unlock my full role report →</button>
+          <div class="gate-privacy">✓ No spam · Your data stays private · Unsubscribe anytime</div>
+        </div>
+      </div>
+
+      <!-- FULL REPORT -->
+      <div class="full-report" id="full-report">
+
+        <div class="agents-section">
+          <div class="agents-label">AI Agents live in this role right now</div>
+          <div id="agents-list"></div>
+        </div>
+
+        <div class="human-edge">
+          <div class="edge-label">What still needs a human in this role</div>
+          <div id="edge-list"></div>
+        </div>
+
+        <div class="timeline-section">
+          <div class="timeline-label">18-month disruption timeline</div>
+          <div class="timeline-row">
+            <div class="t-period">Now</div>
+            <div class="t-bar-track"><div class="t-bar-fill t-fill-now" id="tl-now" style="width:0%"></div></div>
+          </div>
+          <div class="timeline-row">
+            <div class="t-period">6 months</div>
+            <div class="t-bar-track"><div class="t-bar-fill t-fill-6m" id="tl-6m" style="width:0%"></div></div>
+          </div>
+          <div class="timeline-row">
+            <div class="t-period">18 months</div>
+            <div class="t-bar-track"><div class="t-bar-fill t-fill-18m" id="tl-18m" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <div class="report-cta">
+          <h3>Now find out where <em>you</em> personally stand</h3>
+          <p>The report shows what's happening to your role. The quiz shows what's happening to your identity. Together they give you the full picture.</p>
+          <a href="https://shiftid.ai/id-quiz.html" class="cta-btn">Take the free 2-minute quiz →</a>
+          <div class="cta-trust">✓ Free · ✓ 10 questions · ✓ Personalised result · ✓ No signup</div>
+        </div>
+
+      </div><!-- /full-report -->
+
+    </div><!-- /teaser-result -->
+
+  </div><!-- /selector-card -->
+
+  <div class="disclaimer">
+    ShiftID AI Role Exposure Report is based on published research from the World Economic Forum Future of Jobs 2025, McKinsey Global Institute, Goldman Sachs AI Displacement Research and Oxford Martin School probability data. Scores are indicative and reflect current trajectory — individual roles vary. This report is for professional awareness and is not career, financial or legal advice.
+  </div>
+
+</div><!-- /selector-section -->
+
+<footer>
+  <span style="color:var(--gold);font-weight:700">Shift</span><span style="font-weight:300">ID</span> &nbsp;·&nbsp;
+  AI Shift Digital Ltd &nbsp;·&nbsp; Company No. 17191528 &nbsp;·&nbsp;
+  <a href="https://shiftid.ai/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="https://shiftid.ai/terms.html">Disclaimer</a>
+</footer>
+
+</div>
+
+<script>
+// ── ANNOUNCEMENT BAR ROTATION ──
+const announcements = [
+  'New: See which AI agents are targeting your role right now →',
+  'Free Report: AI disruption by role, country and department →',
+  'How exposed is your role to agentic AI? Find out free →'
+];
+let aIdx = 0;
+setInterval(() => {
+  const el = document.getElementById('announce-msg');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    aIdx = (aIdx + 1) % announcements.length;
+    el.textContent = announcements[aIdx];
+    el.style.opacity = '1';
+  }, 300);
+}, 3500);
+document.getElementById('announce-msg').style.transition = 'opacity 0.3s';
+
+// ── ROLE DATA BY DEPARTMENT ──
+const rolesByDept = {
+  'Software Engineering': ['Software Engineer','Senior Engineer','Tech Lead','Engineering Manager','DevOps Engineer','QA Engineer','Solutions Architect'],
+  'Data & Analytics': ['Data Analyst','Data Scientist','Business Intelligence Analyst','Analytics Manager','Data Engineer','ML Engineer'],
+  'Marketing & Content': ['Marketing Manager','Content Strategist','SEO Specialist','Social Media Manager','Brand Manager','Growth Manager','CMO'],
+  'Finance & Accounting': ['Financial Analyst','Accountant','CFO','Controller','FP&A Manager','Risk Analyst','Auditor'],
+  'HR & People': ['HR Manager','Talent Acquisition','People Partner','L&D Manager','CHRO','Compensation Analyst','HR Director'],
+  'Legal & Compliance': ['Legal Counsel','Compliance Manager','Contract Manager','General Counsel','Paralegal','Risk & Compliance Officer'],
+  'Product Management': ['Product Manager','Senior PM','Head of Product','Product Analyst','CPO','Product Designer'],
+  'Sales & Business Dev': ['Account Executive','Sales Manager','VP Sales','Business Development Manager','SDR','Revenue Operations'],
+  'Operations': ['Operations Manager','COO','Supply Chain Manager','Process Analyst','Project Manager','Programme Manager'],
+  'Consulting & Strategy': ['Strategy Consultant','Management Consultant','Business Analyst','Strategy Director','Principal Consultant'],
+  'Healthcare & Clinical': ['Clinical Data Analyst','Healthcare Administrator','Medical Coder','Clinical Research Coordinator','Health Informaticist'],
+  'Education & Training': ['L&D Specialist','Instructional Designer','Corporate Trainer','Head of Learning','Curriculum Designer']
+};
+
+// ── ROLE SCORE DATA ──
+// [overallScore, taskAuto, decisionAuto, relationRisk(inverted), creativeReq(inverted), regBarrier(inverted)]
+// Higher overall = more exposed. Bars show exposure level.
+const roleData = {
+  // Software Engineering
+  'Software Engineer':       {score:72,dims:[78,55,30,35,20],tasks:['Code generation and boilerplate','Unit test writing','Bug detection and fixing'],agents:[{name:'GitHub Copilot',workflow:'Writes, completes and reviews code in real time across all languages',users:'1.8M+ developers'},{name:'Cursor',workflow:'AI-first IDE that rewrites entire files and explains codebases autonomously',users:'500K+ engineers'},{name:'Devin',workflow:'Autonomous software engineer — takes a task, writes and deploys end-to-end',users:'Enterprise early access'}],edge:['System architecture and design decisions','Cross-team technical communication','Debugging novel and complex distributed systems','Mentoring and engineering culture'],tl:[55,70,82]},
+  'Senior Engineer':         {score:58,dims:[65,48,35,42,22],tasks:['Code reviews at scale','Documentation generation','Automated testing pipelines'],agents:[{name:'GitHub Copilot',workflow:'AI pair programmer handling routine code across the full stack',users:'1.8M+ developers'},{name:'Tabnine',workflow:'Team-aware AI autocomplete trained on your codebase',users:'1M+ engineers'},{name:'Swimm',workflow:'Auto-generates and maintains technical documentation from code',users:'600+ engineering teams'}],edge:['Architecture decisions under ambiguity','Stakeholder technical communication','Building and retaining engineering culture','Cross-functional product judgement'],tl:[40,55,68]},
+  'Engineering Manager':     {score:38,dims:[30,28,70,60,18],tasks:['Sprint reporting and metrics','Performance review documentation','Automated standup summaries'],agents:[{name:'Notion AI',workflow:'Auto-generates team updates, meeting notes and status reports',users:'30M+ users'},{name:'LinearB',workflow:'Engineering metrics and delivery insights automated from Git data',users:'1,200+ engineering teams'},{name:'Coefficient',workflow:'Automated reporting and dashboard updates from engineering data',users:'50K+ teams'}],edge:['Team motivation and psychological safety','Hiring judgement','Cross-org political navigation','Shielding team from organisational noise'],tl:[20,32,45]},
+  'DevOps Engineer':         {score:65,dims:[72,60,25,28,30],tasks:['Infrastructure provisioning','Incident detection and initial response','CI/CD pipeline management'],agents:[{name:'Pulumi AI',workflow:'Generates and manages cloud infrastructure from natural language',users:'150K+ engineers'},{name:'PagerDuty AI',workflow:'Detects, triages and routes incidents autonomously',users:'25K+ companies'},{name:'Harness',workflow:'AI-driven CI/CD that optimises pipelines and predicts failures',users:'2,500+ enterprises'}],edge:['Security architecture decisions','Vendor negotiation and cost optimisation','Cross-team reliability culture','Complex multi-cloud strategy'],tl:[48,62,75]},
+  'Tech Lead':               {score:45,dims:[40,38,55,52,20],tasks:['Technical spec documentation','Code review at volume','Architecture diagram generation'],agents:[{name:'GitHub Copilot',workflow:'Autonomous code review, suggestion and refactoring',users:'1.8M+ developers'},{name:'Mermaid AI',workflow:'Auto-generates architecture diagrams from code and descriptions',users:'Growing adoption'},{name:'Codeium',workflow:'Full codebase understanding and multi-file editing',users:'700K+ developers'}],edge:['Technical vision and roadmap','Cross-team alignment','Mentoring senior engineers','Making high-stakes architecture calls'],tl:[28,40,55]},
+  'QA Engineer':             {score:80,dims:[85,70,20,25,15],tasks:['Test case generation','Regression test automation','Bug report writing'],agents:[{name:'Testim',workflow:'AI-generated and self-healing test automation across the full UI',users:'800+ enterprises'},{name:'Mabl',workflow:'Autonomous end-to-end testing that learns from your application',users:'350+ companies'},{name:'Katalon',workflow:'AI test generation from user behaviour and requirements',users:'190K+ testers'}],edge:['Exploratory testing of edge cases','User empathy in QA','Regulatory validation sign-off','Cross-team quality culture'],tl:[65,76,88]},
+  'Solutions Architect':     {score:42,dims:[38,35,58,55,28],tasks:['RFP response drafting','Architecture documentation','Technical proposal generation'],agents:[{name:'Writer',workflow:'Generates technical proposals and RFP responses from templates',users:'500+ enterprises'},{name:'Mermaid AI',workflow:'Auto-creates solution architecture diagrams',users:'Growing adoption'},{name:'Salesforce Einstein',workflow:'AI-generated client requirement analysis and solution mapping',users:'150K+ Salesforce orgs'}],edge:['Client trust and relationship depth','Novel problem framing','Vendor negotiation','Cross-industry pattern recognition'],tl:[25,38,52]},
+
+  // Data & Analytics
+  'Data Analyst':            {score:78,dims:[82,68,22,30,15],tasks:['Report generation and dashboards','SQL query writing','Data cleaning and transformation'],agents:[{name:'Julius AI',workflow:'Analyses datasets, writes SQL, builds charts and explains findings in plain English',users:'200K+ analysts'},{name:'Akkio',workflow:'No-code predictive analytics — builds models from uploaded data automatically',users:'10K+ businesses'},{name:'Obviously AI',workflow:'Automated machine learning and forecasting from spreadsheet data',users:'15K+ users'}],edge:['Framing the right business question','Communicating insight to non-technical stakeholders','Identifying data quality issues before they matter','Business context that gives data meaning'],tl:[62,75,86]},
+  'Data Scientist':          {score:62,dims:[65,58,28,45,20],tasks:['Model selection and tuning','Feature engineering','Experiment tracking and reporting'],agents:[{name:'DataRobot',workflow:'Fully automated machine learning — builds, trains and deploys models end-to-end',users:'1,000+ enterprises'},{name:'H2O.ai',workflow:'Autonomous AI that generates complete ML pipelines from raw data',users:'20,000+ data scientists'},{name:'Weights & Biases',workflow:'AI-driven experiment tracking and model optimisation',users:'500K+ ML practitioners'}],edge:['Problem formulation and hypothesis design','Cross-functional translation of complex models','Novel research in undefined problem spaces','Ethical AI judgement and bias detection'],tl:[45,58,72]},
+  'Business Intelligence Analyst':{score:82,dims:[88,72,18,22,12],tasks:['Dashboard creation and maintenance','Scheduled report generation','KPI tracking and alerting'],agents:[{name:'Tableau AI',workflow:'Auto-generates dashboards and surfaces anomalies without manual configuration',users:'1M+ Tableau users'},{name:'Power BI Copilot',workflow:'Natural language to dashboard — builds reports from plain English questions',users:'250K+ organisations'},{name:'ThoughtSpot',workflow:'AI-powered search analytics — answers business questions without analyst input',users:'500+ enterprises'}],edge:['Translating ambiguous business questions into metrics','Stakeholder education on data literacy','Strategic KPI design','Knowing which number matters and why'],tl:[68,80,90]},
+  'Analytics Manager':       {score:52,dims:[48,42,48,45,18],tasks:['Team reporting automation','Analytics tool evaluation','Performance tracking documentation'],agents:[{name:'Looker AI',workflow:'Automated analytics delivery and insight generation across teams',users:'2,500+ companies'},{name:'Sigma Computing',workflow:'AI-driven collaborative analytics with automated narrative generation',users:'1,000+ enterprises'},{name:'Mode Analytics',workflow:'Automated reporting workflows for data teams',users:'600+ data teams'}],edge:['Building analytics strategy','Managing data team culture','Executive communication of insights','Connecting analytics to business outcomes'],tl:[32,48,62]},
+  'Data Engineer':           {score:68,dims:[72,60,22,28,25],tasks:['Pipeline construction','Data transformation scripts','Schema documentation'],agents:[{name:'dbt AI',workflow:'Auto-generates data transformation logic and documentation from metadata',users:'50K+ data engineers'},{name:'Matillion',workflow:'AI-assisted ETL pipeline building with natural language configuration',users:'3,000+ companies'},{name:'Fivetran AI',workflow:'Automated data movement with self-healing connectors',users:'5,000+ companies'}],edge:['Data architecture design','Cross-team data contracts','Debugging complex pipeline failures','Data governance decisions'],tl:[52,65,78]},
+  'ML Engineer':             {score:55,dims:[58,50,30,42,22],tasks:['Model deployment pipelines','Hyperparameter tuning','Model monitoring and alerting'],agents:[{name:'MLflow AI',workflow:'Automated experiment tracking, model registry and deployment',users:'10M+ downloads'},{name:'Vertex AI',workflow:'Google\'s fully managed ML platform — trains, deploys and monitors models autonomously',users:'Enterprise scale'},{name:'SageMaker',workflow:'AWS automated ML with autopilot feature engineering and training',users:'100K+ ML teams'}],edge:['Novel architecture design','Research into undefined problem spaces','Production reliability judgement','Cross-functional ML strategy'],tl:[38,52,65]},
+
+  // Marketing & Content
+  'Marketing Manager':       {score:68,dims:[72,52,42,48,12],tasks:['Content brief creation','Campaign performance reporting','Email sequence drafting'],agents:[{name:'Jasper',workflow:'Generates on-brand content, campaigns and copy at scale with brand voice training',users:'100K+ marketing teams'},{name:'Persado',workflow:'AI-generated emotional language for ads and emails — tested and optimised autonomously',users:'250+ enterprises'},{name:'Smartly.io',workflow:'Autonomous ad creation, testing and budget optimisation across channels',users:'700+ brands'}],edge:['Brand positioning decisions','Agency and partner relationships','Cultural moment recognition','Integrated campaign strategy'],tl:[52,65,78]},
+  'Content Strategist':      {score:72,dims:[78,58,35,52,10],tasks:['Content calendar generation','SEO brief writing','First draft production'],agents:[{name:'Copy.ai',workflow:'Full content workflow automation — briefs, drafts, repurposing and publishing',users:'10M+ users'},{name:'Clearscope',workflow:'AI-driven SEO content strategy with automated keyword and structure recommendations',users:'3,500+ content teams'},{name:'Surfer SEO',workflow:'Automated content optimisation and competitive gap analysis',users:'150K+ users'}],edge:['Editorial voice and brand differentiation','Audience relationship building','Identifying cultural moments for content','Long-form strategic narrative'],tl:[55,68,82]},
+  'SEO Specialist':          {score:80,dims:[85,72,18,28,10],tasks:['Keyword research and clustering','Meta description writing','Content gap analysis'],agents:[{name:'Semrush AI',workflow:'Automated keyword research, competitor analysis and content recommendations',users:'10M+ users'},{name:'Ahrefs AI',workflow:'AI-powered backlink analysis, rank tracking and content suggestions',users:'900K+ SEOs'},{name:'MarketMuse',workflow:'Autonomous content strategy — identifies gaps and builds optimised briefs automatically',users:'10K+ content teams'}],edge:['Technical SEO strategy','Client communication and education','Algorithm change interpretation','Domain authority building through relationships'],tl:[65,78,88]},
+  'Social Media Manager':    {score:76,dims:[80,65,40,50,8],tasks:['Caption and post writing','Content scheduling','Performance reporting'],agents:[{name:'Hootsuite AI',workflow:'AI caption generation, optimal scheduling and performance analysis',users:'18M+ users'},{name:'Buffer AI',workflow:'Automated post creation, scheduling and engagement analysis',users:'140K+ businesses'},{name:'Sprout Social AI',workflow:'Social listening, automated response drafts and trend analysis',users:'30K+ brands'}],edge:['Community relationship depth','Brand crisis judgement','Influencer relationship management','Cultural sensitivity in content'],tl:[60,74,85]},
+  'Brand Manager':           {score:45,dims:[40,35,60,65,10],tasks:['Brand guideline documentation','Competitor monitoring reports','Campaign brief templates'],agents:[{name:'Frontify AI',workflow:'Automated brand asset management and guideline enforcement',users:'4,000+ brands'},{name:'Brandwatch',workflow:'AI brand monitoring, sentiment analysis and competitive intelligence',users:'5,000+ brands'},{name:'Jasper',workflow:'On-brand content generation trained on brand voice',users:'100K+ marketing teams'}],edge:['Brand positioning strategy','Agency creative direction','Stakeholder alignment on brand values','Long-term brand architecture decisions'],tl:[28,40,56]},
+  'Growth Manager':          {score:62,dims:[65,55,42,45,10],tasks:['A/B test setup and analysis','Funnel reporting','Growth experiment documentation'],agents:[{name:'Amplitude AI',workflow:'Automated user journey analysis, funnel insights and retention predictions',users:'3,000+ companies'},{name:'Mixpanel AI',workflow:'AI-generated experiment analysis and behavioural cohort identification',users:'8,000+ products'},{name:'Mutiny',workflow:'Autonomous website personalisation and conversion rate optimisation',users:'500+ B2B companies'}],edge:['Growth strategy framing','Cross-functional alignment','User research synthesis','Identifying non-obvious growth levers'],tl:[45,58,72]},
+  'CMO':                     {score:28,dims:[25,20,75,70,15],tasks:['Marketing performance dashboard','Board reporting templates','Campaign results summaries'],agents:[{name:'Tableau AI',workflow:'Executive dashboard generation and automated anomaly surfacing',users:'1M+ users'},{name:'Salesforce Einstein',workflow:'AI-generated pipeline forecasts and marketing attribution',users:'150K+ orgs'},{name:'Gong',workflow:'Revenue intelligence and automated coaching insights for leadership',users:'4,000+ companies'}],edge:['Vision and positioning strategy','Board and investor communication','Executive team leadership','Market timing and category creation'],tl:[15,24,35]},
+
+  // Finance & Accounting
+  'Financial Analyst':       {score:75,dims:[80,65,20,25,28],tasks:['Financial model updates','Variance analysis reports','Data gathering and reconciliation'],agents:[{name:'Planful',workflow:'Automated financial planning, forecasting and consolidation end-to-end',users:'1,500+ finance teams'},{name:'Workiva AI',workflow:'Automated financial reporting, disclosures and regulatory filing preparation',users:'6,000+ enterprises'},{name:'Mosaic',workflow:'Real-time financial intelligence with automated KPI tracking and scenario modelling',users:'500+ finance teams'}],edge:['Strategic financial judgement','Board-level narrative construction','M&A due diligence depth','Cross-functional business partnering'],tl:[58,72,84]},
+  'Accountant':              {score:82,dims:[88,70,15,18,32],tasks:['Transaction categorisation','Reconciliation and month-end close','Tax preparation and filing'],agents:[{name:'Botkeeper',workflow:'Fully automated bookkeeping — categorises, reconciles and closes books autonomously',users:'600+ accounting firms'},{name:'Vic.ai',workflow:'AI accounts payable — processes, approves and pays invoices without human review',users:'200+ enterprises'},{name:'TaxJar',workflow:'Automated sales tax calculation, filing and remittance across all jurisdictions',users:'30,000+ businesses'}],edge:['Complex tax strategy','Client relationship and advisory','Audit defence and judgement','Regulatory interpretation in ambiguous situations'],tl:[68,80,90]},
+  'CFO':                     {score:22,dims:[20,18,78,72,30],tasks:['Board reporting pack generation','Budget variance commentary','Investor update templates'],agents:[{name:'Workiva AI',workflow:'Automated board reporting and regulatory disclosure generation',users:'6,000+ enterprises'},{name:'Mosaic',workflow:'Real-time CFO dashboard with automated narrative generation',users:'500+ finance teams'},{name:'Planful',workflow:'AI-driven FP&A with automated scenario analysis',users:'1,500+ finance teams'}],edge:['Capital allocation strategy','Board and investor trust','M&A and strategic deal-making','Organisational leadership in uncertainty'],tl:[12,20,30]},
+  'FP&A Manager':            {score:70,dims:[75,62,30,28,25],tasks:['Budget model updates','Variance reporting','Forecast consolidation'],agents:[{name:'Anaplan',workflow:'Connected planning platform with AI-driven forecasting and scenario analysis',users:'2,000+ enterprises'},{name:'Adaptive Insights',workflow:'Automated FP&A workflows with intelligent driver-based forecasting',users:'6,000+ companies'},{name:'Pigment',workflow:'AI business planning with automated data integration and modelling',users:'500+ finance teams'}],edge:['Strategic business partnering','Communicating financial story to non-finance leaders','Identifying the right business drivers','Influencing decisions through financial narrative'],tl:[52,66,80]},
+  'Risk Analyst':            {score:65,dims:[68,58,28,32,42],tasks:['Risk report generation','Data collection for risk models','Regulatory reporting templates'],agents:[{name:'Palantir AIP',workflow:'Autonomous risk detection, monitoring and alert generation across data sources',users:'300+ enterprises'},{name:'Quantexa',workflow:'AI network analytics for financial crime and risk detection',users:'Top 10 global banks'},{name:'Riskified',workflow:'Real-time AI risk scoring and decision-making for financial transactions',users:'1,000+ merchants'}],edge:['Strategic risk judgement in novel situations','Regulatory relationship management','Board-level risk communication','Model governance and ethical AI oversight'],tl:[48,62,76]},
+  'Auditor':                 {score:70,dims:[75,60,22,25,48],tasks:['Sample selection and data testing','Working paper generation','Audit evidence collection'],agents:[{name:'MindBridge',workflow:'AI auditing platform that analyses 100% of transactions and flags anomalies autonomously',users:'350+ audit firms'},{name:'AuditBoard AI',workflow:'Automated audit workflow management, evidence collection and risk assessment',users:'3,500+ companies'},{name:'Galvanize',workflow:'AI-powered risk and compliance testing with continuous monitoring',users:'7,000+ audit teams'}],edge:['Professional scepticism and judgement','Complex accounting policy interpretation','Client relationship and trust','Fraud investigation in ambiguous situations'],tl:[52,66,80]},
+
+  // HR & People
+  'HR Manager':              {score:58,dims:[60,45,55,38,22],tasks:['Job description writing','Policy document drafting','Employee query responses'],agents:[{name:'Workday AI',workflow:'Automated HR workflows — hiring, onboarding, performance and payroll management',users:'10,000+ enterprises'},{name:'Eightfold',workflow:'AI talent intelligence — matches candidates, identifies skills gaps and predicts attrition',users:'1B+ talent profiles'},{name:'Leena AI',workflow:'AI HR chatbot that handles employee queries, onboarding and policy questions autonomously',users:'500+ enterprises'}],edge:['Complex employee relations','Organisational culture building','Leadership coaching and development','Managing sensitive people situations'],tl:[40,54,68]},
+  'Talent Acquisition':      {score:72,dims:[78,62,42,30,18],tasks:['CV screening and shortlisting','Job posting optimisation','Interview scheduling'],agents:[{name:'HireVue',workflow:'AI video interviewing with automated candidate scoring and ranking',users:'1,000+ enterprises'},{name:'Beamery',workflow:'AI talent CRM — identifies, engages and nurtures candidates autonomously',users:'250+ enterprises'},{name:'Paradox (Olivia)',workflow:'Conversational AI recruiter that screens, schedules and onboards candidates',users:'500+ companies'}],edge:['Senior and executive search relationships','Employer brand building','Candidate experience at critical decision points','Diverse hiring strategy'],tl:[55,68,82]},
+  'People Partner':          {score:40,dims:[35,28,72,45,20],tasks:['People analytics reporting','Policy template generation','Engagement survey analysis'],agents:[{name:'Culture Amp AI',workflow:'Automated engagement analysis, manager insights and action recommendations',users:'6,500+ companies'},{name:'Lattice AI',workflow:'AI performance management — automated reviews, goals and development plans',users:'5,000+ companies'},{name:'Glint',workflow:'AI employee listening with automated trend detection and manager nudges',users:'1,200+ enterprises'}],edge:['Complex performance and conduct situations','Leadership team coaching','Organisational change navigation','Building psychological safety at team level'],tl:[25,36,50]},
+  'L&D Manager':             {score:65,dims:[68,55,40,48,15],tasks:['Course content drafting','Learning needs analysis reports','Training material formatting'],agents:[{name:'Docebo AI',workflow:'Automated learning path creation, content curation and skill gap identification',users:'3,000+ enterprises'},{name:'360Learning AI',workflow:'AI course generation from subject matter expert input with automated assessments',users:'1,700+ companies'},{name:'Synthesia',workflow:'AI video generation for training content without filming',users:'50,000+ creators'}],edge:['Learning culture strategy','Senior leader development','Connecting L&D to business outcomes','Facilitation of complex behavioural change'],tl:[48,62,76]},
+  'CHRO':                    {score:22,dims:[20,16,80,68,22],tasks:['Board people reporting','HR metrics dashboards','Policy review documentation'],agents:[{name:'Workday AI',workflow:'Automated workforce analytics and executive HR reporting',users:'10,000+ enterprises'},{name:'Visier',workflow:'People analytics platform with AI-generated workforce insights for leadership',users:'25,000+ companies'},{name:'Culture Amp AI',workflow:'Automated engagement intelligence for executive decision-making',users:'6,500+ companies'}],edge:['Culture and values leadership','Board-level talent strategy','CEO partnership on organisational design','Building trust in sensitive people matters'],tl:[12,20,30]},
+  'Compensation Analyst':    {score:78,dims:[82,68,18,20,32],tasks:['Salary benchmarking analysis','Compensation modelling','Job levelling documentation'],agents:[{name:'Radford AI',workflow:'Automated compensation benchmarking and equity analysis',users:'3,000+ companies'},{name:'Pave',workflow:'AI real-time compensation intelligence and automated band modelling',users:'4,000+ companies'},{name:'Figures',workflow:'Compensation management with AI market data and automated recommendations',users:'600+ companies'}],edge:['Executive compensation strategy','Equity philosophy design','Compensation communication to employees','Regulatory compliance judgement in novel situations'],tl:[62,74,86]},
+  'HR Director':             {score:32,dims:[28,24,75,62,20],tasks:['HR strategy documentation','People metrics reporting','Policy framework drafting'],agents:[{name:'Workday AI',workflow:'Automated HR operations, analytics and strategic workforce planning',users:'10,000+ enterprises'},{name:'Eightfold',workflow:'AI talent intelligence for strategic workforce planning',users:'1B+ talent profiles'},{name:'Visier',workflow:'People analytics with AI-generated strategic recommendations',users:'25,000+ companies'}],edge:['Organisational culture stewardship','Senior people leadership','Change management in uncertainty','Board-level HR strategy'],tl:[18,28,42]},
+
+  // Legal & Compliance
+  'Legal Counsel':           {score:65,dims:[68,55,45,38,52],tasks:['Contract first draft generation','Legal research and memo drafting','Risk flagging in standard documents'],agents:[{name:'Harvey AI',workflow:'Drafts contracts, reviews clauses, conducts legal research and flags risk end-to-end',users:'40,000+ legal professionals'},{name:'Clio',workflow:'AI-powered legal practice management with automated document generation',users:'150,000+ legal professionals'},{name:'Ironclad AI',workflow:'Autonomous contract lifecycle management — drafts, negotiates and executes contracts',users:'1,000+ legal teams'}],edge:['Complex negotiation and deal judgement','Client relationship and trust','Novel legal argument construction','Regulatory interpretation in grey areas'],tl:[48,62,76]},
+  'Compliance Manager':      {score:60,dims:[65,52,38,30,58],tasks:['Policy document drafting','Regulatory change monitoring','Compliance training content'],agents:[{name:'Relativity AI',workflow:'Automated regulatory compliance monitoring, alerting and document review',users:'13,000+ organisations'},{name:'ComplyAdvantage',workflow:'AI regulatory intelligence with automated risk screening and monitoring',users:'1,000+ financial institutions'},{name:'Navex AI',workflow:'Automated compliance programme management and policy distribution',users:'13,000+ companies'}],edge:['Regulatory relationship management','Novel risk judgement in undefined situations','Ethics and culture stewardship','Board-level compliance communication'],tl:[42,56,70]},
+  'Contract Manager':        {score:78,dims:[82,70,28,22,45],tasks:['Contract drafting from templates','Obligation extraction and tracking','Renewal alert management'],agents:[{name:'Ironclad AI',workflow:'Autonomous contract creation, review, negotiation and execution',users:'1,000+ legal teams'},{name:'Icertis AI',workflow:'AI contract intelligence — extracts, analyses and manages obligations at scale',users:'350+ enterprises'},{name:'Summize',workflow:'Automated contract review, risk scoring and clause extraction',users:'Growing adoption'}],edge:['High-value negotiation judgement','Counterparty relationship management','Strategic contract architecture','Novel clause interpretation in disputes'],tl:[62,74,87]},
+  'General Counsel':         {score:28,dims:[25,20,75,68,55],tasks:['Board legal reporting','Policy oversight documentation','External counsel briefing templates'],agents:[{name:'Harvey AI',workflow:'Legal research, memo drafting and contract review at scale',users:'40,000+ legal professionals'},{name:'Lexis+ AI',workflow:'AI legal research with automated case analysis and recommendation',users:'Thousands of law firms'},{name:'Ironclad AI',workflow:'Autonomous contract operations with executive-level reporting',users:'1,000+ legal teams'}],edge:['Board-level legal strategy','Regulatory relationship and reputation','M&A and complex deal oversight','Managing external counsel networks'],tl:[15,24,36]},
+  'Paralegal':               {score:85,dims:[90,75,15,18,40],tasks:['Document review and categorisation','Research memo drafting','Deadline and docket tracking'],agents:[{name:'Harvey AI',workflow:'Automated legal research, document review and memo generation',users:'40,000+ legal professionals'},{name:'Luminance',workflow:'AI due diligence — reviews thousands of documents and flags issues autonomously',users:'600+ law firms'},{name:'Kira Systems',workflow:'Automated contract analysis and data extraction for legal review',users:'Major global law firms'}],edge:['Complex fact pattern synthesis requiring human judgement','Client-facing relationship work','Highly sensitive matter discretion','Novel situation navigation beyond templates'],tl:[70,82,92]},
+  'Risk & Compliance Officer':{score:55,dims:[58,48,42,32,60],tasks:['Risk register maintenance','Regulatory report generation','Policy compliance monitoring'],agents:[{name:'Galvanize',workflow:'AI risk and compliance management with continuous automated monitoring',users:'7,000+ audit teams'},{name:'LogicGate',workflow:'Automated risk workflow management with AI risk scoring',users:'1,500+ companies'},{name:'Riskonnect',workflow:'Enterprise risk management with AI-driven risk identification and reporting',users:'2,000+ enterprises'}],edge:['Novel risk judgement in undefined territories','Board risk communication','Regulatory relationship management','Building risk culture across the organisation'],tl:[38,52,66]},
+
+  // Product Management
+  'Product Manager':         {score:50,dims:[52,42,55,58,12],tasks:['PRD and specification drafting','User story generation','Competitive analysis reports'],agents:[{name:'Productboard AI',workflow:'Automated feature prioritisation, roadmap generation and user feedback analysis',users:'5,000+ product teams'},{name:'Notion AI',workflow:'Product specs, PRDs and meeting notes generated and structured automatically',users:'30M+ users'},{name:'Amplitude AI',workflow:'Automated product analytics with AI-generated insight and recommendation',users:'3,000+ companies'}],edge:['Strategic product vision','Customer relationship and discovery','Cross-functional alignment and influence','Knowing which user problem actually matters'],tl:[32,46,60]},
+  'Senior PM':               {score:42,dims:[40,35,60,62,12],tasks:['Roadmap documentation','Stakeholder update generation','OKR progress reporting'],agents:[{name:'Productboard AI',workflow:'AI product strategy with automated customer feedback synthesis',users:'5,000+ product teams'},{name:'Aha!',workflow:'AI-assisted roadmapping with automated stakeholder communications',users:'700K+ product managers'},{name:'Linear AI',workflow:'Automated sprint planning, ticket generation and project tracking',users:'25,000+ teams'}],edge:['Strategic product bets under uncertainty','Engineering trust and relationship','Executive influence','Market timing judgement'],tl:[25,38,52]},
+  'Head of Product':         {score:32,dims:[28,25,70,68,14],tasks:['Portfolio reporting','OKR dashboard generation','Team retrospective documentation'],agents:[{name:'Productboard AI',workflow:'Portfolio-level product intelligence and automated executive reporting',users:'5,000+ product teams'},{name:'Amplitude AI',workflow:'AI product intelligence across the full portfolio',users:'3,000+ companies'},{name:'Miro AI',workflow:'Automated workshop facilitation and strategy documentation',users:'60M+ users'}],edge:['Product organisation culture','Executive alignment','Build vs buy strategic judgement','Market category creation'],tl:[18,28,42]},
+  'CPO':                     {score:22,dims:[18,15,80,75,15],tasks:['Board product reporting','Vision documentation','Quarterly business review prep'],agents:[{name:'Productboard AI',workflow:'Executive product portfolio intelligence',users:'5,000+ product teams'},{name:'Amplitude AI',workflow:'AI-driven product metrics for C-suite decision-making',users:'3,000+ companies'},{name:'Notion AI',workflow:'Automated executive communications and documentation',users:'30M+ users'}],edge:['Product vision and company strategy','Board and investor communication','Building product culture','Market timing and category bets'],tl:[12,20,30]},
+  'Product Analyst':         {score:75,dims:[80,65,22,28,10],tasks:['Dashboard maintenance','Experiment analysis','Feature usage reporting'],agents:[{name:'Amplitude AI',workflow:'Automated product analytics with AI-generated recommendations',users:'3,000+ companies'},{name:'Mixpanel AI',workflow:'AI behavioural analytics with automated experiment analysis',users:'8,000+ products'},{name:'FullStory AI',workflow:'Automated session analysis and UX issue identification',users:'3,500+ companies'}],edge:['Translating data into product strategy','Defining the right metrics for new features','Cross-functional data advocacy','Qualitative insight synthesis'],tl:[58,72,84]},
+  'Product Designer':        {score:55,dims:[58,45,48,62,8],tasks:['Wireframe generation','Design system documentation','User flow diagramming'],agents:[{name:'Figma AI',workflow:'Automated UI generation, design system application and component suggestion',users:'8M+ designers'},{name:'Uizard',workflow:'AI wireframe and prototype generation from text descriptions',users:'500K+ designers'},{name:'Attention Insight',workflow:'AI heatmap prediction and attention analysis before user testing',users:'15K+ UX teams'}],edge:['User research synthesis and empathy','Novel interaction design','Brand and aesthetic direction','Accessibility judgement'],tl:[38,52,66]},
+
+  // Sales & Business Dev
+  'Account Executive':       {score:52,dims:[55,42,62,45,10],tasks:['Proposal drafting','CRM update and logging','Follow-up email sequences'],agents:[{name:'Salesforce Einstein',workflow:'Automated opportunity scoring, next-best-action and pipeline forecasting',users:'150K+ Salesforce orgs'},{name:'Gong',workflow:'AI analyses every call, scores performance and writes personalised follow-up emails autonomously',users:'4,000+ revenue teams'},{name:'Outreach AI',workflow:'Automated sales sequence personalisation, timing optimisation and reply detection',users:'6,000+ sales teams'}],edge:['Executive relationship building','Complex deal negotiation','Strategic account expansion','Trust in competitive high-stakes sales'],tl:[35,48,62]},
+  'Sales Manager':           {score:40,dims:[38,30,68,50,12],tasks:['Pipeline reporting','Coaching notes and documentation','Forecast commentary generation'],agents:[{name:'Gong',workflow:'Automated call coaching, deal risk detection and forecast intelligence',users:'4,000+ revenue teams'},{name:'Clari',workflow:'AI revenue intelligence with automated pipeline management and forecasting',users:'1,500+ revenue teams'},{name:'Salesloft AI',workflow:'Automated rep performance analysis and personalised coaching nudges',users:'5,000+ sales teams'}],edge:['Team motivation and culture','Hiring and developing sales talent','Enterprise relationship stewardship','Navigating complex internal deal politics'],tl:[25,36,50]},
+  'VP Sales':                {score:28,dims:[25,20,76,65,14],tasks:['Sales board reporting','Territory plan documentation','Quota modelling'],agents:[{name:'Clari',workflow:'AI revenue intelligence and automated executive forecasting',users:'1,500+ revenue teams'},{name:'Gong',workflow:'Revenue intelligence with automated win/loss analysis',users:'4,000+ revenue teams'},{name:'Salesforce Einstein',workflow:'AI pipeline management and forecast generation',users:'150K+ orgs'}],edge:['Revenue strategy and market positioning','C-suite relationship and negotiation','Team leadership in uncertainty','Category and channel strategy'],tl:[15,24,35]},
+  'Business Development Manager':{score:55,dims:[58,48,58,42,10],tasks:['Outreach message drafting','Market research reports','Partnership proposal templates'],agents:[{name:'Apollo.io AI',workflow:'Automated prospect research, outreach personalisation and sequence management',users:'1M+ salespeople'},{name:'ZoomInfo Copilot',workflow:'AI-driven lead identification, intent detection and automated outreach',users:'35,000+ companies'},{name:'Clay',workflow:'Automated prospect data enrichment and hyper-personalised outreach at scale',users:'100K+ teams'}],edge:['Strategic partnership negotiation','Network and relationship leverage','Market entry judgement','Category creation through partnerships'],tl:[38,52,66]},
+  'SDR':                     {score:82,dims:[88,72,32,20,8],tasks:['Prospecting and list building','Email and LinkedIn outreach','Meeting booking and qualification'],agents:[{name:'Apollo.io AI',workflow:'End-to-end automated prospecting, personalised outreach and meeting booking',users:'1M+ salespeople'},{name:'Outreach AI',workflow:'AI-personalised sequences with automated send-time optimisation and reply management',users:'6,000+ sales teams'},{name:'Conversica',workflow:'AI sales assistant that autonomously nurtures leads and books meetings',users:'2,000+ companies'}],edge:['Complex objection handling in live conversation','Building genuine rapport with senior buyers','Reading emotional cues in real interactions','Navigating gatekeepers in enterprise accounts'],tl:[68,80,90]},
+  'Revenue Operations':      {score:68,dims:[72,60,30,28,15],tasks:['Sales reporting and dashboards','CRM data hygiene automation','Commission calculation'],agents:[{name:'Clari',workflow:'Automated revenue operations with AI pipeline management',users:'1,500+ revenue teams'},{name:'Salesforce Einstein',workflow:'AI-driven RevOps automation and forecasting',users:'150K+ orgs'},{name:'Operata',workflow:'Automated contact centre performance analytics and optimisation',users:'Growing adoption'}],edge:['RevOps strategy design','Cross-functional GTM alignment','Tech stack architecture decisions','Interpreting signal in complex data'],tl:[50,64,78]},
+
+  // Operations
+  'Operations Manager':      {score:60,dims:[62,50,48,40,28],tasks:['Process documentation','Performance reporting','Vendor communication templates'],agents:[{name:'UiPath',workflow:'Robotic process automation — executes repetitive operational tasks end-to-end',users:'10,000+ enterprises'},{name:'Automation Anywhere',workflow:'AI-powered intelligent automation across business processes',users:'5,000+ customers'},{name:'Celonis',workflow:'Process mining AI that identifies and automates operational inefficiencies',users:'2,000+ enterprises'}],edge:['Cross-team operational leadership','Vendor relationship management','Crisis and exception management','Culture and team motivation'],tl:[42,56,72]},
+  'COO':                     {score:20,dims:[18,14,80,72,30],tasks:['Operational reporting','Board update preparation','KPI dashboard management'],agents:[{name:'Celonis',workflow:'Process intelligence and automated operational optimisation',users:'2,000+ enterprises'},{name:'UiPath',workflow:'Enterprise-wide process automation',users:'10,000+ enterprises'},{name:'Tableau AI',workflow:'Automated executive operational dashboards',users:'1M+ users'}],edge:['Organisational strategy execution','Cross-functional leadership','Operational culture and values','Crisis decision-making'],tl:[10,18,28]},
+  'Supply Chain Manager':    {score:70,dims:[74,62,35,30,32],tasks:['Demand forecasting','Supplier communication','Inventory reports'],agents:[{name:'o9 Solutions',workflow:'AI supply chain planning with autonomous demand sensing and inventory optimisation',users:'100+ enterprises'},{name:'Llamasoft AI',workflow:'Supply chain design and optimisation with autonomous scenario modelling',users:'500+ supply chain teams'},{name:'Coupa AI',workflow:'Autonomous procurement — sourcing, negotiation and purchase order management',users:'3,000+ companies'}],edge:['Supplier relationship strategy','Novel disruption response','Ethical supply chain judgement','Strategic sourcing decisions'],tl:[52,66,80]},
+  'Process Analyst':         {score:78,dims:[82,70,22,25,25],tasks:['Process mapping and documentation','Performance data analysis','Improvement recommendation reports'],agents:[{name:'Celonis',workflow:'AI process mining — maps, analyses and optimises processes automatically',users:'2,000+ enterprises'},{name:'ABBYY AI',workflow:'Intelligent document processing and workflow automation',users:'10,000+ organisations'},{name:'Bizagi AI',workflow:'Automated process modelling and digital transformation recommendations',users:'1,000+ enterprises'}],edge:['Stakeholder change management','Identifying political barriers to process change','Strategic process architecture','Building change adoption'],tl:[62,74,87]},
+  'Project Manager':         {score:62,dims:[65,52,42,38,18],tasks:['Status report generation','Risk log maintenance','Meeting minutes and action tracking'],agents:[{name:'Monday.com AI',workflow:'Automated project tracking, status updates and risk flagging',users:'225,000+ companies'},{name:'Asana AI',workflow:'AI project management with automated task assignment and timeline adjustment',users:'139,000+ paying organisations'},{name:'ClickUp AI',workflow:'Automated project documentation, status reports and dependency management',users:'800,000+ teams'}],edge:['Stakeholder management in complex politics','Risk judgement in ambiguous situations','Cross-team influence without authority','Client relationship in high-stakes delivery'],tl:[44,58,74]},
+  'Programme Manager':       {score:48,dims:[45,38,58,45,20],tasks:['Portfolio reporting','Governance documentation','Dependency tracking'],agents:[{name:'Planview AI',workflow:'Automated portfolio management with AI resource optimisation',users:'4,500+ enterprises'},{name:'ServiceNow AI',workflow:'AI programme governance with automated risk and status reporting',users:'8,100+ enterprises'},{name:'Smartsheet AI',workflow:'Automated programme reporting and cross-project dependency management',users:'12.5M+ users'}],edge:['Strategic programme leadership','Executive stakeholder alignment','Organisational change navigation','Building trust across senior leadership'],tl:[30,44,58]},
+
+  // Consulting & Strategy
+  'Strategy Consultant':     {score:55,dims:[58,48,50,55,15],tasks:['Market research and synthesis','Slide deck first drafts','Benchmarking data gathering'],agents:[{name:'Perplexity Pro',workflow:'Autonomous deep research with cited synthesis across thousands of sources',users:'15M+ users'},{name:'ChatGPT Enterprise',workflow:'Strategic analysis, framework application and document generation at scale',users:'600,000+ organisations'},{name:'Writer',workflow:'On-brand document generation for consulting deliverables',users:'500+ enterprises'}],edge:['Client relationship and trust','Novel problem framing','Creative hypothesis generation','Senior stakeholder influence'],tl:[38,52,66]},
+  'Management Consultant':   {score:60,dims:[62,52,48,52,14],tasks:['Data analysis and visualisation','Interview synthesis','Report and deck production'],agents:[{name:'Perplexity Pro',workflow:'Deep research synthesis with source citation',users:'15M+ users'},{name:'Tableau AI',workflow:'Automated data visualisation and insight generation',users:'1M+ users'},{name:'Otter.ai',workflow:'Automated interview transcription, synthesis and theme extraction',users:'20M+ users'}],edge:['Client relationship depth','Hypothesis creativity in novel contexts','Senior stakeholder facilitation','Judgement calls under time pressure and ambiguity'],tl:[42,56,72]},
+  'Business Analyst':        {score:70,dims:[74,62,28,32,16],tasks:['Requirements documentation','Process flow diagramming','Data analysis and reporting'],agents:[{name:'Notion AI',workflow:'Automated requirements documentation and business specification writing',users:'30M+ users'},{name:'Lucidchart AI',workflow:'Automated process flow and system diagram generation',users:'35M+ users'},{name:'Tableau AI',workflow:'Automated data analysis and dashboard generation',users:'1M+ users'}],edge:['Stakeholder elicitation in complex organisations','Requirements that reflect human nuance','Facilitation of competing interests','Translating between business and technical teams'],tl:[52,66,80]},
+  'Strategy Director':       {score:35,dims:[32,26,68,65,18],tasks:['Strategy presentation drafting','Competitive intelligence reports','Board strategy documentation'],agents:[{name:'Perplexity Pro',workflow:'Autonomous competitive intelligence and market research',users:'15M+ users'},{name:'ChatGPT Enterprise',workflow:'Strategic synthesis and document generation',users:'600,000+ organisations'},{name:'Crayon',workflow:'AI competitive intelligence with automated monitoring and alerting',users:'1,500+ companies'}],edge:['Strategic vision and positioning','Board relationship and trust','Leading through organisational ambiguity','Identifying the right problem before solving it'],tl:[20,30,44]},
+  'Principal Consultant':    {score:40,dims:[38,30,68,60,16],tasks:['Proposal generation','Methodology documentation','Client update reporting'],agents:[{name:'Perplexity Pro',workflow:'Deep research and synthesis for client deliverables',users:'15M+ users'},{name:'Writer',workflow:'On-brand consulting document generation',users:'500+ enterprises'},{name:'Otter.ai',workflow:'Client meeting synthesis and action extraction',users:'20M+ users'}],edge:['Client relationship at senior level','Novel methodology design','Organisational change facilitation','Practice-building and thought leadership'],tl:[24,36,50]},
+
+  // Healthcare & Clinical
+  'Clinical Data Analyst':   {score:72,dims:[76,62,20,25,55],tasks:['Clinical report generation','Data cleaning and validation','Statistical analysis outputs'],agents:[{name:'IBM Watson Health',workflow:'Automated clinical data analysis and insight generation from patient datasets',users:'Enterprise healthcare'},{name:'Flatiron Health AI',workflow:'Real-world evidence analysis and automated oncology data processing',users:'2,800+ oncology practices'},{name:'Tempus',workflow:'AI clinical data integration and automated genomic analysis',users:'1M+ patients'}],edge:['Clinical context and patient safety judgement','Regulatory submission navigation','Novel clinical question framing','Cross-disciplinary research collaboration'],tl:[55,68,80]},
+  'Healthcare Administrator':{score:75,dims:[80,65,30,20,42],tasks:['Patient scheduling automation','Insurance authorisation processing','Medical coding and billing'],agents:[{name:'Olive AI',workflow:'Healthcare operations automation — prior authorisations, eligibility and claims',users:'900+ hospitals'},{name:'Notable Health',workflow:'AI patient intake, scheduling and administrative workflow automation',users:'300+ health systems'},{name:'Waystar',workflow:'Automated revenue cycle management and claims processing',users:'30,000+ healthcare providers'}],edge:['Complex patient and family communication','Staff management and culture','Clinical leadership relationship','Handling sensitive and crisis situations'],tl:[58,72,84]},
+  'Medical Coder':           {score:88,dims:[92,80,12,15,45],tasks:['Diagnosis and procedure coding','Coding audit and review','Documentation improvement suggestions'],agents:[{name:'3M M*Modal',workflow:'AI-powered clinical documentation and autonomous medical coding from notes',users:'Major health systems'},{name:'Nuance AI',workflow:'Ambient clinical intelligence — codes automatically from physician conversations',users:'500M+ patient encounters'},{name:'Optum360',workflow:'Automated coding accuracy and compliance with AI review',users:'Major US health systems'}],edge:['Highly complex multi-system cases','Audit defence and expert testimony','Coding policy interpretation in novel situations','Regulatory ambiguity resolution'],tl:[75,85,93]},
+  'Clinical Research Coordinator':{score:60,dims:[62,50,42,38,48],tasks:['Data entry and case report forms','Regulatory document preparation','Patient visit scheduling'],agents:[{name:'Medidata AI',workflow:'Automated clinical trial data capture, monitoring and risk-based management',users:'1,900+ biopharma companies'},{name:'Veeva Vault AI',workflow:'Automated regulatory document management and submission preparation',users:'1,000+ life sciences companies'},{name:'Oracle Clinical One',workflow:'AI site monitoring and automated data cleaning for clinical trials',users:'500+ sponsors'}],edge:['Patient relationship and retention in trials','Protocol deviation judgement','Regulatory inspection navigation','Cross-site coordination in complex trials'],tl:[42,56,72]},
+  'Health Informaticist':    {score:55,dims:[58,48,38,42,52],tasks:['EHR data extraction and reporting','Clinical workflow documentation','Data quality monitoring'],agents:[{name:'Epic AI',workflow:'Automated clinical workflow suggestions and ambient documentation within EHR',users:'250M+ patient records'},{name:'Health Catalyst AI',workflow:'Automated health data analytics and quality measure reporting',users:'500+ health systems'},{name:'Arcadia.io',workflow:'AI population health analytics with automated gap-in-care identification',users:'400M+ patient records'}],edge:['Health system political navigation','Clinical informatics strategy','Physician relationship and change management','Novel workflow design for clinical environments'],tl:[38,52,66]},
+
+  // Education & Training
+  'L&D Specialist':          {score:68,dims:[72,58,38,48,14],tasks:['Course content creation','Learning needs analysis','Training material formatting'],agents:[{name:'Docebo AI',workflow:'Automated learning path creation and AI content curation',users:'3,000+ enterprises'},{name:'Articulate AI',workflow:'AI course generation and interactive content creation from source material',users:'120,000+ course creators'},{name:'Synthesia',workflow:'AI video generation for training — no filming required',users:'50,000+ creators'}],edge:['Facilitation of complex behavioural change','Senior leader development','Learning culture strategy','Connecting L&D to real business outcomes'],tl:[50,64,78]},
+  'Instructional Designer':  {score:72,dims:[76,62,32,52,12],tasks:['Storyboard creation','Assessment question generation','SCORM content packaging'],agents:[{name:'Articulate AI',workflow:'Automated course authoring from text and source material',users:'120,000+ course creators'},{name:'Lectora AI',workflow:'AI-assisted eLearning development with automated interaction generation',users:'100,000+ designers'},{name:'iSpring AI',workflow:'Automated quiz generation and course conversion from documents',users:'59,000+ companies'}],edge:['Learning science application to novel contexts','Subject matter expert relationship and extraction','Complex simulation design','Accessibility and inclusive design decisions'],tl:[55,68,82]},
+  'Corporate Trainer':       {score:65,dims:[68,55,48,50,12],tasks:['Training deck creation','Pre and post assessment generation','Follow-up resource compilation'],agents:[{name:'Synthesia',workflow:'AI video training content — presenter and content generated autonomously',users:'50,000+ creators'},{name:'360Learning AI',workflow:'AI collaborative learning with automated content generation from SME input',users:'1,700+ companies'},{name:'Kahoot AI',workflow:'Automated quiz and engagement content generation for training sessions',users:'300M+ users'}],edge:['Live facilitation of difficult conversations','Behavioural change coaching','Reading the room and adapting in real time','Relationship with learners over time'],tl:[48,60,76]},
+  'Head of Learning':        {score:30,dims:[26,22,72,65,14],tasks:['L&D strategy documentation','Learning impact reporting','Board L&D updates'],agents:[{name:'Docebo AI',workflow:'Automated learning intelligence and executive L&D reporting',users:'3,000+ enterprises'},{name:'Degreed AI',workflow:'Skills intelligence platform with automated learning pathway recommendations',users:'400+ enterprises'},{name:'LinkedIn Learning AI',workflow:'AI-personalised learning recommendations at organisational scale',users:'16,000+ organisations'}],edge:['Learning culture leadership','CEO and board relationship','Connecting learning to business strategy','Talent development philosophy'],tl:[16,26,38]},
+  'Curriculum Designer':     {score:62,dims:[65,54,35,55,16],tasks:['Curriculum framework documentation','Learning objective writing','Assessment design templates'],agents:[{name:'Articulate AI',workflow:'Automated curriculum structure and content generation',users:'120,000+ creators'},{name:'Canva AI',workflow:'Automated learning material design and formatting',users:'150M+ users'},{name:'ChatGPT Enterprise',workflow:'Curriculum mapping, objective generation and assessment creation',users:'600,000+ organisations'}],edge:['Learning science applied to novel domains','Stakeholder co-design facilitation','Cultural adaptation of curriculum','Accessibility and equity design'],tl:[44,58,72]}
+};
+
+// Country modifier — some countries have faster/slower adoption
+const countryModifier = {
+  'United States':1.05,'United Kingdom':1.02,'Canada':1.0,'Australia':1.0,
+  'Ireland':1.0,'India':0.92,'Germany':0.95,'France':0.93,'Netherlands':1.02,
+  'Sweden':1.03,'Switzerland':1.0,'Spain':0.90,'Italy':0.88,
+  'Singapore':1.04,'UAE':0.98,'New Zealand':0.98,'South Africa':0.88
+};
+
+function onSelChange(){ }
+
+function onDeptChange(){
+  const dept = document.getElementById('sel-dept').value;
+  const roleSelect = document.getElementById('sel-role');
+  roleSelect.innerHTML = '<option value="">Select role</option>';
+  if(dept && rolesByDept[dept]){
+    rolesByDept[dept].forEach(r=>{
+      const o = document.createElement('option');
+      o.value = r; o.textContent = r;
+      roleSelect.appendChild(o);
+    });
+  }
+  document.getElementById('teaser-result').style.display='none';
+}
+
+function onRoleChange(){
+  const role = document.getElementById('sel-role').value;
+  const country = document.getElementById('sel-country').value || 'United Kingdom';
+  if(!role) return;
+  const data = roleData[role];
+  if(!data) return;
+
+  const mod = countryModifier[country] || 1.0;
+  const score = Math.min(99, Math.round(data.score * mod));
+  const dims = data.dims.map(d => Math.min(99, Math.round(d * mod)));
+
+  // Show teaser result
+  document.getElementById('teaser-result').style.display='block';
+  document.getElementById('teaser-result').style.animation='fadeUp 0.5s ease';
+
+  // Score
+  const scoreEl = document.getElementById('score-num');
+  const badgeEl = document.getElementById('score-badge');
+  scoreEl.textContent = score + '%';
+  document.getElementById('score-title').textContent = role + ' — AI Exposure Score';
+
+  let level, levelClass, badgeClass;
+  if(score>=70){ level='High Exposure'; levelClass='high'; badgeClass='badge-high'; }
+  else if(score>=45){ level='Moderate Exposure'; levelClass='mid'; badgeClass='badge-mid'; }
+  else { level='Lower Exposure'; levelClass='low'; badgeClass='badge-low'; }
+
+  scoreEl.className = 'score-big ' + levelClass;
+  badgeEl.textContent = level;
+  badgeEl.className = 'score-badge ' + badgeClass;
+
+  const descMap = {
+    high: 'AI agents can already perform the majority of tasks in this role. The shift is happening now.',
+    mid: 'AI is automating significant parts of this role. The window to adapt is 12-18 months.',
+    low: 'This role has meaningful protection from agentic AI — for now. Strategic awareness is key.'
+  };
+  document.getElementById('score-desc').textContent = descMap[levelClass];
+
+  // Dimension bars
+  const dimIds = ['task','decision','relation','creative','reg'];
+  const dimFills = [dims[0],dims[1],dims[2],dims[3],dims[4]];
+  dimIds.forEach((id,i)=>{
+    const fill = document.getElementById('bar-'+id);
+    const pct = document.getElementById('pct-'+id);
+    setTimeout(()=>{ fill.style.width=dimFills[i]+'%'; },100);
+    pct.textContent = dimFills[i]+'%';
+    fill.className = 'dim-fill ' + (dimFills[i]>=65?'fill-red':dimFills[i]>=40?'fill-amber':'fill-green');
+  });
+
+  // Free tasks (show first 3)
+  const taskList = document.getElementById('free-tasks-list');
+  taskList.innerHTML = data.tasks.slice(0,3).map(t=>`
+    <div class="task-item">
+      <div class="task-icon">
+        <svg viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="#E05050" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="task-text">${t}</div>
+    </div>
+  `).join('');
+
+  // Store data for unlock
+  window._currentRole = role;
+  window._currentData = data;
+  window._currentMod = mod;
+
+  // Reset gate
+  document.getElementById('gate-section').style.display='block';
+  document.getElementById('full-report').classList.remove('unlocked');
+  document.getElementById('gate-name').value='';
+  document.getElementById('gate-email').value='';
+
+  // Scroll to result
+  setTimeout(()=>document.getElementById('teaser-result').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function unlockReport(){
+  const name = document.getElementById('gate-name').value.trim();
+  const email = document.getElementById('gate-email').value.trim();
+  const consent = document.getElementById('gate-consent').checked;
+  if(!name || !email || !email.includes('@')){ alert('Please enter your name and a valid email to unlock the full report.'); return; }
+  if(!consent){ alert('Please confirm you agree to our Privacy Policy to continue.'); return; }
+
+  const data = window._currentData;
+  const mod = window._currentMod;
+  const role = window._currentRole || '';
+  const country = document.getElementById('sel-country').value || '';
+  const dept = document.getElementById('sel-dept').value || '';
+  const score = document.getElementById('score-num').textContent || '';
+
+  // ── PABBLY WEBHOOK — report gate lead capture ──
+  // Replace PABBLY_WEBHOOK_URL_REPORT with your Pabbly Connect webhook URL
+  const PABBLY_WEBHOOK_REPORT = 'PABBLY_WEBHOOK_URL_REPORT';
+  if(PABBLY_WEBHOOK_REPORT !== 'PABBLY_WEBHOOK_URL_REPORT'){
+    fetch(PABBLY_WEBHOOK_REPORT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: 'shiftid_report',
+        first_name: name,
+        email: email,
+        country: country,
+        department: dept,
+        role: role,
+        ai_exposure_score: score,
+        consent: true,
+        consent_timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
+      })
+    }).catch(()=>{}); // Silent fail — never block the user experience
+  }
+
+  // Hide gate, show full report
+  document.getElementById('gate-section').style.display='none';
+  const fr = document.getElementById('full-report');
+  fr.classList.add('unlocked');
+
+  // Agents
+  const agentsList = document.getElementById('agents-list');
+  agentsList.innerHTML = data.agents.map(a=>`
+    <div class="agent-card">
+      <div class="agent-name">${a.name}</div>
+      <div class="agent-workflow">${a.workflow}</div>
+      <div class="agent-users">${a.users}</div>
+    </div>
+  `).join('');
+
+  // Human edge
+  const edgeList = document.getElementById('edge-list');
+  edgeList.innerHTML = data.edge.map(e=>`
+    <div class="edge-item">
+      <div class="edge-dot"></div>
+      <div class="edge-text">${e}</div>
+    </div>
+  `).join('');
+
+  // Timeline
+  const tl = data.tl.map(v=>Math.min(99,Math.round(v*mod)));
+  setTimeout(()=>{
+    document.getElementById('tl-now').style.width=tl[0]+'%';
+    document.getElementById('tl-now').textContent=tl[0]+'% of tasks automated';
+    document.getElementById('tl-6m').style.width=tl[1]+'%';
+    document.getElementById('tl-6m').textContent=tl[1]+'% of tasks automated';
+    document.getElementById('tl-18m').style.width=tl[2]+'%';
+    document.getElementById('tl-18m').textContent=tl[2]+'% of tasks automated';
+  },100);
+
+  fr.scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
