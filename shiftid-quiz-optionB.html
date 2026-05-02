@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShiftID — Identity Mirror Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #F4F2EE;
+  --bg2:      #FFFFFF;
+  --bg3:      #ECEAE5;
+  --border:   rgba(0,0,0,0.08);
+  --gold:     #B8852A;
+  --gold2:    #D4A84B;
+  --goldDim:  rgba(184,133,42,0.08);
+  --dark:     #0D0C18;
+  --text:     #1A1828;
+  --text2:    #6B6680;
+  --text3:    #9994B0;
+  --green:    #2A8C5A;
+  --serif:    'Playfair Display', Georgia, serif;
+  --sans:     'Outfit', system-ui, sans-serif;
+  /* Mirror screen dark vars */
+  --m-bg:    #0D0C18;
+  --m-bg2:   #13121E;
+  --m-border:rgba(255,255,255,0.08);
+  --m-text:  #EAE8F2;
+  --m-text2: #9994B0;
+  --m-gold:  #D4A84B;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background 0.6s ease}
+body.mirror-active{background:var(--m-bg)}
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+nav{padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--bg2);transition:background 0.6s,border-color 0.6s}
+body.mirror-active nav{background:rgba(13,12,24,0.95);border-color:rgba(255,255,255,0.07)}
+.logo{font-size:19px;font-weight:700;color:var(--gold)}
+.logo span{color:var(--text);font-weight:300;transition:color 0.6s}
+body.mirror-active .logo span{color:#EAE8F2}
+.nav-progress{font-size:12px;color:var(--text3);letter-spacing:1px;transition:color 0.6s}
+body.mirror-active .nav-progress{color:rgba(255,255,255,0.3)}
+
+/* PROGRESS */
+.progress-wrap{height:3px;background:rgba(0,0,0,0.06);transition:background 0.6s}
+body.mirror-active .progress-wrap{background:rgba(255,255,255,0.05)}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:0 2px 2px 0;transition:width 0.5s ease}
+
+/* MAIN */
+.quiz-main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.quiz-card{width:100%;max-width:600px}
+
+.screen{display:none;animation:fadeIn 0.4s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* NAME SCREEN — light */
+/* NAME SCREEN */
+.name-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.name-title{font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:400;line-height:1.15;margin-bottom:8px;color:var(--text)}
+.name-title em{color:var(--gold);font-style:italic}
+.name-sub{font-size:15px;font-weight:300;color:var(--text2);line-height:1.65;margin-bottom:28px}
+
+/* Form fields */
+.field-wrap{margin-bottom:16px}
+.field-wrap label{display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.name-input{width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 18px;font-family:var(--sans);font-size:16px;color:var(--text);outline:none;transition:border-color 0.2s}
+.name-input:focus{border-color:var(--gold)}
+.name-input::placeholder{color:var(--text3)}
+
+/* Two-col row */
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+
+/* Dropdown */
+.sel-field{width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:14px 18px;font-family:var(--sans);font-size:15px;color:var(--text);outline:none;cursor:pointer;appearance:none;transition:border-color 0.2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6680' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.sel-field:focus{border-color:var(--gold)}
+.sel-field option{background:var(--bg2);color:var(--text)}
+.sel-field.placeholder{color:var(--text3)}
+
+.trust-mini{font-size:12px;color:var(--text3);margin-bottom:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+
+/* Q SCREEN — light */
+.q-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.q-num-badge{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:var(--goldDim);border:1px solid rgba(184,133,42,0.2);padding:5px 14px;border-radius:20px}
+.q-of{font-size:12px;color:var(--text3)}
+.q-text{font-family:var(--serif);font-size:clamp(20px,3vw,27px);font-weight:400;line-height:1.3;margin-bottom:28px;color:var(--text)}
+
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.opt{display:flex;align-items:flex-start;gap:14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;cursor:pointer;transition:all 0.2s;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.opt:hover{border-color:rgba(184,133,42,0.35);background:var(--goldDim);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.opt.selected{border-color:var(--gold);background:var(--goldDim)}
+.opt-letter{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text3);flex-shrink:0;transition:all 0.2s}
+.opt.selected .opt-letter{background:var(--gold);border-color:var(--gold);color:#fff}
+.opt-text{font-size:15px;font-weight:400;color:var(--text2);line-height:1.5;padding-top:4px;transition:color 0.2s}
+.opt.selected .opt-text{color:var(--text)}
+
+/* MIRROR SCREEN — dark consultation room */
+.mirror-screen-inner{background:var(--m-bg);border-radius:24px;padding:36px;border:1px solid rgba(212,168,75,0.12)}
+.mirror-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m-gold);margin-bottom:16px}
+.mirror-q{font-family:var(--serif);font-size:clamp(20px,3vw,26px);font-weight:400;line-height:1.35;color:var(--m-text);margin-bottom:8px}
+.mirror-hint{font-size:13px;color:var(--m-text2);font-style:italic;margin-bottom:20px}
+.mirror-textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--m-border);border-radius:12px;padding:16px 18px;font-family:var(--sans);font-size:15px;font-weight:300;color:var(--m-text);line-height:1.65;resize:none;outline:none;min-height:130px;transition:border-color 0.2s}
+.mirror-textarea::placeholder{color:var(--m-text2);opacity:0.5}
+.mirror-textarea:focus{border-color:rgba(212,168,75,0.35)}
+.mirror-footer{display:flex;justify-content:space-between;margin-top:10px}
+.word-count{font-size:12px;color:var(--m-text2)}
+.word-count.warn{color:var(--m-gold)}
+.mirror-disclaimer{font-size:12px;color:rgba(153,148,176,0.6);font-style:italic;line-height:1.5;margin-top:16px;padding-top:16px;border-top:1px solid var(--m-border)}
+.mirror-nav{margin-top:24px;display:flex;align-items:center;gap:16px}
+.btn-back-mirror{background:none;border:none;font-family:var(--sans);font-size:14px;color:var(--m-text2);cursor:pointer;padding:8px 0;transition:color 0.2s}
+.btn-back-mirror:hover{color:var(--m-text)}
+
+/* ANALYSING — dark */
+.analysing-wrap{text-align:center;padding:40px 0}
+.analysing-wrap.light{color:var(--text)}
+.analysing-icon{width:72px;height:72px;border-radius:50%;background:var(--goldDim);border:2px solid rgba(184,133,42,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 28px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(184,133,42,0.15)}50%{transform:scale(1.04);box-shadow:0 0 20px 6px rgba(184,133,42,0.08)}}
+.analysing-title{font-family:var(--serif);font-size:28px;font-weight:400;margin-bottom:12px;color:var(--m-text)}
+.analysing-title em{color:var(--m-gold);font-style:italic}
+.analysing-steps{list-style:none;margin:24px 0;display:flex;flex-direction:column;gap:10px}
+.a-step{font-size:14px;color:rgba(153,148,176,0.5);display:flex;align-items:center;gap:10px;justify-content:center;opacity:0;transition:opacity 0.5s,color 0.5s}
+.a-step.visible{opacity:1;color:var(--m-text2)}
+.a-step.done{color:var(--green)}
+.a-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* BTN */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-size:16px;font-weight:700;color:#fff;background:var(--gold);padding:17px 52px;border-radius:80px;border:none;cursor:pointer;transition:all 0.25s}
+.btn:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(184,133,42,0.3)}
+.btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-wrap{display:flex;align-items:center;gap:16px;margin-top:4px}
+.btn-back{background:none;border:none;font-family:var(--sans);font-size:14px;color:var(--text3);cursor:pointer;padding:8px 0;transition:color 0.2s}
+.btn-back:hover{color:var(--text2)}
+
+footer{padding:20px 32px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--text3);transition:border-color 0.6s,color 0.6s}
+body.mirror-active footer{border-color:rgba(255,255,255,0.06);color:rgba(153,148,176,0.4)}
+footer a{color:inherit;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="page">
+
+<nav>
+  <div class="logo">Shift<span>ID</span></div>
+  <div class="nav-progress" id="nav-progress">Identity Mirror Quiz</div>
+</nav>
+<div class="progress-wrap">
+  <div class="progress-fill" id="progress-bar" style="width:0%"></div>
+</div>
+
+<main class="quiz-main">
+<div class="quiz-card">
+
+  <!-- NAME -->
+  <div class="screen active" id="screen-name">
+    <div class="name-eyebrow">Before we begin</div>
+    <h1 class="name-title">What should we call <em>you?</em></h1>
+    <p class="name-sub">Your result is personalised to you. 10 questions. 2 minutes. No signup needed.</p>
+
+    <div class="field-wrap">
+      <label>Your first name</label>
+      <input class="name-input" type="text" id="user-name" placeholder="Enter your first name" maxlength="40" autocomplete="given-name" oninput="checkNameReady()">
+    </div>
+
+    <div class="trust-mini">
+      <span>✓ Free</span>
+      <span>✓ No account needed</span>
+      <span>✓ 10 questions</span>
+      <span>✓ Instant result</span>
+    </div>
+
+    <button class="btn" id="btn-name" onclick="startQuiz()" disabled>Let's begin →</button>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="screen" id="screen-q"></div>
+
+  <!-- MIRROR -->
+  <div class="screen" id="screen-mirror">
+    <div class="mirror-screen-inner">
+      <div class="q-meta" style="margin-bottom:20px">
+        <div class="q-num-badge" style="background:rgba(212,168,75,0.12);border-color:rgba(212,168,75,0.25);color:var(--m-gold)">Question 5 of 10</div>
+        <div class="q-of" style="color:var(--m-text2)">The Mirror Question</div>
+      </div>
+      <div class="mirror-label">In your own words</div>
+      <div class="mirror-q">What would you lose if your job title disappeared tomorrow?</div>
+      <div class="mirror-hint">Take 30 seconds. Be honest. Nobody else will see this.</div>
+      <textarea class="mirror-textarea" id="mirror-text" placeholder="Write whatever comes to mind first..." maxlength="900" oninput="updateWordCount()"></textarea>
+      <div class="mirror-footer">
+        <div class="word-count" id="word-count">0 / 150 words</div>
+      </div>
+      <div class="mirror-disclaimer">This is a reflective tool, not a clinical assessment. Your result is based on your answers in this moment — it may look different if you take it again. That's not a bug. That's you.<br><br>Your response is stored securely, used only in anonymised form, and never attributed to you. <a href="https://shiftid.ai/privacy.html" target="_blank" style="color:var(--m-gold)">Privacy Policy</a> · <a href="mailto:privacy@shiftid.ai" style="color:var(--m-gold)">Request deletion</a></div>
+    </div>
+    <div class="mirror-nav">
+      <button class="btn-back-mirror" onclick="goBack()">← Back</button>
+      <button class="btn" id="btn-mirror" onclick="nextFromMirror()" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- ANALYSING -->
+  <div class="screen" id="screen-analysing">
+    <div class="analysing-wrap">
+      <div class="analysing-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D4A84B" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <h2 class="analysing-title">Analysing <em id="name-display-a">your</em> answers</h2>
+      <p style="font-size:14px;color:var(--m-text2);margin-bottom:8px">Reading your identity pattern across four dimensions</p>
+      <ul class="analysing-steps">
+        <li class="a-step" id="as1"><span class="a-dot"></span>Reading your identity signals</li>
+        <li class="a-step" id="as2"><span class="a-dot"></span>Mapping your Mirror response</li>
+        <li class="a-step" id="as3"><span class="a-dot"></span>Scoring across four patterns</li>
+        <li class="a-step" id="as4"><span class="a-dot"></span>Building your personalised report</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer>ShiftID · AI Shift Digital Ltd · <a href="https://shiftid.ai/privacy.html">Privacy</a> · <a href="https://shiftid.ai/terms.html">Disclaimer</a></footer>
+</div>
+
+<script>
+const questions=[
+  {id:1,signal:'identity',text:'When someone asks "what do you do?" — what\'s the first thing that comes to mind?',opts:['My job title','The problems I solve','The value I create for people','I usually deflect or say it\'s complicated']},
+  {id:2,signal:'exposure',text:'How much of what you did at work 3 years ago could an AI agent do today?',opts:['Almost none of it','Maybe 20–30%','Probably half','Honestly, most of it']},
+  {id:3,signal:'worth',key:true,text:'If your job title disappeared tomorrow, how would your sense of self-worth be affected?',opts:['Barely — I know who I am beyond my role','Somewhat — it would take adjustment','Significantly — my role is central to how I see myself','Completely — I don\'t know who I\'d be']},
+  {id:4,signal:'output',text:'On your best days at work, what makes you feel most valuable?',opts:['Delivering a specific output or result','How I think through problems','The relationships and trust I\'ve built','My ability to lead and adapt to what\'s needed']},
+  {id:6,signal:'anxiety',key:true,text:'In the last 6 months, have you felt a quiet unease about where AI is taking your career — even if you haven\'t said it out loud?',opts:['No — I feel confident and clear','Occasionally — but I push it aside','Yes — more often than I\'d like to admit','Constantly — it\'s affecting how I show up']},
+  {id:7,signal:'skill',text:'If AI could do your core skill better than you by next year, which feels most true?',opts:['I\'d find a new skill — I\'m defined by adaptability','I\'d struggle — that skill took years to build','I\'d feel lost — that skill is a big part of who I am','I\'m already thinking about this and don\'t have an answer']},
+  {id:8,signal:'linkedin',text:'How much does your LinkedIn profile reflect who you actually are — vs who you need to appear to be?',opts:['Completely authentic — it\'s genuinely me','Mostly me with some professional polish','It\'s a performance — the real me is different','I haven\'t thought about it but now I\'m uncomfortable']},
+  {id:9,signal:'adaptation',text:'When your organisation introduces a new AI tool or process, what\'s your honest first reaction?',opts:['Curiosity — I want to understand and use it','Caution — I assess before I engage','Resistance — change feels threatening','Anxiety — I worry about what it means for my role']},
+  {id:10,signal:'self',key:true,text:'Outside of work, how clearly can you describe who you are?',opts:['Very clearly — I have a strong sense of self beyond my career','Somewhat — work and identity blur more than I\'d like','Not very clearly — most of my identity is career-related','I find this question genuinely difficult to answer']},
+  {id:11,signal:'action',text:'If you knew AI would replace 60% of your current role within 2 years — what would you do today?',opts:['Start building — I\'d pivot immediately with clarity','Research — I\'d gather information before acting','Wait and see — I\'d hope it doesn\'t affect me','Panic — I genuinely don\'t know where I\'d start']}
+];
+
+let userName='',userCountry='',userDept='',userRole='',answers={},mirrorText='',qIndex=0,phase='before-mirror';
+
+function checkNameReady(){
+  const name=document.getElementById('user-name').value.trim();
+  document.getElementById('btn-name').disabled=name.length<2;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const nameInput=document.getElementById('user-name');
+  if(nameInput){
+    nameInput.addEventListener('keydown',function(e){
+      if(e.key==='Enter'&&this.value.trim().length>=2) startQuiz();
+    });
+  }
+});
+
+function startQuiz(){
+  userName=document.getElementById('user-name').value.trim();
+  qIndex=0;phase='before-mirror';
+  showQuestion();
+}
+
+function showQuestion(){
+  let q;
+  if(phase==='before-mirror'){if(qIndex<4){q=questions[qIndex];}else{showMirror();return;}}
+  else{if(qIndex<questions.length){q=questions[qIndex];}else{showAnalysing();return;}}
+
+  // Sequential display number: before-mirror = 1-4, mirror = 5, after-mirror = 6-10
+  const qNum = phase==='before-mirror' ? qIndex+1 : Math.min(qIndex+2, 10);
+  updateProgress(Math.round((qNum/10)*100),`Question ${qNum} of 10`);
+
+  const letters=['A','B','C','D'];
+  const labels={identity:'Identity',exposure:'AI Exposure',worth:'Self-Worth',output:'Value Source',anxiety:'Awareness',skill:'Skill Layer',linkedin:'Professional Layer',adaptation:'Adaptability',self:'Core Self',action:'Readiness'};
+  const alreadyAnswered = answers[q.id] !== undefined;
+
+  document.getElementById('screen-q').innerHTML=`
+    <div class="q-meta">
+      <div class="q-num-badge">Question ${qNum} of 10</div>
+      <div class="q-of">${labels[q.signal]||''}</div>
+    </div>
+    <div class="q-text">${q.text}</div>
+    <div class="options" id="opts-wrap">
+      ${q.opts.map((o,i)=>`<div class="opt${alreadyAnswered && answers[q.id]===i?' selected':''}" id="opt-${i}" onclick="selectOpt(${q.id},${i})"><div class="opt-letter">${letters[i]}</div><div class="opt-text">${o}</div></div>`).join('')}
+    </div>
+    <div class="btn-wrap">
+      <button class="btn-back" onclick="goBack()">← Back</button>
+      <button class="btn" id="btn-next" onclick="nextQ(${q.id})" ${alreadyAnswered?'':'disabled'}>Continue →</button>
+    </div>`;
+  showScreen('screen-q');
+  document.body.classList.remove('mirror-active');
+}
+
+function selectOpt(qId,i){
+  answers[qId]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>el.classList.toggle('selected',idx===i));
+  document.getElementById('btn-next').disabled=false;
+}
+
+function nextQ(qId){
+  if(answers[qId]===undefined)return;
+  if(phase==='before-mirror'){qIndex++;if(qIndex>=4){showMirror();return;}}
+  else{qIndex++;}
+  showQuestion();
+}
+
+function showMirror(){
+  updateProgress(50,'Question 5 of 10');
+  showScreen('screen-mirror');
+  document.body.classList.add('mirror-active');
+}
+
+function nextFromMirror(){
+  mirrorText=document.getElementById('mirror-text').value.trim();
+  if(mirrorText.length<20)return;
+  phase='after-mirror';qIndex=4;
+  document.body.classList.remove('mirror-active');
+  showQuestion();
+}
+
+function goBack(){
+  document.body.classList.remove('mirror-active');
+  if(phase==='before-mirror'){if(qIndex===0){showScreen('screen-name');updateProgress(0,'Identity Mirror Quiz');return;}qIndex--;}
+  else{if(qIndex===4){showMirror();return;}qIndex--;}
+  showQuestion();
+}
+
+function updateWordCount(){
+  const ta=document.getElementById('mirror-text');
+  const words=ta.value.trim()===''?0:ta.value.trim().split(/\s+/).length;
+  const wc=document.getElementById('word-count');
+  wc.textContent=`${words} / 150 words`;
+  wc.classList.toggle('warn',words>=140);
+  document.getElementById('btn-mirror').disabled=ta.value.trim().length<20;
+}
+
+function showAnalysing(){
+  updateProgress(100,'Analysing your results');
+  document.getElementById('name-display-a').textContent=userName+'\'s';
+  document.body.classList.add('mirror-active');
+  showScreen('screen-analysing');
+  ['as1','as2','as3','as4'].forEach((id,i)=>{
+    setTimeout(()=>{
+      document.getElementById(id).classList.add('visible');
+      setTimeout(()=>document.getElementById(id).classList.add('done'),800);
+    },i*900);
+  });
+  setTimeout(()=>{
+    const pattern=calculatePattern();
+
+    // ── PABBLY WEBHOOK — quiz completion lead capture ──
+    // Replace PABBLY_WEBHOOK_URL_QUIZ with your Pabbly Connect webhook URL
+    const PABBLY_WEBHOOK_QUIZ = 'PABBLY_WEBHOOK_URL_QUIZ';
+    if(PABBLY_WEBHOOK_QUIZ !== 'PABBLY_WEBHOOK_URL_QUIZ'){
+      fetch(PABBLY_WEBHOOK_QUIZ, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'shiftid_quiz',
+          first_name: userName,
+          country: userCountry,
+          department: userDept,
+          role: userRole,
+          identity_pattern: pattern,
+          timestamp: new Date().toISOString()
+        })
+      }).catch(()=>{}); // Silent fail — never block the user experience
+    }
+
+    const params=new URLSearchParams({name:userName,country:userCountry,dept:userDept,role:userRole,pattern,mirror:mirrorText.substring(0,200),a1:answers[1]||0,a2:answers[2]||0,a3:answers[3]||0,a4:answers[4]||0,a6:answers[6]||0,a7:answers[7]||0,a8:answers[8]||0,a9:answers[9]||0,a10:answers[10]||0,a11:answers[11]||0});
+    window.location.href='https://shiftid.ai/shiftid-result.html?'+params.toString();
+  },4500);
+}
+
+function calculatePattern(){
+  const scores={expert:0,doubter:0,shifter:0,leader:0};
+  const a1=[0,2,3,1];scores.expert+=a1[answers[1]||0]*8;scores.leader+=(3-(answers[1]||0))*8;
+  const exp=[0,10,20,30];scores.expert+=exp[answers[2]||0];scores.doubter+=exp[answers[2]||0]*0.7;
+  const wa=[0,1,2,3][answers[3]||0];scores.expert+=wa*15;scores.doubter+=wa*10;scores.leader+=(3-wa)*15;scores.shifter+=(3-wa)*8;
+  const o4=[3,1,1,0];scores.expert+=o4[answers[4]||0]*8;scores.leader+=(3-o4[answers[4]||0])*6;
+  const av=[0,1,2,3][answers[6]||0];scores.doubter+=av*14;scores.expert+=av*8;scores.shifter+=(av===1?10:0);
+  const a7=[0,2,3,2];scores.expert+=a7[answers[7]||0]*7;scores.shifter+=(answers[7]===0?15:0);
+  const a8=[0,1,2,3][answers[8]||0];scores.doubter+=a8*8;scores.leader+=(3-a8)*6;
+  scores.shifter+=(answers[9]===0?20:0);scores.expert+=([0,1,2,3][answers[9]||0])*6;
+  const sv=[0,1,2,3][answers[10]||0];scores.leader+=(3-sv)*15;scores.doubter+=sv*10;scores.expert+=sv*8;
+  scores.shifter+=(answers[11]===0?25:answers[11]===1?10:0);scores.doubter+=(answers[11]===3?20:0);scores.expert+=(answers[11]===2?15:0);
+  const mt=mirrorText.toLowerCase();
+  if(/lost|don'?t know|everything|who i am|terrif|anxious|scared/.test(mt))scores.doubter+=20;
+  if(/expertise|skill|knowledge|years|built|experience|reputation/.test(mt))scores.expert+=20;
+  if(/adapt|pivot|figur|already|thinking|building|next/.test(mt))scores.shifter+=20;
+  if(/purpose|people|beyond|bigger|clear|lead|impact/.test(mt))scores.leader+=20;
+  return Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+}
+
+function updateProgress(pct,label){
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('nav-progress').textContent=label;
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
