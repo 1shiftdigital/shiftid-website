@@ -66,6 +66,39 @@ nav{padding:14px 32px;display:flex;align-items:center;justify-content:space-betw
 .consequence-text{font-size:clamp(15px,1.8vw,17px);font-weight:300;color:var(--text2);line-height:1.8}
 .consequence-text em{color:var(--gold);font-style:normal;font-weight:500}
 
+/* EXPOSURE CARD */
+.exposure-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;display:none;animation:fadeUp 0.5s ease}
+.exposure-card.visible{display:block}
+.exposure-top{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;margin-bottom:20px}
+.exposure-score{font-size:42px;font-weight:700;line-height:1}
+.score-high{color:var(--red)}
+.score-mid{color:var(--gold)}
+.score-low{color:var(--green)}
+.exposure-info h4{font-family:var(--serif);font-size:clamp(16px,2vw,20px);font-weight:400;margin-bottom:4px}
+.exposure-info p{font-size:13px;color:var(--text2);line-height:1.5}
+.exposure-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:20px;white-space:nowrap}
+.badge-high{background:rgba(224,80,80,0.1);color:var(--red);border:1px solid rgba(224,80,80,0.2)}
+.badge-mid{background:rgba(212,168,75,0.1);color:var(--gold);border:1px solid rgba(212,168,75,0.2)}
+.badge-low{background:rgba(62,200,138,0.1);color:var(--green);border:1px solid rgba(62,200,138,0.15)}
+.exposure-dims{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.exp-dim{display:grid;grid-template-columns:130px 1fr 36px;gap:10px;align-items:center}
+.exp-label{font-size:12px;color:var(--text2)}
+.exp-track{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.exp-fill{height:100%;border-radius:3px;transition:width 0.8s ease}
+.exp-fill-red{background:var(--red)}
+.exp-fill-gold{background:var(--gold)}
+.exp-fill-green{background:var(--green)}
+.exp-pct{font-size:11px;color:var(--text2);text-align:right}
+.exposure-tasks{margin-bottom:16px}
+.exp-tasks-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.exp-task{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);padding:5px 0;border-bottom:1px solid var(--border)}
+.exp-task:last-child{border-bottom:none}
+.exp-task-dot{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0}
+.exposure-link{font-size:12px;color:var(--text3);text-align:center}
+.exposure-link a{color:var(--gold);text-decoration:none}
+.exposure-link a:hover{text-decoration:underline}
+@media(max-width:600px){.exposure-top{grid-template-columns:auto 1fr};.exp-dim{grid-template-columns:100px 1fr 30px}}
+
 /* PERSONALISE BLOCK */
 .personalise-block{background:var(--bg2);border:1px solid rgba(212,168,75,0.18);border-radius:20px;padding:32px;margin-bottom:28px;animation:fadeUp 0.6s 0.35s both}
 .personalise-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;text-align:center}
@@ -419,6 +452,27 @@ report.innerHTML = `
     <button class="personalise-btn" id="personalise-btn" onclick="applyPersonalisation()" disabled>Update my prompts →</button>
   </div>
 
+  <!-- EXPOSURE CARD — appears after role selection -->
+  <div class="exposure-card" id="exposure-card">
+    <div class="exposure-top">
+      <div class="exposure-score" id="exp-score">--</div>
+      <div class="exposure-info">
+        <h4 id="exp-title">AI Exposure Score</h4>
+        <p id="exp-desc"></p>
+      </div>
+      <div class="exposure-badge" id="exp-badge"></div>
+    </div>
+    <div class="exposure-dims" id="exp-dims"></div>
+    <div class="exposure-tasks">
+      <div class="exp-tasks-label">Already automated in this role today</div>
+      <div id="exp-tasks"></div>
+    </div>
+    <div class="exposure-link">
+      Want the full breakdown including AI agents and 18-month timeline?
+      <a href="https://shiftid.ai/ai-report.html" target="_blank" rel="noopener">See your full AI Role Report →</a>
+    </div>
+  </div>
+
   <!-- PROMPTS INTRO — appears after role selection -->
   <div id="prompt-intro" style="display:none;background:var(--bg2);border:1px solid rgba(212,168,75,0.18);border-left:3px solid var(--gold);border-radius:0 14px 14px 0;padding:20px 24px;margin-bottom:24px;font-size:15px;font-weight:300;color:var(--text2);line-height:1.75;animation:fadeUp 0.5s ease"></div>
 
@@ -541,6 +595,144 @@ function onDeptPersonalise(){
     roleSelect.disabled = false;
   }
   onPersonaliseChange();
+}
+
+// ── ROLE EXPOSURE DATA (subset from ai-report.html) ──
+const roleData = {
+  'Software Engineer':{score:72,dims:[78,55,30,35,20],tasks:['Code generation and boilerplate','Unit test writing','Bug detection and fixing']},
+  'Senior Engineer':{score:58,dims:[65,48,35,42,22],tasks:['Code reviews at scale','Documentation generation','Automated testing pipelines']},
+  'Engineering Manager':{score:38,dims:[30,28,70,60,18],tasks:['Sprint reporting and metrics','Performance review documentation','Automated standup summaries']},
+  'DevOps Engineer':{score:65,dims:[72,60,25,28,30],tasks:['Infrastructure provisioning','Incident detection and initial response','CI/CD pipeline management']},
+  'Tech Lead':{score:45,dims:[40,38,55,52,20],tasks:['Technical spec documentation','Code review at volume','Architecture diagram generation']},
+  'QA Engineer':{score:80,dims:[85,70,20,25,15],tasks:['Test case generation','Regression test automation','Bug report writing']},
+  'Solutions Architect':{score:42,dims:[38,35,58,55,28],tasks:['RFP response drafting','Architecture documentation','Technical proposal generation']},
+  'Data Analyst':{score:78,dims:[82,68,22,30,15],tasks:['Report generation and dashboards','SQL query writing','Data cleaning and transformation']},
+  'Data Scientist':{score:62,dims:[65,58,28,45,20],tasks:['Model selection and tuning','Feature engineering','Experiment tracking and reporting']},
+  'Business Intelligence Analyst':{score:82,dims:[88,72,18,22,12],tasks:['Dashboard creation and maintenance','Scheduled report generation','KPI tracking and alerting']},
+  'Analytics Manager':{score:52,dims:[48,42,48,45,18],tasks:['Team reporting automation','Analytics tool evaluation','Performance tracking documentation']},
+  'Data Engineer':{score:68,dims:[72,60,22,28,25],tasks:['Pipeline construction','Data transformation scripts','Schema documentation']},
+  'ML Engineer':{score:55,dims:[58,50,30,42,22],tasks:['Model deployment pipelines','Hyperparameter tuning','Model monitoring and alerting']},
+  'Marketing Manager':{score:68,dims:[72,52,42,48,12],tasks:['Content brief creation','Campaign performance reporting','Email sequence drafting']},
+  'Content Strategist':{score:72,dims:[78,58,35,52,10],tasks:['Content calendar generation','SEO brief writing','First draft production']},
+  'SEO Specialist':{score:80,dims:[85,72,18,28,10],tasks:['Keyword research and clustering','Meta description writing','Content gap analysis']},
+  'Social Media Manager':{score:76,dims:[80,65,40,50,8],tasks:['Caption and post writing','Content scheduling','Performance reporting']},
+  'Brand Manager':{score:45,dims:[40,35,60,65,10],tasks:['Brand guideline documentation','Competitor monitoring reports','Campaign brief templates']},
+  'Growth Manager':{score:62,dims:[65,55,42,45,10],tasks:['A/B test setup and analysis','Funnel reporting','Growth experiment documentation']},
+  'CMO':{score:28,dims:[25,20,75,70,15],tasks:['Marketing performance dashboard','Board reporting templates','Campaign results summaries']},
+  'Financial Analyst':{score:75,dims:[80,65,20,25,28],tasks:['Financial model updates','Variance analysis reports','Data gathering and reconciliation']},
+  'Accountant':{score:82,dims:[88,70,15,18,32],tasks:['Transaction categorisation','Reconciliation and month-end close','Tax preparation and filing']},
+  'CFO':{score:22,dims:[20,18,78,72,30],tasks:['Board reporting pack generation','Budget variance commentary','Investor update templates']},
+  'FP&A Manager':{score:70,dims:[75,62,30,28,25],tasks:['Budget model updates','Variance reporting','Forecast consolidation']},
+  'Risk Analyst':{score:65,dims:[68,58,28,32,42],tasks:['Risk report generation','Data collection for risk models','Regulatory reporting templates']},
+  'Auditor':{score:70,dims:[75,60,22,25,48],tasks:['Sample selection and data testing','Working paper generation','Audit evidence collection']},
+  'HR Manager':{score:58,dims:[60,45,55,38,22],tasks:['Job description writing','Policy document drafting','Employee query responses']},
+  'Talent Acquisition':{score:72,dims:[78,62,42,30,18],tasks:['CV screening and shortlisting','Job posting optimisation','Interview scheduling']},
+  'People Partner':{score:40,dims:[35,28,72,45,20],tasks:['People analytics reporting','Policy template generation','Engagement survey analysis']},
+  'L&D Manager':{score:65,dims:[68,55,40,48,15],tasks:['Course content drafting','Learning needs analysis reports','Training material formatting']},
+  'CHRO':{score:22,dims:[20,16,80,68,22],tasks:['Board people reporting','HR metrics dashboards','Policy review documentation']},
+  'Compensation Analyst':{score:78,dims:[82,68,18,20,32],tasks:['Salary benchmarking analysis','Compensation modelling','Job levelling documentation']},
+  'HR Director':{score:32,dims:[28,24,75,62,20],tasks:['HR strategy documentation','People metrics reporting','Policy framework drafting']},
+  'Legal Counsel':{score:65,dims:[68,55,45,38,52],tasks:['Contract first draft generation','Legal research and memo drafting','Risk flagging in standard documents']},
+  'Compliance Manager':{score:60,dims:[65,52,38,30,58],tasks:['Policy document drafting','Regulatory change monitoring','Compliance training content']},
+  'Contract Manager':{score:78,dims:[82,70,28,22,45],tasks:['Contract drafting from templates','Obligation extraction and tracking','Renewal alert management']},
+  'General Counsel':{score:28,dims:[25,20,75,68,55],tasks:['Board legal reporting','Policy oversight documentation','External counsel briefing templates']},
+  'Paralegal':{score:85,dims:[90,75,15,18,40],tasks:['Document review and categorisation','Research memo drafting','Deadline and docket tracking']},
+  'Risk & Compliance Officer':{score:55,dims:[58,48,42,32,60],tasks:['Risk register maintenance','Regulatory report generation','Policy compliance monitoring']},
+  'Product Manager':{score:50,dims:[52,42,55,58,12],tasks:['PRD and specification drafting','User story generation','Competitive analysis reports']},
+  'Senior PM':{score:42,dims:[40,35,60,62,12],tasks:['Roadmap documentation','Stakeholder update generation','OKR progress reporting']},
+  'Head of Product':{score:32,dims:[28,25,70,68,14],tasks:['Portfolio reporting','OKR dashboard generation','Team retrospective documentation']},
+  'CPO':{score:22,dims:[18,15,80,75,15],tasks:['Board product reporting','Vision documentation','Quarterly business review prep']},
+  'Product Analyst':{score:75,dims:[80,65,22,28,10],tasks:['Dashboard maintenance','Experiment analysis','Feature usage reporting']},
+  'Product Designer':{score:55,dims:[58,45,48,62,8],tasks:['Wireframe generation','Design system documentation','User flow diagramming']},
+  'Account Executive':{score:52,dims:[55,42,62,45,10],tasks:['Proposal drafting','CRM update and logging','Follow-up email sequences']},
+  'Sales Manager':{score:40,dims:[38,30,68,50,12],tasks:['Pipeline reporting','Coaching notes and documentation','Forecast commentary generation']},
+  'VP Sales':{score:28,dims:[25,20,76,65,14],tasks:['Sales board reporting','Territory plan documentation','Quota modelling']},
+  'Business Development Manager':{score:55,dims:[58,48,58,42,10],tasks:['Outreach message drafting','Market research reports','Partnership proposal templates']},
+  'SDR':{score:82,dims:[88,72,32,20,8],tasks:['Prospecting and list building','Email and LinkedIn outreach','Meeting booking and qualification']},
+  'Revenue Operations':{score:68,dims:[72,60,30,28,15],tasks:['Sales reporting and dashboards','CRM data hygiene automation','Commission calculation']},
+  'Operations Manager':{score:60,dims:[62,50,48,40,28],tasks:['Process documentation','Performance reporting','Vendor communication templates']},
+  'COO':{score:20,dims:[18,14,80,72,30],tasks:['Operational reporting','Board update preparation','KPI dashboard management']},
+  'Supply Chain Manager':{score:70,dims:[74,62,35,30,32],tasks:['Demand forecasting','Supplier communication','Inventory reports']},
+  'Process Analyst':{score:78,dims:[82,70,22,25,25],tasks:['Process mapping and documentation','Performance data analysis','Improvement recommendation reports']},
+  'Project Manager':{score:62,dims:[65,52,42,38,18],tasks:['Status report generation','Risk log maintenance','Meeting minutes and action tracking']},
+  'Programme Manager':{score:48,dims:[45,38,58,45,20],tasks:['Portfolio reporting','Governance documentation','Dependency tracking']},
+  'Strategy Consultant':{score:55,dims:[58,48,50,55,15],tasks:['Market research and synthesis','Slide deck first drafts','Benchmarking data gathering']},
+  'Management Consultant':{score:60,dims:[62,52,48,52,14],tasks:['Data analysis and visualisation','Interview synthesis','Report and deck production']},
+  'Business Analyst':{score:70,dims:[74,62,28,32,16],tasks:['Requirements documentation','Process flow diagramming','Data analysis and reporting']},
+  'Strategy Director':{score:35,dims:[32,26,68,65,18],tasks:['Strategy presentation drafting','Competitive intelligence reports','Board strategy documentation']},
+  'Principal Consultant':{score:40,dims:[38,30,68,60,16],tasks:['Proposal generation','Methodology documentation','Client update reporting']},
+  'Clinical Data Analyst':{score:72,dims:[76,62,20,25,55],tasks:['Clinical report generation','Data cleaning and validation','Statistical analysis outputs']},
+  'Healthcare Administrator':{score:75,dims:[80,65,30,20,42],tasks:['Patient scheduling automation','Insurance authorisation processing','Medical coding and billing']},
+  'Medical Coder':{score:88,dims:[92,80,12,15,45],tasks:['Diagnosis and procedure coding','Coding audit and review','Documentation improvement suggestions']},
+  'Clinical Research Coordinator':{score:60,dims:[62,50,42,38,48],tasks:['Data entry and case report forms','Regulatory document preparation','Patient visit scheduling']},
+  'Health Informaticist':{score:55,dims:[58,48,38,42,52],tasks:['EHR data extraction and reporting','Clinical workflow documentation','Data quality monitoring']},
+  'L&D Specialist':{score:68,dims:[72,58,38,48,14],tasks:['Course content creation','Learning needs analysis','Training material formatting']},
+  'Instructional Designer':{score:72,dims:[76,62,32,52,12],tasks:['Storyboard creation','Assessment question generation','SCORM content packaging']},
+  'Corporate Trainer':{score:65,dims:[68,55,48,50,12],tasks:['Training deck creation','Pre and post assessment generation','Follow-up resource compilation']},
+  'Head of Learning':{score:30,dims:[26,22,72,65,14],tasks:['L&D strategy documentation','Learning impact reporting','Board L&D updates']},
+  'Curriculum Designer':{score:62,dims:[65,54,35,55,16],tasks:['Curriculum framework documentation','Learning objective writing','Assessment design templates']}
+};
+
+const countryModifier = {
+  'United States':1.05,'United Kingdom':1.02,'Canada':1.0,'Australia':1.0,
+  'Ireland':1.0,'India':0.92,'Germany':0.95,'France':0.93,'Netherlands':1.02,
+  'Sweden':1.03,'Switzerland':1.0,'Spain':0.90,'Italy':0.88,
+  'Singapore':1.04,'UAE':0.98,'New Zealand':0.98,'South Africa':0.88
+};
+
+const dimLabels = ['Task Automation','Decision Autonomy','Relationship Risk','Creative Requirement','Regulatory Barrier'];
+
+function renderExposureCard(role, country){
+  const data = roleData[role];
+  const card = document.getElementById('exposure-card');
+  if(!data){ card.classList.remove('visible'); return; }
+
+  const mod = countryModifier[country] || 1.0;
+  const score = Math.min(99, Math.round(data.score * mod));
+  const dims = data.dims.map(d => Math.min(99, Math.round(d * mod)));
+
+  let level, scoreClass, badgeClass, descText;
+  if(score >= 70){
+    level = 'High Exposure'; scoreClass = 'score-high'; badgeClass = 'badge-high';
+    descText = 'AI agents can already perform the majority of tasks in this role. The shift is happening now.';
+  } else if(score >= 45){
+    level = 'Moderate Exposure'; scoreClass = 'score-mid'; badgeClass = 'badge-mid';
+    descText = 'AI is automating significant parts of this role. The window to adapt is 12-18 months.';
+  } else {
+    level = 'Lower Exposure'; scoreClass = 'score-low'; badgeClass = 'badge-low';
+    descText = 'This role has meaningful protection from agentic AI for now. Strategic awareness is key.';
+  }
+
+  document.getElementById('exp-score').textContent = score + '%';
+  document.getElementById('exp-score').className = 'exposure-score ' + scoreClass;
+  document.getElementById('exp-title').textContent = role + ' \u2014 AI Exposure Score';
+  document.getElementById('exp-desc').textContent = descText;
+  document.getElementById('exp-badge').textContent = level;
+  document.getElementById('exp-badge').className = 'exposure-badge ' + badgeClass;
+
+  // Dimension bars
+  document.getElementById('exp-dims').innerHTML = dims.map((v,i) => {
+    const fillClass = v >= 65 ? 'exp-fill-red' : v >= 40 ? 'exp-fill-gold' : 'exp-fill-green';
+    return '<div class="exp-dim">' +
+      '<div class="exp-label">' + dimLabels[i] + '</div>' +
+      '<div class="exp-track"><div class="exp-fill ' + fillClass + '" style="width:0%" data-w="' + v + '%"></div></div>' +
+      '<div class="exp-pct">' + v + '%</div>' +
+    '</div>';
+  }).join('');
+
+  // Animate bars
+  setTimeout(()=>{
+    document.querySelectorAll('#exp-dims .exp-fill').forEach(el=>{
+      el.style.width = el.getAttribute('data-w');
+    });
+  }, 100);
+
+  // Tasks
+  document.getElementById('exp-tasks').innerHTML = data.tasks.slice(0,3).map(t=>
+    '<div class="exp-task"><div class="exp-task-dot"></div>' + t + '</div>'
+  ).join('');
+
+  card.classList.add('visible');
 }
 
 function onPersonaliseChange(){
@@ -823,6 +1015,9 @@ function applyPersonalisation(){
       .replace(/\[A1\]/g, a1)
       .replace(/\[A2\]/g, a2);
   }
+
+  // Render exposure card
+  renderExposureCard(role, country);
 
   // Show intro paragraph
   const introEl = document.getElementById('prompt-intro');
