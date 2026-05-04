@@ -1150,7 +1150,7 @@ function applyPersonalisation(){
     introEl.style.fontStyle = 'italic';
   }
 
-  const WORKER_URL = 'SHIFTID_WORKER_URL';
+  const WORKER_URL = 'https://shiftid-worker.tarangs-059.workers.dev';
   if(WORKER_URL !== 'SHIFTID_WORKER_URL'){
     fetch(WORKER_URL, {
       method: 'POST',
