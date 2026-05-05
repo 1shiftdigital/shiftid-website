@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- © 2026 AI Shift Digital Ltd. All rights reserved. Unauthorised reproduction or reverse engineering of this software is prohibited. -->
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -267,145 +269,15 @@ footer a{color:var(--text3);text-decoration:none}
   }
 })();
 
-// ── PATTERN DATA ──
+// ── PATTERN DATA — served from Worker, minimal shell here ──
 const patterns = {
-  expert: {
-    pill: 'Your Pattern',
-    name: 'The Expert Under Pressure',
-    opening: `You've spent years becoming genuinely excellent at what you do. That expertise is real — and it's earned. But somewhere in the last 12–18 months, something shifted. The skills that made you indispensable are starting to feel less secure. Not because you've lost them — but because AI is acquiring them faster than the market can keep up with. Your identity is still largely built on what you know and what you deliver. That's the pressure point.`,
-    bars: [
-      {name:'Expert Under Pressure',pct:78,cls:'bf-red',sub:'Your sense of self is closely tied to your skills and output'},
-      {name:'Quiet Doubter',pct:45,cls:'bf-gold',sub:'The anxiety is there — you\'re just not saying it out loud'},
-      {name:'Conscious Shifter',pct:32,cls:'bf-purple',sub:'You\'re already moving — you just need the structure to go further'},
-      {name:'Identity-First Leader',pct:21,cls:'bf-green',sub:'Who you are exists independently of what you do'}
-    ],
-    consequence: `The good news is your foundation is strong. The shift you need isn't about learning new skills — you've been doing that your whole career. It's about <em>separating who you are from what you produce.</em> That's the work these prompts are built to start.`,
-    prompts: {
-      free: [
-        {
-          title: 'Reframe your value beyond output',
-          text: `I am a [YOUR ROLE] with [X] years of experience. My work has primarily been valued through [specific output or deliverable]. AI can now replicate much of that output. Help me identify and articulate the value I provide that exists independently of that output — specifically around judgement, relationships, and context that AI cannot replicate. Give me 5 concrete statements I can use in professional conversations.`
-        },
-        {
-          title: 'Audit your role for AI exposure',
-          text: `Here is a list of my 10 most common weekly tasks as a [YOUR ROLE]: [LIST YOUR TASKS]. For each one, tell me: (1) can an AI agent do this today, (2) how long before it does it better than me, (3) what uniquely human element, if any, remains. Be direct and don't soften the assessment.`
-        }
-      ],
-      locked: [
-        'Rebuild your professional identity narrative for the AI era',
-        'Create your "human edge" positioning statement',
-        'Design your 90-day identity shift roadmap',
-        'Rewrite your LinkedIn profile for identity-first positioning'
-      ]
-    },
-    nextStep: 'stage2',
-    ctaTitle: 'The shift you need isn\'t about new skills.',
-    ctaSub: 'It\'s about knowing who you are without them. Stage 2 gives you the framework, the AI analysis and the specific path forward for your pattern.'
-  },
-
-  doubter: {
-    pill: 'Your Pattern',
-    name: 'The Quiet Doubter',
-    opening: `You feel it but you haven't said it out loud yet. There's a quiet background anxiety about where all of this is going — for your role, your industry, and honestly, your sense of self. Most of your peers look confident on LinkedIn. You wonder if they're feeling what you're feeling, or whether you're the only one who sees it. You're not. You're actually ahead of most people — because you're honest enough to acknowledge the uncertainty.`,
-    bars: [
-      {name:'Expert Under Pressure',pct:41,cls:'bf-gold',sub:'Your expertise is real but it\'s not where your anxiety lives'},
-      {name:'Quiet Doubter',pct:82,cls:'bf-red',sub:'The uncertainty is signal — your instincts are working'},
-      {name:'Conscious Shifter',pct:28,cls:'bf-purple',sub:'The awareness is there — the movement hasn\'t started yet'},
-      {name:'Identity-First Leader',pct:18,cls:'bf-green',sub:'There\'s a stronger sense of self here than you realise'}
-    ],
-    consequence: `The anxiety you're carrying isn't weakness — it's signal. It means your instincts are working. What you need now isn't reassurance. It's <em>clarity.</em> A clear picture of exactly where you stand — and a specific next step.`,
-    prompts: {
-      free: [
-        {
-          title: 'Name the anxiety clearly',
-          text: `I am a [YOUR ROLE] and I've been feeling a quiet but persistent anxiety about AI and the future of my work. I haven't fully articulated it yet. Help me name it precisely. Here's what I know: [DESCRIBE WHAT YOU'VE BEEN FEELING IN 3-5 SENTENCES]. Now give me: (1) the specific fear underneath this, (2) whether that fear is rational given current AI capability, (3) one concrete action I could take this week that would give me more clarity.`
-        },
-        {
-          title: 'Separate the fear from the fact',
-          text: `I work as a [YOUR ROLE] in [INDUSTRY]. Here are my three biggest worries about AI and my career: [LIST THEM]. For each worry, help me separate what is factually happening right now from what I am projecting or fearing might happen. Then give me one question I should be asking myself about each one.`
-        }
-      ],
-      locked: [
-        'Build your personal AI clarity framework in 7 days',
-        'Design your identity anchor statement for uncertainty',
-        'Create your "signal vs noise" filter for AI news',
-        'Write your 6-month clarity-to-action plan'
-      ]
-    },
-    nextStep: 'stage2',
-    ctaTitle: 'Clarity is a decision, not a feeling.',
-    ctaSub: 'Stage 2 gives you the structure to turn the anxiety into a clear picture — and a specific path forward built for exactly where you are.'
-  },
-
-  shifter: {
-    pill: 'Your Pattern',
-    name: 'The Conscious Shifter',
-    opening: `You're already moving. You've seen what's coming and you're not waiting for it to happen to you. You're actively thinking about what's next — maybe already making changes, maybe in early conversations about pivoting, maybe just starting to build something on the side. Your identity isn't completely tied to your current role and you know it. But there's still a gap between where you are and the clarity you want — a framework for what the shift actually looks like in practice.`,
-    bars: [
-      {name:'Expert Under Pressure',pct:35,cls:'bf-gold',sub:'Skills matter to you but they\'re not your whole identity'},
-      {name:'Quiet Doubter',pct:29,cls:'bf-purple',sub:'The uncertainty is present but it doesn\'t define you'},
-      {name:'Conscious Shifter',pct:85,cls:'bf-green',sub:'You\'re already in motion — this is your dominant mode'},
-      {name:'Identity-First Leader',pct:52,cls:'bf-gold',sub:'You\'re building toward this — closer than most'}
-    ],
-    consequence: `You don't need to be convinced the shift is necessary — you're already convinced. What you need is the <em>structure to do it properly,</em> so the momentum you have right now doesn't stall.`,
-    prompts: {
-      free: [
-        {
-          title: 'Map your shift trajectory',
-          text: `I am a [YOUR ROLE] who is actively thinking about shifting my career in the context of AI disruption. Here's where I currently am: [DESCRIBE YOUR SITUATION]. Here's where I think I want to go: [DESCRIBE YOUR DIRECTION, EVEN IF VAGUE]. Help me: (1) identify what I'm actually moving toward vs moving away from, (2) name the identity shift that needs to happen for this to work, (3) give me the 3 most important questions I should be sitting with right now.`
-        },
-        {
-          title: 'Identify your momentum blockers',
-          text: `I know I need to make a shift. I've started moving. But there's something slowing me down. Here's what I've done so far: [LIST ACTIONS TAKEN]. Here's what I keep not doing: [LIST WHAT YOU'RE AVOIDING]. Help me identify: (1) the real reason I'm not moving faster, (2) whether it's identity-based or practical, (3) one thing I could decide today that would break the pattern.`
-        }
-      ],
-      locked: [
-        'Design your identity-first pivot framework',
-        'Build your "what I\'m building toward" positioning',
-        'Create your 90-day conscious shift action plan',
-        'Write your AI-era professional narrative'
-      ]
-    },
-    nextStep: 'stage3',
-    ctaTitle: 'You\'re already moving. Now get the framework.',
-    ctaSub: 'Stage 3 gives you the complete identity shift structure — so the momentum you have right now becomes a clear, deliberate path forward.'
-  },
-
-  leader: {
-    pill: 'Your Pattern',
-    name: 'The Identity-First Leader',
-    opening: `You've done something most professionals haven't — you've separated who you are from what you do. Your sense of self doesn't live inside your job title and it never really did. You see AI as a tool, not a threat — and you're probably already thinking about how to use it rather than worrying about whether it will replace you. The people around you are looking to you, even if they haven't said it directly, because your groundedness in uncertainty is visible.`,
-    bars: [
-      {name:'Expert Under Pressure',pct:22,cls:'bf-purple',sub:'Your expertise is a tool you carry — not who you are'},
-      {name:'Quiet Doubter',pct:15,cls:'bf-gold',sub:'The uncertainty doesn\'t destabilise you'},
-      {name:'Conscious Shifter',pct:61,cls:'bf-green',sub:'You shift naturally — it\'s part of how you operate'},
-      {name:'Identity-First Leader',pct:89,cls:'bf-gold',sub:'This is your dominant mode — it\'s already your foundation'}
-    ],
-    consequence: `Your next move isn't about catching up — it's about <em>going deeper and bringing others with you.</em> The people around you need to see this modelled. That's what the prompts below are built for.`,
-    prompts: {
-      free: [
-        {
-          title: 'Articulate your identity-first leadership model',
-          text: `I operate from a place of knowing who I am independent of my role or output. I want to help the people around me build the same foundation — especially as AI disrupts their sense of professional identity. Help me: (1) articulate my own identity-first model in clear language, (2) identify the 3 specific ways I can model this for my team or peers, (3) design one conversation I could have this week that would open this topic with someone who needs it.`
-        },
-        {
-          title: 'Design your AI leadership positioning',
-          text: `I am a [YOUR ROLE/TITLE] who is comfortable with my identity in the AI era. I want to build a professional positioning that reflects this — not as a personal brand exercise, but as a genuine expression of how I lead and think. Help me draft: (1) a 3-sentence professional positioning statement, (2) a LinkedIn post that opens the identity conversation without sounding preachy, (3) one thought leadership angle that is uniquely mine based on this: [SHARE YOUR SPECIFIC PERSPECTIVE OR EXPERIENCE].`
-        }
-      ],
-      locked: [
-        'Build your identity-first leadership framework for your team',
-        'Design your thought leadership content strategy for the AI era',
-        'Create your "leading through AI disruption" workshop outline',
-        'Write your personal AI leadership manifesto'
-      ]
-    },
-    nextStep: 'share',
-    ctaTitle: 'You\'re already where most people are trying to get to.',
-    ctaSub: 'Share your result and open the conversation. The people around you need to see this modelled — and ShiftID Stage 2 gives them the path to get here.'
-  }
+  expert:  { pill:'Your Pattern', name:'The Expert Under Pressure',  opening:'', bars:[], consequence:'', prompts:{free:[{title:'',text:''},{title:'',text:''}],locked:[]}, nextStep:'stage2', ctaTitle:'', ctaSub:'' },
+  doubter: { pill:'Your Pattern', name:'The Quiet Doubter',          opening:'', bars:[], consequence:'', prompts:{free:[{title:'',text:''},{title:'',text:''}],locked:[]}, nextStep:'stage2', ctaTitle:'', ctaSub:'' },
+  shifter: { pill:'Your Pattern', name:'The Conscious Shifter',      opening:'', bars:[], consequence:'', prompts:{free:[{title:'',text:''},{title:'',text:''}],locked:[]}, nextStep:'stage3', ctaTitle:'', ctaSub:'' },
+  leader:  { pill:'Your Pattern', name:'The Identity-First Leader',  opening:'', bars:[], consequence:'', prompts:{free:[{title:'',text:''},{title:'',text:''}],locked:[]}, nextStep:'share',  ctaTitle:'', ctaSub:'' }
 };
 
+// ── PARSE DATA
 // ── PARSE DATA — sessionStorage first, URL params as fallback ──
 let userName, patternKey, quizData = {};
 try {
@@ -809,6 +681,7 @@ function onDeptPersonalise(){
 }
 
 // ── ROLE EXPOSURE DATA (subset from ai-report.html) ──
+// TODO: migrate to Worker (P0 before launch)
 const roleData = {
   'Software Engineer':{score:72,dims:[78,55,30,35,20],tasks:['Code generation and boilerplate','Unit test writing','Bug detection and fixing']},
   'Senior Engineer':{score:58,dims:[65,48,35,42,22],tasks:['Code reviews at scale','Documentation generation','Automated testing pipelines']},
@@ -1287,12 +1160,19 @@ function applyPersonalisation(){
     introEl.style.fontStyle = 'italic';
   }
 
+  // Retrieve session token generated by quiz
+  let _tokenData = {};
+  try {
+    const _stored = sessionStorage.getItem('shiftid_token');
+    if(_stored) _tokenData = JSON.parse(_stored);
+  } catch(e){}
+
   const WORKER_URL = 'https://shiftid-worker.tarangs-059.workers.dev';
   if(WORKER_URL !== 'SHIFTID_WORKER_URL'){
     fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ ...payload, ..._tokenData })
     })
     .then(r => r.json())
     .then(res => {

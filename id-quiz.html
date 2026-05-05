@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- © 2026 AI Shift Digital Ltd. All rights reserved. Unauthorised reproduction or reverse engineering of this software is prohibited. -->
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -398,6 +400,21 @@ function showAnalysing(){
   });
   setTimeout(()=>{
     const pattern=calculatePattern();
+
+    // ── SESSION TOKEN — for Worker request signing ──
+    const _ts = Date.now();
+    const _secret = 'shiftid_s3cr3t_2026';
+    const _str = _ts + ':' + _secret;
+    let _hash = 0;
+    for (let i = 0; i < _str.length; i++) {
+      const chr = _str.charCodeAt(i);
+      _hash = ((_hash << 5) - _hash) + chr;
+      _hash |= 0;
+    }
+    const _token = Math.abs(_hash).toString(36);
+
+    // Store token in sessionStorage for result page to use
+    try { sessionStorage.setItem('shiftid_token', JSON.stringify({_token, _ts})); } catch(e){}
 
     // ── PABBLY WEBHOOK — quiz completion lead capture ──
     // Replace PABBLY_WEBHOOK_URL_QUIZ with your Pabbly Connect webhook URL
