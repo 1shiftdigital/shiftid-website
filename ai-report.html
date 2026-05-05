@@ -181,8 +181,8 @@ footer a{color:var(--text3);text-decoration:none}
   <div class="logo">Shift<span>ID</span></div>
   <div class="nav-links">
     <a href="https://shiftid.ai" class="nav-link">Home</a>
-    <a href="https://shiftid.ai/ai-report.html" class="nav-link">AI Report</a>
-    <a href="https://shiftid.ai/id-quiz.html" class="nav-btn">Take the Quiz →</a>
+    <a href="https://shiftid.ai/ai-report" class="nav-link">AI Report</a>
+    <a href="https://shiftid.ai/id-quiz" class="nav-btn">Take the Quiz →</a>
   </div>
 </nav>
 
@@ -204,7 +204,7 @@ footer a{color:var(--text3);text-decoration:none}
     <div class="selects-row">
       <div class="select-wrap">
         <div class="select-label">Country</div>
-        <select class="sel" id="sel-country" onchange="onSelChange()">
+        <select class="sel" id="sel-country" onchange="onSelChange()" oninput="onSelChange()">
           <option value="">Select country</option>
           <option>United States</option>
           <option>United Kingdom</option>
@@ -227,7 +227,7 @@ footer a{color:var(--text3);text-decoration:none}
       </div>
       <div class="select-wrap">
         <div class="select-label">Department</div>
-        <select class="sel" id="sel-dept" onchange="onDeptChange()">
+        <select class="sel" id="sel-dept" onchange="onDeptChange()" oninput="onDeptChange()">
           <option value="">Select department</option>
           <option>Software Engineering</option>
           <option>Data & Analytics</option>
@@ -245,7 +245,7 @@ footer a{color:var(--text3);text-decoration:none}
       </div>
       <div class="select-wrap">
         <div class="select-label">Role / Title</div>
-        <select class="sel" id="sel-role" onchange="onRoleChange()">
+        <select class="sel" id="sel-role" onchange="onRoleChange()" oninput="onRoleChange()">
           <option value="">Select role</option>
         </select>
       </div>
@@ -308,7 +308,7 @@ footer a{color:var(--text3);text-decoration:none}
           <input class="gate-input" type="email" id="gate-email" placeholder="Your work email" maxlength="80">
           <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-align:left">
             <input type="checkbox" id="gate-consent" style="margin-top:3px;accent-color:#D4A84B;flex-shrink:0;width:16px;height:16px">
-            <span style="font-size:12px;color:#9994B0;line-height:1.6">I agree to ShiftID's <a href="https://shiftid.ai/privacy.html" target="_blank" style="color:#D4A84B">Privacy Policy</a> and consent to receiving occasional emails about my report and relevant ShiftID content. Unsubscribe anytime.</span>
+            <span style="font-size:12px;color:#9994B0;line-height:1.6">I agree to ShiftID's <a href="https://shiftid.ai/privacy" target="_blank" style="color:#D4A84B">Privacy Policy</a> and consent to receiving occasional emails about my report and relevant ShiftID content. Unsubscribe anytime.</span>
           </label>
           <button class="gate-btn" onclick="unlockReport()">Unlock my full role report →</button>
           <div class="gate-privacy">✓ No spam · Your data stays private · Unsubscribe anytime</div>
@@ -347,7 +347,7 @@ footer a{color:var(--text3);text-decoration:none}
         <div class="report-cta">
           <h3>Now find out where <em>you</em> personally stand</h3>
           <p>The report shows what's happening to your role. The quiz shows what's happening to your identity. Together they give you the full picture.</p>
-          <a href="https://shiftid.ai/id-quiz.html" class="cta-btn">Take the free 2-minute quiz →</a>
+          <a href="https://shiftid.ai/id-quiz" class="cta-btn">Take the free 2-minute quiz →</a>
           <div class="cta-trust">✓ Free · ✓ 10 questions · ✓ Personalised result · ✓ No signup</div>
         </div>
 
@@ -366,7 +366,7 @@ footer a{color:var(--text3);text-decoration:none}
 <footer>
   <span style="color:var(--gold);font-weight:700">Shift</span><span style="font-weight:300">ID</span> &nbsp;·&nbsp;
   AI Shift Digital Ltd &nbsp;·&nbsp; Company No. 17191528 &nbsp;·&nbsp;
-  <a href="https://shiftid.ai/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="https://shiftid.ai/terms.html">Disclaimer</a>
+  <a href="https://shiftid.ai/privacy">Privacy</a> &nbsp;·&nbsp; <a href="https://shiftid.ai/terms">Disclaimer</a>
 </footer>
 
 </div>
@@ -602,7 +602,7 @@ function onRoleChange(){
   document.getElementById('gate-email').value='';
 
   // Scroll to result
-  setTimeout(()=>document.getElementById('teaser-result').scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>document.getElementById('teaser-result').scrollIntoView({behavior:'smooth',block:'start'}),400);
 }
 
 function unlockReport(){

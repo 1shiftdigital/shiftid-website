@@ -228,7 +228,7 @@ footer a{color:var(--text3);text-decoration:none}
 
 <nav>
   <div class="logo">Shift<span>ID</span></div>
-  <a href="https://shiftid.ai/id-quiz.html" class="nav-btn">Retake Quiz →</a>
+  <a href="https://shiftid.ai/id-quiz" class="nav-btn">Retake Quiz →</a>
 </nav>
 
 <div class="report-wrap" id="report-content">
@@ -238,7 +238,7 @@ footer a{color:var(--text3);text-decoration:none}
 <footer>
   <span style="color:var(--gold);font-weight:700">Shift</span><span style="font-weight:300">ID</span> &nbsp;·&nbsp;
   AI Shift Digital Ltd &nbsp;·&nbsp; Company No. 17191528 &nbsp;·&nbsp;
-  <a href="https://shiftid.ai/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="https://shiftid.ai/terms.html">Disclaimer</a>
+  <a href="https://shiftid.ai/privacy">Privacy</a> &nbsp;·&nbsp; <a href="https://shiftid.ai/terms">Disclaimer</a>
 </footer>
 
 </div>
@@ -254,7 +254,7 @@ footer a{color:var(--text3);text-decoration:none}
 
     // Valid entry: came from quiz (session) OR returning via saved link (local+id)
     if(!hasSession && !hasLocal && !hasUrlId){
-      window.location.replace('https://shiftid.ai/id-quiz.html');
+      window.location.replace('https://shiftid.ai/id-quiz');
     }
   } catch(e){
     // Storage blocked — allow through rather than redirect quiz completers
@@ -495,7 +495,7 @@ report.innerHTML = `
     <div class="personalise-selects">
       <div class="p-sel-wrap">
         <label>Country</label>
-        <select class="p-sel" id="p-country" onchange="onPersonaliseChange()">
+        <select class="p-sel" id="p-country" onchange="onPersonaliseChange()" oninput="onPersonaliseChange()">
           <option value="" disabled selected>Country</option>
           <option>United States</option><option>United Kingdom</option>
           <option>Canada</option><option>Australia</option>
@@ -510,7 +510,7 @@ report.innerHTML = `
       </div>
       <div class="p-sel-wrap">
         <label>Department</label>
-        <select class="p-sel" id="p-dept" onchange="onDeptPersonalise()">
+        <select class="p-sel" id="p-dept" onchange="onDeptPersonalise()" oninput="onDeptPersonalise()">
           <option value="" disabled selected>Department</option>
           <option>Software Engineering</option><option>Data & Analytics</option>
           <option>Marketing & Content</option><option>Finance & Accounting</option>
@@ -522,7 +522,7 @@ report.innerHTML = `
       </div>
       <div class="p-sel-wrap">
         <label>Role / Title</label>
-        <select class="p-sel" id="p-role" onchange="onPersonaliseChange()" disabled>
+        <select class="p-sel" id="p-role" onchange="onPersonaliseChange()" oninput="onPersonaliseChange()" disabled>
           <option value="" disabled selected>Select dept first</option>
         </select>
       </div>
@@ -547,7 +547,7 @@ report.innerHTML = `
     </div>
     <div class="exposure-link">
       Want the full breakdown including AI agents and 18-month timeline?
-      <a href="https://shiftid.ai/ai-report.html" target="_blank" rel="noopener">See your full AI Role Report →</a>
+      <a href="https://shiftid.ai/ai-report" target="_blank" rel="noopener">See your full AI Role Report →</a>
     </div>
   </div>
 
@@ -1433,7 +1433,7 @@ function saveResult(){
         identity_pattern: patternKey,
         role: rd.role || '', department: rd.dept || '', country: rd.country || '',
         mirror_keyword: (rd.mirror || '').substring(0,50),
-        return_url: 'https://shiftid.ai/id-result.html?id=' + resultId,
+        return_url: 'https://shiftid.ai/id-result?id=' + resultId,
         timestamp: new Date().toISOString()
       })
     }).catch(()=>{});
@@ -1663,7 +1663,7 @@ window.submitFeedback = submitFeedback;
 
 // ── LINKEDIN SHARE ──
 function shareLinkedIn(){
-  const shareUrl = 'https://shiftid.ai/id-quiz.html';
+  const shareUrl = 'https://shiftid.ai/id-quiz';
   window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl), '_blank');
 }
 window.shareLinkedIn = shareLinkedIn;
