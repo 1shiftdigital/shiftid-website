@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShiftID — Your Identity Report</title>
+<meta name="description" content="Discover your professional identity pattern in the age of AI. The Identity Mirror Quiz gives you a personalised analysis of where you stand and what to do next.">
+<meta property="og:title" content="ShiftID — The Identity Mirror Quiz">
+<meta property="og:description" content="In the age of agentic AI, the most important question for any professional isn't 'will AI take my job?' It's 'who am I without my job title?' Take the free 2-minute quiz.">
+<meta property="og:url" content="https://shiftid.ai/id-quiz.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ShiftID">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ShiftID — The Identity Mirror Quiz">
+<meta name="twitter:description" content="Discover your professional identity pattern in the age of AI. Free 2-minute quiz.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
 <style>
@@ -59,7 +70,7 @@ nav{padding:14px 32px;display:flex;align-items:center;justify-content:space-betw
 .bf-red{background:var(--red)}
 .bf-green{background:var(--green)}
 .bf-purple{background:var(--purple)}
-.bar-sub{font-size:12px;color:var(--text3);margin-top:5px}
+.bar-sub{font-size:13px;color:var(--text2);margin-top:6px;font-weight:300}
 
 /* CONSEQUENCE */
 .consequence-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:28px;animation:fadeUp 0.6s 0.3s both}
@@ -133,6 +144,15 @@ nav{padding:14px 32px;display:flex;align-items:center;justify-content:space-betw
 .unlock-btn{display:inline-flex;align-items:center;background:var(--gold);color:var(--bg);font-family:var(--sans);font-size:13px;font-weight:700;padding:10px 24px;border-radius:60px;text-decoration:none;transition:background 0.2s}
 .unlock-btn:hover{background:var(--gold2)}
 @media(max-width:600px){.save-result-form{flex-direction:column}.save-email-btn{width:100%}}
+
+/* PROMPT ACTIONS */
+.prompt-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.open-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:12px;font-weight:600;padding:8px 14px;border-radius:8px;text-decoration:none;transition:all 0.2s;cursor:pointer}
+.chatgpt-btn{background:rgba(16,163,127,0.1);border:1px solid rgba(16,163,127,0.25);color:#10a37f}
+.chatgpt-btn:hover{background:rgba(16,163,127,0.2)}
+.claude-btn{background:rgba(212,168,75,0.1);border:1px solid rgba(212,168,75,0.25);color:var(--gold)}
+.claude-btn:hover{background:rgba(212,168,75,0.2)}
+@media(max-width:480px){.prompt-actions{flex-direction:column}.open-btn,.copy-btn{width:100%;justify-content:center;text-align:center}}
 
 /* FEEDBACK CARD */
 .feedback-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:28px;text-align:center;display:none;animation:fadeUp 0.5s ease}
@@ -231,15 +251,13 @@ footer a{color:var(--text3);text-decoration:none}
     const hasLocal = localStorage.getItem('shiftid_result_data');
     const params = new URLSearchParams(window.location.search);
     const hasUrlId = params.get('id');
-    const hasPattern = params.get('p') || params.get('pattern');
 
-    // Valid entry: came from quiz (session) OR returning via saved link (local+id) OR direct URL with pattern
-    if(!hasSession && !hasLocal && !hasUrlId && !hasPattern){
+    // Valid entry: came from quiz (session) OR returning via saved link (local+id)
+    if(!hasSession && !hasLocal && !hasUrlId){
       window.location.replace('https://shiftid.ai/id-quiz.html');
     }
   } catch(e){
-    // If storage is blocked (private browsing restrictions) — allow through
-    // Better to show fallback than redirect someone who completed the quiz
+    // Storage blocked — allow through rather than redirect quiz completers
   }
 })();
 
@@ -250,12 +268,12 @@ const patterns = {
     name: 'The Expert Under Pressure',
     opening: `You've spent years becoming genuinely excellent at what you do. That expertise is real — and it's earned. But somewhere in the last 12–18 months, something shifted. The skills that made you indispensable are starting to feel less secure. Not because you've lost them — but because AI is acquiring them faster than the market can keep up with. Your identity is still largely built on what you know and what you deliver. That's the pressure point.`,
     bars: [
-      {name:'Expert Identity',pct:78,cls:'bf-red',sub:'Your sense of self is closely tied to your skills and output'},
+      {name:'Expert Under Pressure',pct:78,cls:'bf-red',sub:'Your sense of self is closely tied to your skills and output'},
       {name:'Quiet Doubter',pct:45,cls:'bf-gold',sub:'The anxiety is there — you\'re just not saying it out loud'},
-      {name:'Conscious Shifter',pct:32,cls:'bf-purple',sub:'You\'re aware change is needed but haven\'t started moving yet'},
-      {name:'Identity-First Leader',pct:21,cls:'bf-green',sub:'Your sense of self beyond work is still developing'}
+      {name:'Conscious Shifter',pct:32,cls:'bf-purple',sub:'You\'re already moving — you just need the structure to go further'},
+      {name:'Identity-First Leader',pct:21,cls:'bf-green',sub:'Who you are exists independently of what you do'}
     ],
-    consequence: `The good news is your foundation is strong. The shift you need isn't about learning new skills — you've been doing that your whole career. It's about <em>separating who you are from what you produce.</em> That's the work Stage 2 is built for.`,
+    consequence: `The good news is your foundation is strong. The shift you need isn't about learning new skills — you've been doing that your whole career. It's about <em>separating who you are from what you produce.</em> That's the work these prompts are built to start.`,
     prompts: {
       free: [
         {
@@ -284,12 +302,12 @@ const patterns = {
     name: 'The Quiet Doubter',
     opening: `You feel it but you haven't said it out loud yet. There's a quiet background anxiety about where all of this is going — for your role, your industry, and honestly, your sense of self. Most of your peers look confident on LinkedIn. You wonder if they're feeling what you're feeling, or whether you're the only one who sees it. You're not. You're actually ahead of most people — because you're honest enough to acknowledge the uncertainty.`,
     bars: [
-      {name:'Expert Identity',pct:41,cls:'bf-gold',sub:'Your expertise is real but it\'s not where your anxiety lives'},
+      {name:'Expert Under Pressure',pct:41,cls:'bf-gold',sub:'Your expertise is real but it\'s not where your anxiety lives'},
       {name:'Quiet Doubter',pct:82,cls:'bf-red',sub:'The uncertainty is signal — your instincts are working'},
       {name:'Conscious Shifter',pct:28,cls:'bf-purple',sub:'The awareness is there — the movement hasn\'t started yet'},
       {name:'Identity-First Leader',pct:18,cls:'bf-green',sub:'There\'s a stronger sense of self here than you realise'}
     ],
-    consequence: `The anxiety you're carrying isn't weakness — it's signal. It means your instincts are working. What you need now isn't reassurance. It's <em>clarity.</em> A clear picture of exactly where you stand and a specific path forward. That's what Stage 2 gives you.`,
+    consequence: `The anxiety you're carrying isn't weakness — it's signal. It means your instincts are working. What you need now isn't reassurance. It's <em>clarity.</em> A clear picture of exactly where you stand — and a specific next step.`,
     prompts: {
       free: [
         {
@@ -318,12 +336,12 @@ const patterns = {
     name: 'The Conscious Shifter',
     opening: `You're already moving. You've seen what's coming and you're not waiting for it to happen to you. You're actively thinking about what's next — maybe already making changes, maybe in early conversations about pivoting, maybe just starting to build something on the side. Your identity isn't completely tied to your current role and you know it. But there's still a gap between where you are and the clarity you want — a framework for what the shift actually looks like in practice.`,
     bars: [
-      {name:'Expert Identity',pct:35,cls:'bf-gold',sub:'Skills matter to you but they\'re not your whole identity'},
+      {name:'Expert Under Pressure',pct:35,cls:'bf-gold',sub:'Skills matter to you but they\'re not your whole identity'},
       {name:'Quiet Doubter',pct:29,cls:'bf-purple',sub:'The uncertainty is present but it doesn\'t define you'},
       {name:'Conscious Shifter',pct:85,cls:'bf-green',sub:'You\'re already in motion — this is your dominant mode'},
       {name:'Identity-First Leader',pct:52,cls:'bf-gold',sub:'You\'re building toward this — closer than most'}
     ],
-    consequence: `You don't need to be convinced the shift is necessary — you're already convinced. What you need is the <em>structure to do it properly,</em> so the momentum you have right now doesn't stall. Stage 3 is built exactly for where you are.`,
+    consequence: `You don't need to be convinced the shift is necessary — you're already convinced. What you need is the <em>structure to do it properly,</em> so the momentum you have right now doesn't stall.`,
     prompts: {
       free: [
         {
@@ -352,12 +370,12 @@ const patterns = {
     name: 'The Identity-First Leader',
     opening: `You've done something most professionals haven't — you've separated who you are from what you do. Your sense of self doesn't live inside your job title and it never really did. You see AI as a tool, not a threat — and you're probably already thinking about how to use it rather than worrying about whether it will replace you. The people around you are looking to you, even if they haven't said it directly, because your groundedness in uncertainty is visible.`,
     bars: [
-      {name:'Expert Identity',pct:22,cls:'bf-purple',sub:'Your expertise is a tool you carry — not who you are'},
+      {name:'Expert Under Pressure',pct:22,cls:'bf-purple',sub:'Your expertise is a tool you carry — not who you are'},
       {name:'Quiet Doubter',pct:15,cls:'bf-gold',sub:'The uncertainty doesn\'t destabilise you'},
       {name:'Conscious Shifter',pct:61,cls:'bf-green',sub:'You shift naturally — it\'s part of how you operate'},
       {name:'Identity-First Leader',pct:89,cls:'bf-gold',sub:'This is your dominant mode — it\'s already your foundation'}
     ],
-    consequence: `Your next move isn't about catching up — it's about <em>going deeper and bringing others with you.</em> The people around you need to see this modelled. That's a different kind of leadership — and it's exactly what the next phase of your career is about.`,
+    consequence: `Your next move isn't about catching up — it's about <em>going deeper and bringing others with you.</em> The people around you need to see this modelled. That's what the prompts below are built for.`,
     prompts: {
       free: [
         {
@@ -440,11 +458,11 @@ report.innerHTML = `
 
   <!-- PATTERN CARD -->
   <div class="pattern-card">
-    <div class="pattern-opening">${pattern.opening}</div>
-    <div class="pattern-label-wrap">
+    <div class="pattern-label-wrap" style="margin-bottom:20px">
       <div class="pattern-pill">${pattern.pill}</div>
       <div class="pattern-name">${pattern.name}</div>
     </div>
+    <div class="pattern-opening">${pattern.opening}</div>
   </div>
 
   <!-- BARS -->
@@ -473,7 +491,7 @@ report.innerHTML = `
   <div class="personalise-block">
     <div class="personalise-label">Personalise your prompts</div>
     <div class="personalise-title">Tell us your role — we'll tailor every prompt to it</div>
-    <div class="personalise-sub">Select your country, department and role. Your 2 free prompts update instantly — pre-filled and ready to use.</div>
+    <div class="personalise-sub">Select your country, department and role. We'll generate your personalised analysis and prompts from your specific quiz answers — takes about 5 seconds.</div>
     <div class="personalise-selects">
       <div class="p-sel-wrap">
         <label>Country</label>
@@ -533,6 +551,18 @@ report.innerHTML = `
     </div>
   </div>
 
+  <!-- ANALYSIS PROGRESS BAR — shows during API call -->
+  <div id="analysis-progress" style="display:none;margin-bottom:24px;animation:fadeUp 0.4s ease">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)" id="progress-label">Reading your answers</div>
+      <div style="font-size:12px;color:var(--text3)" id="progress-pct">0%</div>
+    </div>
+    <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
+      <div id="progress-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;transition:width 0.4s ease"></div>
+    </div>
+    <div style="font-size:12px;color:var(--text3);margin-top:8px" id="progress-sub">Analysing your identity pattern across 11 questions</div>
+  </div>
+
   <!-- PROMPTS INTRO — appears after role selection -->
   <div id="prompt-intro" style="display:none;background:var(--bg2);border:1px solid rgba(212,168,75,0.18);border-left:3px solid var(--gold);border-radius:0 14px 14px 0;padding:20px 24px;margin-bottom:24px;font-size:15px;font-weight:300;color:var(--text2);line-height:1.8;animation:fadeUp 0.5s ease"></div>
 
@@ -541,35 +571,82 @@ report.innerHTML = `
     <div class="prompts-header">
       <div class="prompts-label">AI Prompts for Your Pattern</div>
       <div class="prompts-title" id="prompts-title">Built for ${pattern.name}</div>
-      <div class="prompts-sub" id="prompts-sub">Select your role above to get prompts pre-filled for your specific position. Use directly in ChatGPT or Claude — no editing needed.</div>
+      <div class="prompts-sub" id="prompts-sub">Select your country, department and role. We'll generate your personalised prompts from your quiz answers — takes a few seconds.</div>
     </div>
 
-    <!-- FREE PROMPT 1 -->
-    <div class="prompt-card" id="prompt-card-0">
-      <div class="prompt-card-label">✓ FREE — PROMPT 1 OF 6</div>
-      <div class="prompt-card-title" id="prompt-title-0">Select your role above</div>
-      <div class="prompt-card-text" id="prompt-text-0">Your personalised prompt will appear here once you select your country, department and role above and click Update.</div>
-      <button class="copy-btn" id="copy-btn-0" onclick="copyPrompt(0)">Copy</button>
-    </div>
-
-    <!-- FREE PROMPT 2 -->
-    <div class="prompt-card" id="prompt-card-1">
-      <div class="prompt-card-label">✓ FREE — PROMPT 2 OF 6</div>
-      <div class="prompt-card-title" id="prompt-title-1">Select your role above</div>
-      <div class="prompt-card-text" id="prompt-text-1">Your second personalised prompt will appear here.</div>
-      <button class="copy-btn" id="copy-btn-1" onclick="copyPrompt(1)">Copy</button>
-    </div>
-
-    <!-- SAVE RESULT BLOCK -->
-    <div class="save-result-block" id="save-block">
-      <div class="save-result-text">These 6 prompts work best in order — each one builds on the last to give you a complete picture of where you stand and what to do next.</div>
-      <div class="save-result-sub">If you want to continue later or on a different device, save your result now. We will send you a personal link so everything is waiting for you exactly as you left it.</div>
-      <div class="save-result-form">
-        <input type="email" id="save-email" placeholder="your@email.com" class="save-email-input">
-        <button class="save-email-btn" onclick="saveResult()">Save my result →</button>
+    <!-- WHY USE THESE PROMPTS -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px 22px;margin-bottom:20px;display:flex;gap:16px;align-items:flex-start">
+      <div style="font-size:22px;flex-shrink:0;margin-top:2px">💡</div>
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">Why use these prompts?</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">Your quiz answers revealed something specific about you. These prompts take that directly into ChatGPT or Claude — which can go as deep as you need, answer your follow-up questions, and help you think it through in real time. <strong style="color:var(--text)">Tap "Open in ChatGPT" — the prompt is already filled in. Just press send.</strong></div>
       </div>
-      <div class="save-result-note" id="save-note">Already saved? Check your inbox for your link.</div>
     </div>
+
+    <!-- SOFT EMAIL OVERLAY WRAPPER -->
+    <div style="position:relative" id="prompts-overlay-wrap">
+
+      <!-- EMAIL CAPTURE OVERLAY — fires when prompts load -->
+      <div id="email-overlay" style="display:none;position:absolute;inset:0;z-index:10;border-radius:16px;background:linear-gradient(to bottom,rgba(7,6,13,0.0) 0%,rgba(7,6,13,0.97) 22%);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center">
+
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Your prompts are ready</div>
+        <div style="font-family:var(--serif);font-size:clamp(18px,2.5vw,22px);font-weight:400;margin-bottom:8px;line-height:1.3">Enter your email to continue reading</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:22px;line-height:1.6;max-width:340px">Your prompts were built from your specific quiz answers. Enter your email to read them in full and save your result — so you can access everything on any device, any time.</div>
+        <div style="display:flex;gap:8px;width:100%;max-width:400px;margin-bottom:8px;flex-wrap:wrap">
+          <input type="email" id="overlay-email" placeholder="your@email.com" style="flex:1;min-width:200px;background:var(--bg3);border:1px solid rgba(212,168,75,0.3);border-radius:10px;padding:12px 14px;font-family:var(--sans);font-size:14px;color:var(--text);outline:none">
+          <button onclick="saveAndUnlock()" style="background:var(--gold);color:var(--bg);font-family:var(--sans);font-size:14px;font-weight:700;padding:12px 20px;border-radius:10px;border:none;cursor:pointer;white-space:nowrap;transition:background 0.2s">Save & continue →</button>
+        </div>
+        <div style="font-size:11px;color:var(--text3)">No spam. Just your result link and prompts.</div>
+      </div>
+
+      <!-- FREE PROMPT 1 — shows preview, rest blurred until email -->
+      <div class="prompt-card" id="prompt-card-0">
+        <div class="prompt-card-label">✓ FREE — PROMPT 1 OF 6</div>
+        <div class="prompt-card-title" id="prompt-title-0">Select your role above</div>
+        <!-- PREVIEW — always visible -->
+        <div class="prompt-card-text" id="prompt-preview-0" style="margin-bottom:0">Your personalised prompt will appear here once you select your role above and click Update.</div>
+        <!-- FULL TEXT — hidden until email captured -->
+        <div id="prompt-text-0" style="display:none"></div>
+        <!-- PERSISTENT EMAIL BAR — visible after overlay dismissed without email -->
+        <div id="prompt-email-bar" style="display:none;margin-top:12px;padding:14px 16px;background:rgba(212,168,75,0.06);border:1px solid rgba(212,168,75,0.2);border-radius:10px">
+          <div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:10px">Enter your email to read your full prompts</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="email" id="bar-email" placeholder="your@email.com" style="flex:1;min-width:180px;background:var(--bg3);border:1px solid rgba(212,168,75,0.3);border-radius:8px;padding:10px 12px;font-family:var(--sans);font-size:13px;color:var(--text);outline:none">
+            <button onclick="barSaveAndUnlock()" style="background:var(--gold);color:var(--bg);font-family:var(--sans);font-size:13px;font-weight:700;padding:10px 16px;border-radius:8px;border:none;cursor:pointer;white-space:nowrap">Continue reading →</button>
+          </div>
+        </div>
+        <div class="prompt-actions" id="prompt-actions-0" style="display:none">
+          <a class="open-btn chatgpt-btn" id="chatgpt-btn-0" href="#" target="_blank" rel="noopener" onclick="openInChatGPT(0,event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.032.067L9.773 19.9a4.5 4.5 0 0 1-6.173-1.596zM2.25 8.116a4.475 4.475 0 0 1 2.342-1.974V11.9a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0L4.24 14.483a4.5 4.5 0 0 1-1.99-6.367zm16.597 3.855l-5.843-3.372 2.02-1.164a.076.076 0 0 1 .071 0l4.424 2.554a4.5 4.5 0 0 1-.676 8.123v-5.76a.79.79 0 0 0-.396-.681zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.31 9.45V7.118a.08.08 0 0 1 .032-.067l4.446-2.567a4.5 4.5 0 0 1 6.67 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+            Open in ChatGPT
+          </a>
+          <a class="open-btn claude-btn" id="claude-btn-0" href="#" target="_blank" rel="noopener" onclick="openInClaude(0,event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4.709 15.955l4.72-2.647.08-.078v-.155l-.079-.078-4.72-2.648-.046.023v5.56zM12 2.006C6.477 2.006 2 6.484 2 12.006s4.477 10 10 10 10-4.478 10-10-4.477-10-10-10z"/></svg>
+            Open in Claude
+          </a>
+          <button class="copy-btn" id="copy-btn-0" onclick="copyPrompt(0)">Copy</button>
+        </div>
+      </div>
+
+      <!-- FREE PROMPT 2 — hidden until email captured -->
+      <div class="prompt-card" id="prompt-card-1" style="display:none">
+        <div class="prompt-card-label">✓ FREE — PROMPT 2 OF 6</div>
+        <div class="prompt-card-title" id="prompt-title-1">Select your role above</div>
+        <div class="prompt-card-text" id="prompt-text-1"></div>
+        <div class="prompt-actions" id="prompt-actions-1">
+          <a class="open-btn chatgpt-btn" id="chatgpt-btn-1" href="#" target="_blank" rel="noopener" onclick="openInChatGPT(1,event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.032.067L9.773 19.9a4.5 4.5 0 0 1-6.173-1.596zM2.25 8.116a4.475 4.475 0 0 1 2.342-1.974V11.9a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0L4.24 14.483a4.5 4.5 0 0 1-1.99-6.367zm16.597 3.855l-5.843-3.372 2.02-1.164a.076.076 0 0 1 .071 0l4.424 2.554a4.5 4.5 0 0 1-.676 8.123v-5.76a.79.79 0 0 0-.396-.681zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.31 9.45V7.118a.08.08 0 0 1 .032-.067l4.446-2.567a4.5 4.5 0 0 1 6.67 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
+            Open in ChatGPT
+          </a>
+          <a class="open-btn claude-btn" id="claude-btn-1" href="#" target="_blank" rel="noopener" onclick="openInClaude(1,event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4.709 15.955l4.72-2.647.08-.078v-.155l-.079-.078-4.72-2.648-.046.023v5.56zM12 2.006C6.477 2.006 2 6.484 2 12.006s4.477 10 10 10 10-4.478 10-10-4.477-10-10-10z"/></svg>
+            Open in Claude
+          </a>
+          <button class="copy-btn" id="copy-btn-1" onclick="copyPrompt(1)">Copy</button>
+        </div>
+      </div>
+
+    </div><!-- end prompts-overlay-wrap -->
 
     <!-- LOCKED PROMPT 3 -->
     <div class="prompt-card locked-card" id="prompt-card-2">
@@ -639,7 +716,7 @@ report.innerHTML = `
     <div class="share-title">Open the conversation</div>
     <div class="share-sub">Share your pattern and invite someone you know to find theirs. You will be surprised how many people in your network are thinking exactly this but have not said it out loud.</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px">
-      <a href="https://api.whatsapp.com/send?text=I%20just%20took%20the%20ShiftID%20Identity%20Mirror%20Quiz%20and%20got%20my%20result.%20It%20asked%20me%20questions%20about%20AI%20and%20professional%20identity%20I%20hadn%27t%20thought%20about%20before.%20Worth%202%20minutes%20%E2%86%92%20https%3A%2F%2Fshiftid.ai%2Fid-quiz.html" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;font-size:14px;font-weight:600;padding:12px 22px;border-radius:60px;text-decoration:none;transition:all 0.2s">
+      <a id="whatsapp-share-btn" href="https://api.whatsapp.com/send?text=I%20just%20took%20the%20ShiftID%20Identity%20Mirror%20Quiz%20and%20got%20my%20result.%20It%20asked%20me%20questions%20about%20AI%20and%20professional%20identity%20I%20hadn%27t%20thought%20about%20before.%20Worth%202%20minutes%20%E2%86%92%20https%3A%2F%2Fshiftid.ai%2Fid-quiz.html" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);color:#25D366;font-size:14px;font-weight:600;padding:12px 22px;border-radius:60px;text-decoration:none;transition:all 0.2s">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 0C5.374 0 0 5.373 0 12c0 2.117.554 4.104 1.522 5.827L0 24l6.335-1.502A11.954 11.954 0 0012.004 24C18.63 24 24 18.627 24 12S18.63 0 12.004 0zm0 21.818c-1.944 0-3.77-.523-5.337-1.435l-.383-.228-3.762.892.937-3.664-.249-.394A9.818 9.818 0 012.182 12c0-5.421 4.401-9.818 9.822-9.818 5.42 0 9.818 4.397 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
         Share on WhatsApp
       </a>
@@ -672,6 +749,18 @@ setTimeout(()=>{
   // Set CTA title safely
   const ctaH2 = document.getElementById('cta-title-h2');
   if(ctaH2) ctaH2.innerHTML = pattern.ctaTitle;
+
+  // ── Update URL with pattern so copied/shared links work ──
+  try {
+    const resultUrl = new URL(window.location.href);
+    if(!resultUrl.searchParams.get('p')){
+      resultUrl.searchParams.set('p', patternKey);
+      if(userName && userName !== 'Your'){
+        resultUrl.searchParams.set('n', userName);
+      }
+      window.history.replaceState({}, '', resultUrl.toString());
+    }
+  } catch(e){}
 },200);
 
 // Stage btn label for shifter/leader
@@ -1124,6 +1213,47 @@ function applyPersonalisation(){
   btn.disabled = true;
   btn.style.color = 'var(--text2)';
 
+  // ── SHOW PROGRESS BAR ──
+  const progressEl = document.getElementById('analysis-progress');
+  const progressFill = document.getElementById('progress-fill');
+  const progressPct = document.getElementById('progress-pct');
+  const progressLabel = document.getElementById('progress-label');
+  const progressSub = document.getElementById('progress-sub');
+
+  if(progressEl) progressEl.style.display = 'block';
+
+  // Animated progress stages — realistic feel without fake precision
+  const stages = [
+    { pct: 12, label: 'Reading your answers', sub: 'Analysing your identity pattern across 11 questions', delay: 200 },
+    { pct: 28, label: 'Mapping your Mirror response', sub: 'Understanding what your words reveal about your identity', delay: 800 },
+    { pct: 45, label: 'Identifying your pattern', sub: 'Connecting your ' + patternKey.charAt(0).toUpperCase() + patternKey.slice(1) + ' pattern to your role context', delay: 1400 },
+    { pct: 62, label: 'Building your analysis', sub: 'Writing your personalised identity paragraph', delay: 2000 },
+    { pct: 78, label: 'Generating your prompts', sub: 'Creating 6 prompts specific to your answers and role', delay: 2800 },
+    { pct: 91, label: 'Almost ready', sub: 'Finalising your personalised report', delay: 3600 }
+  ];
+
+  stages.forEach(s => {
+    setTimeout(() => {
+      if(progressFill) progressFill.style.width = s.pct + '%';
+      if(progressPct) progressPct.textContent = s.pct + '%';
+      if(progressLabel) progressLabel.textContent = s.label;
+      if(progressSub) progressSub.textContent = s.sub;
+    }, s.delay);
+  });
+
+  function completeProgress(success){
+    if(progressFill) progressFill.style.width = '100%';
+    if(progressPct) progressPct.textContent = '100%';
+    if(progressLabel){
+      progressLabel.textContent = success ? 'Analysis complete' : 'Analysis ready';
+      progressLabel.style.color = 'var(--green)';
+    }
+    if(progressSub) progressSub.textContent = success ? 'Your personalised identity report is ready below' : 'Your prompts are ready below';
+    setTimeout(() => {
+      if(progressEl) progressEl.style.display = 'none';
+    }, 1500);
+  }
+
   renderExposureCard(role, country);
 
   const stored = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
@@ -1159,11 +1289,16 @@ function applyPersonalisation(){
     })
     .then(r => r.json())
     .then(res => {
+      completeProgress(true);
       if(res.success && res.data){ renderPersonalisedContent(res.data, role, dept, country); }
       else { renderFallbackContent(role, dept, country); }
     })
-    .catch(() => { renderFallbackContent(role, dept, country); });
+    .catch(() => {
+      completeProgress(false);
+      renderFallbackContent(role, dept, country);
+    });
   } else {
+    completeProgress(false);
     renderFallbackContent(role, dept, country);
   }
 
@@ -1200,7 +1335,12 @@ function renderPersonalisedContent(data, role, dept, country){
   document.getElementById('prompts-sub').textContent = 'Generated from your specific answers. Use in order in a single conversation for best results.';
 
   if(data.p1_title) document.getElementById('prompt-title-0').textContent = data.p1_title;
-  if(data.p1_text) document.getElementById('prompt-text-0').textContent = data.p1_text;
+  if(data.p1_text){
+    // Show first ~150 chars as preview, store full text hidden
+    const preview1 = data.p1_text.substring(0, 150).trim() + '...';
+    document.getElementById('prompt-preview-0').textContent = preview1;
+    document.getElementById('prompt-text-0').textContent = data.p1_text;
+  }
   if(data.p2_title) document.getElementById('prompt-title-1').textContent = data.p2_title;
   if(data.p2_text) document.getElementById('prompt-text-1').textContent = data.p2_text;
 
@@ -1231,6 +1371,12 @@ function renderPersonalisedContent(data, role, dept, country){
   setTimeout(()=>{
     const el = document.getElementById('prompt-intro');
     if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    // Fire overlay when prompt card is visible — scroll to it first
+    setTimeout(()=>{
+      const pc = document.getElementById('prompt-card-0');
+      if(pc) pc.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(showEmailOverlay, 800);
+    }, 1200);
   }, 200);
 }
 
@@ -1248,10 +1394,13 @@ function renderFallbackContent(role, dept, country){
   if(deptData){
     const a1 = deptData.agents[0]; const a2 = deptData.agents[1];
     const sub = t => t.replace(/\[ROLE\]/g,role).replace(/\[A1\]/g,a1).replace(/\[A2\]/g,a2);
+    const p1full = sub(deptData.p1[patternKey] || deptData.p1.expert);
+    const p2full = sub(deptData.p2[patternKey] || deptData.p2.expert);
     document.getElementById('prompt-title-0').textContent = 'The Value Audit';
-    document.getElementById('prompt-text-0').textContent = sub(deptData.p1[patternKey] || deptData.p1.expert);
+    document.getElementById('prompt-preview-0').textContent = p1full.substring(0, 150).trim() + '...';
+    document.getElementById('prompt-text-0').textContent = p1full;
     document.getElementById('prompt-title-1').textContent = 'The Identity Audit';
-    document.getElementById('prompt-text-1').textContent = sub(deptData.p2[patternKey] || deptData.p2.expert);
+    document.getElementById('prompt-text-1').textContent = p2full;
   }
   document.getElementById('prompts-title').textContent = 'Built for ' + role + ' \u00b7 ' + pattern.name;
   const btn = document.getElementById('personalise-btn');
@@ -1261,6 +1410,11 @@ function renderFallbackContent(role, dept, country){
   setTimeout(()=>{
     const el = document.getElementById('prompt-intro');
     if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(()=>{
+      const pc = document.getElementById('prompt-card-0');
+      if(pc) pc.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(showEmailOverlay, 800);
+    }, 1200);
   }, 200);
 }
 
@@ -1295,6 +1449,161 @@ function scrollToUnlock(){
   if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
 }
 
+// ── EMAIL OVERLAY ──
+let overlayShown = false;
+function showEmailOverlay(){
+  if(overlayShown) return;
+  try {
+    const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
+    if(rd.emailCaptured){ revealFullPrompts(); return; }
+  } catch(e){}
+  overlayShown = true;
+  const overlay = document.getElementById('email-overlay');
+  const wrap = document.getElementById('prompts-overlay-wrap');
+  if(overlay){
+    overlay.style.display = 'flex';
+    if(wrap) wrap.style.minHeight = '420px';
+  }
+}
+
+function revealFullPrompts(){
+  const preview0 = document.getElementById('prompt-preview-0');
+  const text0 = document.getElementById('prompt-text-0');
+  const actions0 = document.getElementById('prompt-actions-0');
+  if(preview0) preview0.style.display = 'none';
+  if(text0){ text0.style.display = 'block'; }
+  if(actions0) actions0.style.display = 'flex';
+  const card1 = document.getElementById('prompt-card-1');
+  if(card1) card1.style.display = 'block';
+}
+
+function saveAndUnlock(){
+  const email = document.getElementById('overlay-email').value.trim();
+  if(!email || !email.includes('@')){
+    document.getElementById('overlay-email').style.borderColor = 'var(--red)';
+    return;
+  }
+  const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
+  const PABBLY_WEBHOOK_SAVE = 'PABBLY_WEBHOOK_URL_SAVE';
+  if(PABBLY_WEBHOOK_SAVE !== 'PABBLY_WEBHOOK_URL_SAVE'){
+    fetch(PABBLY_WEBHOOK_SAVE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: 'shiftid_overlay_capture',
+        email: email,
+        first_name: userName,
+        result_id: resultId,
+        identity_pattern: patternKey,
+        role: rd.role || '',
+        department: rd.dept || '',
+        country: rd.country || '',
+        timestamp: new Date().toISOString()
+      })
+    }).catch(()=>{});
+  }
+  try {
+    rd.emailCaptured = true;
+    localStorage.setItem('shiftid_result_data', JSON.stringify(rd));
+  } catch(e){}
+  dismissOverlay();
+}
+window.saveAndUnlock = saveAndUnlock;
+
+function skipOverlay(){ /* email required — do nothing */ }
+window.skipOverlay = skipOverlay;
+
+function dismissOverlay(){
+  const overlay = document.getElementById('email-overlay');
+  const wrap = document.getElementById('prompts-overlay-wrap');
+  if(overlay){
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.4s ease';
+    setTimeout(()=>{
+      overlay.style.display = 'none';
+      if(wrap) wrap.style.minHeight = '';
+      try {
+        const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
+        if(rd.emailCaptured){
+          revealFullPrompts();
+        } else {
+          // Show persistent bar — they need email to continue
+          const bar = document.getElementById('prompt-email-bar');
+          if(bar) bar.style.display = 'block';
+        }
+      } catch(e){ revealFullPrompts(); }
+    }, 400);
+  }
+}
+
+function barSaveAndUnlock(){
+  const email = (document.getElementById('bar-email') || {}).value || '';
+  if(!email.trim() || !email.includes('@')){
+    const input = document.getElementById('bar-email');
+    if(input) input.style.borderColor = 'var(--red)';
+    return;
+  }
+  // Reuse same Pabbly + localStorage logic
+  const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
+  const PABBLY_WEBHOOK_SAVE = 'PABBLY_WEBHOOK_URL_SAVE';
+  if(PABBLY_WEBHOOK_SAVE !== 'PABBLY_WEBHOOK_URL_SAVE'){
+    fetch(PABBLY_WEBHOOK_SAVE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: 'shiftid_bar_capture',
+        email: email.trim(),
+        first_name: userName,
+        result_id: resultId,
+        identity_pattern: patternKey,
+        role: rd.role || '',
+        department: rd.dept || '',
+        country: rd.country || '',
+        timestamp: new Date().toISOString()
+      })
+    }).catch(()=>{});
+  }
+  try {
+    rd.emailCaptured = true;
+    localStorage.setItem('shiftid_result_data', JSON.stringify(rd));
+  } catch(e){}
+  const bar = document.getElementById('prompt-email-bar');
+  if(bar) bar.style.display = 'none';
+  revealFullPrompts();
+}
+window.barSaveAndUnlock = barSaveAndUnlock;
+
+// ── OPEN IN CHATGPT / CLAUDE ──
+function openInChatGPT(i, e){
+  e.preventDefault();
+  const text = document.getElementById('prompt-text-'+i).textContent;
+  if(!text || text.includes('will appear here')) return;
+  const url = 'https://chat.openai.com/?q=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+  triggerFeedbackCard();
+}
+window.openInChatGPT = openInChatGPT;
+
+function openInClaude(i, e){
+  e.preventDefault();
+  const text = document.getElementById('prompt-text-'+i).textContent;
+  if(!text || text.includes('will appear here')) return;
+  const url = 'https://claude.ai/new?q=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+  triggerFeedbackCard();
+}
+window.openInClaude = openInClaude;
+
+function triggerFeedbackCard(){
+  promptsCopied++;
+  if(promptsCopied === 1){
+    setTimeout(()=>{
+      const fc = document.getElementById('feedback-card');
+      if(fc){ fc.classList.add('visible'); fc.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+    }, 1200);
+  }
+}
+
 // ── COPY PROMPT — triggers feedback card ──
 let promptsCopied = 0;
 function copyPrompt(i){
@@ -1304,16 +1613,7 @@ function copyPrompt(i){
     btn.textContent = 'Copied!';
     btn.classList.add('copied');
     setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('copied'); }, 2000);
-
-    // Show feedback card after first copy
-    promptsCopied++;
-    if(promptsCopied === 1){
-      setTimeout(()=>{
-        const fc = document.getElementById('feedback-card');
-        fc.classList.add('visible');
-        fc.scrollIntoView({behavior:'smooth', block:'nearest'});
-      }, 1200);
-    }
+    triggerFeedbackCard();
   });
 }
 window.copyPrompt = copyPrompt;
@@ -1363,10 +1663,26 @@ window.submitFeedback = submitFeedback;
 
 // ── LINKEDIN SHARE ──
 function shareLinkedIn(){
-  const postText = encodeURIComponent(`I just took the ShiftID Identity Mirror Quiz and got my result: ${pattern.name}.\n\nIn the age of agentic AI, I think the most important question for any professional right now isn't "will AI take my job?" It's "who am I without my job title?"\n\nIf you haven't thought about this yet — you probably should.\n\nTake the free 2-minute quiz → https://shiftid.ai/id-quiz.html\n\n#AI #FutureOfWork #IdentityShift #ShiftID`);
-  window.open('https://www.linkedin.com/sharing/share-offsite/?url=https://shiftid.ai/id-quiz.html&summary='+postText,'_blank');
+  const shareUrl = 'https://shiftid.ai/id-quiz.html';
+  window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl), '_blank');
 }
 window.shareLinkedIn = shareLinkedIn;
+
+// ── KEEP OVERLAY VISIBLE if email not yet captured ──
+window.addEventListener('scroll', ()=>{
+  try {
+    const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
+    if(rd.emailCaptured) return;
+  } catch(e){ return; }
+  const overlay = document.getElementById('email-overlay');
+  if(overlay && overlay.style.display === 'none' && overlayShown){
+    // Re-show if they scrolled past and overlay was dismissed without email
+    overlay.style.opacity = '1';
+    overlay.style.display = 'flex';
+    const wrap = document.getElementById('prompts-overlay-wrap');
+    if(wrap) wrap.style.minHeight = '420px';
+  }
+});
 </script>
 </body>
 </html>
