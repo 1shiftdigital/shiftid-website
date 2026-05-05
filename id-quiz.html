@@ -62,6 +62,7 @@ body.mirror-active .progress-wrap{background:rgba(255,255,255,0.05)}
 
 /* Hide seg bar during mirror + analysing */
 body.mirror-active .seg-progress{display:none}
+#screen-name ~ * .seg-progress{display:none}
 body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 .screen-analysing-active .seg-progress{display:none}
 .seg-progress{display:flex;gap:4px;margin-bottom:24px}
@@ -175,7 +176,7 @@ footer a{color:inherit;text-decoration:none}
 <main class="quiz-main">
 <div class="quiz-card">
   <!-- SEGMENTED PROGRESS BAR — 11 segments -->
-  <div class="seg-progress" id="seg-progress">
+  <div class="seg-progress" id="seg-progress" style="opacity:0">
     <div class="seg" id="seg-1"></div>
     <div class="seg" id="seg-2"></div>
     <div class="seg" id="seg-3"></div>
@@ -193,7 +194,7 @@ footer a{color:inherit;text-decoration:none}
   <div class="screen active" id="screen-name">
     <div class="name-eyebrow">Before we begin</div>
     <h1 class="name-title">What should we call <em>you?</em></h1>
-    <p class="name-sub">Your result is personalised to you. 11 questions. 2 minutes. No signup needed.</p>
+    <p class="name-sub">Your result is personalised to you. 11 questions. No signup needed.</p>
 
     <div class="field-wrap">
       <label>Your first name</label>
@@ -202,9 +203,8 @@ footer a{color:inherit;text-decoration:none}
 
     <div class="trust-mini">
       <span>✓ Free</span>
-      <span>✓ No account needed</span>
-      <span>✓ 11 questions</span>
-      <span>✓ Instant result</span>
+      <span>✓ Realtime analysis</span>
+      <span>✓ Takes 2 minutes</span>
     </div>
 
     <button class="btn" id="btn-name" onclick="startQuiz()" disabled>Let's begin →</button>
@@ -459,15 +459,23 @@ function updateProgress(pct, label){
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('nav-progress').textContent = label;
 
-  // Drive segmented bar — extract question number from label
+  const segWrap = document.getElementById('seg-progress');
   const match = label.match(/Question (\d+) of 11/);
   const qNum = match ? parseInt(match[1]) : 0;
-  for(let i = 1; i <= 11; i++){
-    const seg = document.getElementById('seg-' + i);
-    if(!seg) continue;
-    if(i < qNum){ seg.className = 'seg done'; }
-    else if(i === qNum){ seg.className = 'seg active'; }
-    else { seg.className = 'seg'; }
+
+  if(qNum > 0){
+    // Show seg bar from Q1 onwards
+    if(segWrap) segWrap.style.opacity = '1';
+    for(let i = 1; i <= 11; i++){
+      const seg = document.getElementById('seg-' + i);
+      if(!seg) continue;
+      if(i < qNum){ seg.className = 'seg done'; }
+      else if(i === qNum){ seg.className = 'seg active'; }
+      else { seg.className = 'seg'; }
+    }
+  } else {
+    // Hide on name screen and analysing
+    if(segWrap) segWrap.style.opacity = '0';
   }
 }
 function showScreen(id){
