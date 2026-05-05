@@ -1302,8 +1302,8 @@ function applyPersonalisation(){
     renderFallbackContent(role, dept, country);
   }
 
-  const PABBLY_WEBHOOK_RESULT = 'PABBLY_WEBHOOK_URL_RESULT';
-  if(PABBLY_WEBHOOK_RESULT !== 'PABBLY_WEBHOOK_URL_RESULT'){
+  const PABBLY_WEBHOOK_RESULT = 'https://hook.eu1.make.com/y62ribcylguqufgdr219blzk55heavgx';
+  if(PABBLY_WEBHOOK_RESULT !== 'https://hook.eu1.make.com/y62ribcylguqufgdr219blzk55heavgx'){
     fetch(PABBLY_WEBHOOK_RESULT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1422,8 +1422,8 @@ function saveResult(){
   const email = document.getElementById('save-email').value.trim();
   if(!email || !email.includes('@')){ alert('Please enter a valid email address.'); return; }
   const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
-  const PABBLY_WEBHOOK_SAVE = 'PABBLY_WEBHOOK_URL_SAVE';
-  if(PABBLY_WEBHOOK_SAVE !== 'PABBLY_WEBHOOK_URL_SAVE'){
+  const PABBLY_WEBHOOK_SAVE = 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9';
+  if(PABBLY_WEBHOOK_SAVE !== 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9'){
     fetch(PABBLY_WEBHOOK_SAVE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1484,8 +1484,8 @@ function saveAndUnlock(){
     return;
   }
   const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
-  const PABBLY_WEBHOOK_SAVE = 'PABBLY_WEBHOOK_URL_SAVE';
-  if(PABBLY_WEBHOOK_SAVE !== 'PABBLY_WEBHOOK_URL_SAVE'){
+  const PABBLY_WEBHOOK_SAVE = 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9';
+  if(PABBLY_WEBHOOK_SAVE !== 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9'){
     fetch(PABBLY_WEBHOOK_SAVE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1545,8 +1545,8 @@ function barSaveAndUnlock(){
   }
   // Reuse same Pabbly + localStorage logic
   const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
-  const PABBLY_WEBHOOK_SAVE = 'PABBLY_WEBHOOK_URL_SAVE';
-  if(PABBLY_WEBHOOK_SAVE !== 'PABBLY_WEBHOOK_URL_SAVE'){
+  const PABBLY_WEBHOOK_SAVE = 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9';
+  if(PABBLY_WEBHOOK_SAVE !== 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9'){
     fetch(PABBLY_WEBHOOK_SAVE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1635,8 +1635,8 @@ function submitFeedback(){
   const role = document.getElementById('p-role').value || userRole || '';
 
   // ── PABBLY WEBHOOK — feedback ──
-  const PABBLY_WEBHOOK_FEEDBACK = 'PABBLY_WEBHOOK_URL_FEEDBACK';
-  if(PABBLY_WEBHOOK_FEEDBACK !== 'PABBLY_WEBHOOK_URL_FEEDBACK'){
+  const PABBLY_WEBHOOK_FEEDBACK = 'https://hook.eu1.make.com/1637gpdl27ht4garwd95puwn77ju9rxo';
+  if(PABBLY_WEBHOOK_FEEDBACK !== 'https://hook.eu1.make.com/1637gpdl27ht4garwd95puwn77ju9rxo'){
     fetch(PABBLY_WEBHOOK_FEEDBACK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
