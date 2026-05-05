@@ -622,7 +622,7 @@ function unlockReport(){
   // ── PABBLY WEBHOOK — report gate lead capture ──
   // Replace PABBLY_WEBHOOK_URL_REPORT with your Pabbly Connect webhook URL
   const PABBLY_WEBHOOK_REPORT = 'https://hook.eu1.make.com/ouzpaqokdl1733ysy1x531q8kk9l3oot';
-  if(PABBLY_WEBHOOK_REPORT !== 'https://hook.eu1.make.com/ouzpaqokdl1733ysy1x531q8kk9l3oot'){
+  if(PABBLY_WEBHOOK_REPORT){
     fetch(PABBLY_WEBHOOK_REPORT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

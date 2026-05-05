@@ -1303,7 +1303,7 @@ function applyPersonalisation(){
   }
 
   const PABBLY_WEBHOOK_RESULT = 'https://hook.eu1.make.com/y62ribcylguqufgdr219blzk55heavgx';
-  if(PABBLY_WEBHOOK_RESULT !== 'https://hook.eu1.make.com/y62ribcylguqufgdr219blzk55heavgx'){
+  if(PABBLY_WEBHOOK_RESULT){
     fetch(PABBLY_WEBHOOK_RESULT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1423,7 +1423,7 @@ function saveResult(){
   if(!email || !email.includes('@')){ alert('Please enter a valid email address.'); return; }
   const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
   const PABBLY_WEBHOOK_SAVE = 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9';
-  if(PABBLY_WEBHOOK_SAVE !== 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9'){
+  if(PABBLY_WEBHOOK_SAVE){
     fetch(PABBLY_WEBHOOK_SAVE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1485,7 +1485,7 @@ function saveAndUnlock(){
   }
   const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
   const PABBLY_WEBHOOK_SAVE = 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9';
-  if(PABBLY_WEBHOOK_SAVE !== 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9'){
+  if(PABBLY_WEBHOOK_SAVE){
     fetch(PABBLY_WEBHOOK_SAVE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1546,7 +1546,7 @@ function barSaveAndUnlock(){
   // Reuse same Pabbly + localStorage logic
   const rd = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
   const PABBLY_WEBHOOK_SAVE = 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9';
-  if(PABBLY_WEBHOOK_SAVE !== 'https://hook.eu1.make.com/bkwjuk4v0yqb7kzt05w6cllvefkb0rb9'){
+  if(PABBLY_WEBHOOK_SAVE){
     fetch(PABBLY_WEBHOOK_SAVE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1636,7 +1636,7 @@ function submitFeedback(){
 
   // ── PABBLY WEBHOOK — feedback ──
   const PABBLY_WEBHOOK_FEEDBACK = 'https://hook.eu1.make.com/1637gpdl27ht4garwd95puwn77ju9rxo';
-  if(PABBLY_WEBHOOK_FEEDBACK !== 'https://hook.eu1.make.com/1637gpdl27ht4garwd95puwn77ju9rxo'){
+  if(PABBLY_WEBHOOK_FEEDBACK){
     fetch(PABBLY_WEBHOOK_FEEDBACK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
