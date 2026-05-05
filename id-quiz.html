@@ -120,7 +120,7 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 .opt.selected .opt-text{color:var(--text)}
 
 /* MIRROR SCREEN — dark consultation room */
-.mirror-screen-inner{background:var(--m-bg);border-radius:24px;padding:36px;border:1px solid rgba(212,168,75,0.12)}
+.mirror-screen-inner{background:var(--m-bg);border-radius:24px;padding:36px;border:1px solid rgba(212,168,75,0.55)}
 .mirror-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m-gold);margin-bottom:16px}
 .mirror-q{font-family:var(--serif);font-size:clamp(20px,3vw,26px);font-weight:400;line-height:1.35;color:var(--m-text);margin-bottom:8px}
 .mirror-hint{font-size:13px;color:var(--m-text2);font-style:italic;margin-bottom:20px}
@@ -223,7 +223,7 @@ footer a{color:inherit;text-decoration:none}
       <div class="mirror-label">In your own words</div>
       <div class="mirror-q">What would you lose if your job title disappeared tomorrow?</div>
       <div class="mirror-hint">Take 30 seconds. Be honest. Nobody else will see this.</div>
-      <textarea class="mirror-textarea" id="mirror-text" placeholder="Write whatever comes to mind first..." maxlength="900" oninput="updateWordCount()"></textarea>
+      <textarea class="mirror-textarea" id="mirror-text" placeholder="Write whatever comes to mind first right now... e.g. I'd lose the sense that my opinion matters. The relationships I've built over years. The feeling of being useful..." maxlength="900" oninput="updateWordCount()"></textarea>
       <div class="mirror-footer">
         <div class="word-count" id="word-count">0 / 150 words</div>
       </div>
