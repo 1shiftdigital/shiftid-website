@@ -1325,6 +1325,32 @@ function applyPersonalisation(){
 }
 
 function renderPersonalisedContent(data, role, dept, country){
+  // Update pattern data from server response if provided
+  if(data.patternKey && data.patternName) {
+    patternKey = data.patternKey;
+    // Update pattern card with server-provided data
+    const patternNameEl = document.querySelector('.pattern-name');
+    if(patternNameEl) patternNameEl.textContent = data.patternName;
+    if(data.patternOpening) {
+      const openingEl = document.querySelector('.pattern-opening');
+      if(openingEl) openingEl.textContent = data.patternOpening;
+    }
+    if(data.patternConsequence) {
+      const conseqEl = document.querySelector('.consequence-text');
+      if(conseqEl) conseqEl.innerHTML = data.patternConsequence;
+    }
+    if(data.patternBars) {
+      data.patternBars.forEach((b, i) => {
+        const fills = document.querySelectorAll('.bar-fill');
+        const pcts = document.querySelectorAll('.bar-pct');
+        const subs = document.querySelectorAll('.bar-sub');
+        if(fills[i]) { fills[i].style.width = b.pct + '%'; fills[i].className = 'bar-fill ' + b.cls; }
+        if(pcts[i]) pcts[i].textContent = b.pct + '%';
+        if(subs[i]) subs[i].textContent = b.sub;
+      });
+    }
+  }
+
   const introEl = document.getElementById('prompt-intro');
   if(introEl && data.intro){
     introEl.style.fontStyle = 'normal';

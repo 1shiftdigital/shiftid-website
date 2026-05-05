@@ -436,23 +436,8 @@ function showAnalysing(){
 }
 
 function calculatePattern(){
-  const scores={expert:0,doubter:0,shifter:0,leader:0};
-  const a1=[0,2,3,1];scores.expert+=a1[answers[1]||0]*8;scores.leader+=(3-(answers[1]||0))*8;
-  const exp=[0,10,20,30];scores.expert+=exp[answers[2]||0];scores.doubter+=exp[answers[2]||0]*0.7;
-  const wa=[0,1,2,3][answers[3]||0];scores.expert+=wa*15;scores.doubter+=wa*10;scores.leader+=(3-wa)*15;scores.shifter+=(3-wa)*8;
-  const o4=[3,1,1,0];scores.expert+=o4[answers[4]||0]*8;scores.leader+=(3-o4[answers[4]||0])*6;
-  const av=[0,1,2,3][answers[6]||0];scores.doubter+=av*14;scores.expert+=av*8;scores.shifter+=(av===1?10:0);
-  const a7=[0,2,3,2];scores.expert+=a7[answers[7]||0]*7;scores.shifter+=(answers[7]===0?15:0);
-  const a8=[0,1,2,3][answers[8]||0];scores.doubter+=a8*8;scores.leader+=(3-a8)*6;
-  scores.shifter+=(answers[9]===0?20:0);scores.expert+=([0,1,2,3][answers[9]||0])*6;
-  const sv=[0,1,2,3][answers[10]||0];scores.leader+=(3-sv)*15;scores.doubter+=sv*10;scores.expert+=sv*8;
-  scores.shifter+=(answers[11]===0?25:answers[11]===1?10:0);scores.doubter+=(answers[11]===3?20:0);scores.expert+=(answers[11]===2?15:0);
-  const mt=mirrorText.toLowerCase();
-  if(/lost|don'?t know|everything|who i am|terrif|anxious|scared/.test(mt))scores.doubter+=20;
-  if(/expertise|skill|knowledge|years|built|experience|reputation/.test(mt))scores.expert+=20;
-  if(/adapt|pivot|figur|already|thinking|building|next/.test(mt))scores.shifter+=20;
-  if(/purpose|people|beyond|bigger|clear|lead|impact/.test(mt))scores.leader+=20;
-  return Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];
+  // Pattern calculated server-side in Worker — not exposed client-side
+  return 'pending';
 }
 
 function updateProgress(pct, label){
