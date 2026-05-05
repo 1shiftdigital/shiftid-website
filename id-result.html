@@ -180,7 +180,7 @@ nav{padding:14px 32px;display:flex;align-items:center;justify-content:space-betw
 .prompt-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:12px;position:relative}
 .prompt-card-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
 .prompt-card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:10px}
-.prompt-card-text{font-size:13px;color:var(--text2);line-height:1.7;background:var(--bg3);border-radius:10px;padding:14px 16px;font-family:monospace;border:1px solid rgba(255,255,255,0.05)}
+.prompt-card-text{font-size:clamp(14px,1.6vw,16px);color:var(--text2);line-height:1.8;background:var(--bg3);border-radius:10px;padding:16px 18px;font-family:var(--sans);font-weight:300;border:1px solid rgba(255,255,255,0.05)}
 .copy-btn{position:absolute;top:20px;right:20px;background:none;border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-family:var(--sans);font-size:11px;font-weight:600;color:var(--text3);cursor:pointer;transition:all 0.2s}
 .copy-btn:hover{border-color:var(--gold);color:var(--gold)}
 .copy-btn.copied{border-color:var(--green);color:var(--green)}
@@ -612,7 +612,7 @@ report.innerHTML = `
         <!-- PREVIEW — always visible -->
         <div class="prompt-card-text" id="prompt-preview-0" style="margin-bottom:0">Your personalised prompt will appear here once you select your role above and click Update.</div>
         <!-- FULL TEXT — hidden until email captured -->
-        <div id="prompt-text-0" style="display:none"></div>
+        <div class="prompt-card-text" id="prompt-text-0" style="display:none"></div>
         <!-- PERSISTENT EMAIL BAR — visible after overlay dismissed without email -->
         <div id="prompt-email-bar" style="display:none;margin-top:12px;padding:14px 16px;background:rgba(212,168,75,0.06);border:1px solid rgba(212,168,75,0.2);border-radius:10px">
           <div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:10px">Enter your email to read your full prompts</div>
