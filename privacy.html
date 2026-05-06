@@ -198,8 +198,9 @@ footer a:hover{color:var(--text2)}
   <h3>5.1 Our current third-party processors</h3>
   <ul>
     <li><strong>GoHighLevel (HighLevel Inc.)</strong> — our CRM and email marketing platform. Stores your name, email, role, country and identity pattern for the purpose of delivering communications you have consented to receive. Based in the United States. Covered by Standard Contractual Clauses for UK/EU data transfers.</li>
-    <li><strong>Pabbly Connect</strong> — our automation platform that transfers data between our website forms and GoHighLevel. Processes your submission data in transit only. Based in India. Subject to appropriate transfer safeguards.</li>
-    <li><strong>Cloudflare Inc.</strong> — our website hosting and delivery network. May process limited technical data as part of serving our web pages. Based in the United States. Covered by Standard Contractual Clauses.</li>
+    <li><strong>Make.com (Celonis SE)</strong> — our automation platform that transfers data between our website and GoHighLevel. Processes your submission data in transit only. Based in Germany. Subject to Standard Contractual Clauses for UK data transfers.</li>
+    <li><strong>Cloudflare Inc.</strong> — our website hosting, delivery network and serverless computing platform. May process limited technical data as part of serving our web pages and running our API proxy. Based in the United States. Covered by Standard Contractual Clauses.</li>
+    <li><strong>Anthropic PBC</strong> — our AI content generation provider. When you select your role and request personalised prompts, your quiz answers and Mirror Question response are transmitted to Anthropic's Claude API to generate your personalised analysis. Anthropic does not use this data to train its models under our enterprise agreement. Based in the United States. Covered by Standard Contractual Clauses.
     <li><strong>Plausible Analytics</strong> — our cookieless website analytics tool. Processes only anonymised, aggregated data. No personal data is transferred. Based in the European Union.</li>
     <li><strong>Stripe Inc.</strong> — our payment processor for paid products. Handles payment card data directly — we never see or store your card details. Based in the United States. Covered by Standard Contractual Clauses. Subject to Stripe's own Privacy Policy.</li>
   </ul>
@@ -229,6 +230,8 @@ footer a:hover{color:var(--text2)}
     <li><strong>Payment cookies</strong> — if you make a purchase, Stripe may set cookies on the payment page. These are covered by Stripe's own cookie policy and are necessary to process your payment securely.</li>
   </ul>
   <p>We do not use advertising cookies, social media tracking pixels, or any third-party cookies for marketing purposes. You will not see a cookie consent banner on our site because we do not set non-essential cookies.</p>
+  <h3>7.2 Local storage</h3>
+  <p>We use browser localStorage and sessionStorage to temporarily store your quiz result, identity pattern and result reference on your device. This allows you to return to your result page without retaking the quiz. This data is stored only on your device and is not accessible to us. You can clear it at any time by clearing your browser storage. No personal data is transmitted to third parties via local storage.</p>
 
   <!-- 8 -->
   <h2 id="your-rights">8. Your rights</h2>
@@ -243,13 +246,16 @@ footer a:hover{color:var(--text2)}
     <li><strong>Right to withdraw consent</strong> — where processing is based on consent, you can withdraw it at any time without affecting the lawfulness of prior processing</li>
   </ul>
   <p>To exercise any of these rights, contact us at <a href="mailto:privacy@shiftid.ai">privacy@shiftid.ai</a>. We will respond within 30 days. We may need to verify your identity before processing your request.</p>
-  <p>If you are unhappy with how we handle your data, you have the right to lodge a complaint with the UK Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank">ico.org.uk</a> or by calling 0303 123 1113.</p>
+  <p>If you are unhappy with how we handle your data, you have the right to lodge a complaint with the UK Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank">ico.org.uk</a> or by calling 0303 123 1113. AI Shift Digital Ltd is registered with the ICO as a data controller under the UK Data Protection Act 2018.</p>
 
   <!-- 9 -->
   <h2 id="security">9. Security</h2>
   <p>We take appropriate technical and organisational measures to protect your personal data against unauthorised access, accidental loss, destruction or damage. These include:</p>
   <ul>
-    <li>HTTPS encryption on all pages via Cloudflare SSL</li>
+    <li>HTTPS encryption on all pages via Cloudflare SSL (TLS 1.2 minimum)</li>
+    <li>Session token validation on all AI generation requests to prevent unauthorised access</li>
+    <li>Rate limiting on our API to prevent systematic data extraction</li>
+    <li>Input sanitisation on all user-submitted text before AI processing</li>
     <li>Access controls limiting who within our organisation can access personal data</li>
     <li>Use of reputable, security-certified third-party processors</li>
     <li>Regular review of our data handling practices</li>
