@@ -461,7 +461,7 @@ function nextFromMirror(){
 function goBack(){
   document.body.classList.remove('mirror-active');
   if(phase==='before-mirror'){if(qIndex===0){showScreen('screen-name');updateProgress(0,'Identity Mirror Quiz');return;}qIndex--;}
-  else{if(qIndex===4 && !document.getElementById('screen-mirror').classList.contains('active')){showMirror();return;}qIndex--;}
+  else{if(qIndex===4 && !document.getElementById('screen-mirror').classList.contains('active')){showMirror();return;}qIndex--;if(qIndex<4){phase='before-mirror';}}
   showQuestion();
 }
 
