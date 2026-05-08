@@ -104,7 +104,17 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
   .quiz-main{
     padding:16px 12px;
     align-items:flex-start;
-    min-height:calc(100vh - 60px);
+    min-height:calc(100vh);
+  }
+  /* Centre card only when name screen is active */
+  .quiz-main:has(#screen-name.active){
+    align-items:center;
+    justify-content:center;
+  }
+  #screen-name{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
   }
   .quiz-card{
     border-radius:16px;
