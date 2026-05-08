@@ -186,7 +186,7 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 
 .options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
 .opt{display:flex;align-items:flex-start;gap:14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;cursor:pointer;transition:all 0.2s;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
-.opt:hover{border-color:rgba(184,133,42,0.35);background:var(--goldDim);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+@media(hover:hover){.opt:hover{border-color:rgba(184,133,42,0.35);background:var(--goldDim);box-shadow:0 2px 8px rgba(0,0,0,0.06)}}
 .opt.selected{border-color:var(--gold);background:var(--goldDim)}
 .opt-letter{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text3);flex-shrink:0;transition:all 0.2s}
 .opt.selected .opt-letter{background:var(--gold);border-color:var(--gold);color:#fff}
