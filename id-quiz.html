@@ -122,9 +122,18 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
   }
   .btn{width:100%;justify-content:center;padding:16px 24px;font-size:15px}
   /* Name screen mobile */
-  #screen-name{overflow-y:auto}
-  .name-title{font-size:26px}
-  .name-sub{font-size:14px;margin-bottom:20px}
+  #screen-name{
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    padding-bottom:20px;
+  }
+  .name-eyebrow{margin-bottom:12px}
+  .name-title{font-size:26px;margin-bottom:6px}
+  .name-sub{font-size:13px;margin-bottom:16px;line-height:1.5}
+  .field-wrap{margin-bottom:12px}
+  .trust-mini{margin-bottom:16px;font-size:11px;gap:10px}
+  #screen-name .btn{width:100%;justify-content:center;padding:16px 24px}
   /* Mirror screen mobile */
   .mirror-screen-inner{padding:24px 20px;border-radius:16px}
   .mirror-textarea{min-height:100px}
