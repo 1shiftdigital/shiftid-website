@@ -75,62 +75,50 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 /* MAIN — dark outer, light card */
 .quiz-main{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px}
 .quiz-card{width:100%;max-width:580px;background:var(--bg);border-radius:20px;padding:40px;box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.04)}
-/* Desktop: screens-wrap is transparent passthrough */
-.screens-wrap{display:contents;}
-
-/* MOBILE — fullscreen but card floats with dark surround */
-@media(max-width:600px){
-  html,body{height:100%;overflow:hidden}
-  .page{height:100%;display:flex;flex-direction:column;overflow:hidden}
-  .quiz-main{flex:1;padding:12px;overflow:hidden;position:relative;display:flex;align-items:stretch;}
-  .quiz-card{
-    flex:1;border-radius:16px;padding:0;
-    box-shadow:0 24px 80px rgba(0,0,0,0.5);
-    display:flex;flex-direction:column;
-    overflow:hidden;background:var(--bg);
-    position:relative;
-  }
-  .seg-progress{flex-shrink:0;margin:14px 16px 8px 16px;}
-  /* Screens wrapper fills space below seg bar */
-  .screens-wrap{flex:1;position:relative;overflow:hidden;min-height:0;}
-  /* All screens absolute — only .active shows */
-  .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;}
-  .screen.active{display:flex;}
-  /* NAME SCREEN */
-  #screen-name{padding:20px 18px 0 18px;overflow-y:auto;justify-content:flex-start;}
-  .name-eyebrow{margin-bottom:10px;flex-shrink:0}
-  .name-title{font-size:24px;margin-bottom:6px;flex-shrink:0}
-  .name-sub{font-size:13px;margin-bottom:14px;line-height:1.5;flex-shrink:0}
-  .field-wrap{margin-bottom:10px;flex-shrink:0}
-  .name-input{background:#fff;color:var(--text);-webkit-text-fill-color:var(--text);opacity:1;}
-  .name-input{background:#fff;color:var(--text);-webkit-text-fill-color:var(--text);opacity:1;}
-  .trust-mini{margin-bottom:14px;font-size:11px;gap:10px;flex-shrink:0}
-  #screen-name .btn{width:100%;justify-content:center;padding:16px 24px;flex-shrink:0;margin-bottom:20px;}
-  /* QUESTION SCREEN */
-  #screen-q{padding:16px 18px 0 18px;display:flex;flex-direction:column;overflow:hidden;}
-  .q-meta{margin-bottom:12px;flex-shrink:0}
-  .q-text{font-size:17px;line-height:1.3;margin-bottom:12px;flex-shrink:0}
-  .options{flex:1;overflow-y:auto;margin-bottom:0;gap:7px;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:0;}
-  .options::-webkit-scrollbar{display:none}
-  .opt{padding:11px 13px}
-  .opt-text{font-size:13px}
-  .btn-wrap{flex-shrink:0;padding:12px 0 16px 0;background:var(--bg);border-top:1px solid var(--border);margin-top:6px;}
-  .btn{width:100%;justify-content:center;padding:14px 24px;font-size:15px}
-  /* MIRROR SCREEN */
-  #screen-mirror{padding:14px 18px 0 18px;overflow-y:auto;}
-  .mirror-screen-inner{padding:20px 16px;border-radius:14px}
-  .mirror-textarea{min-height:85px}
-  .mirror-nav{padding:12px 0 16px 0;flex-shrink:0}
-  /* ANALYSING SCREEN */
-  #screen-analysing{padding:20px;overflow-y:auto;}
-  .analysing-wrap{padding:16px 0}
-  /* Footer hidden on mobile */
-  footer{display:none}
-}
 
 .screen{display:none;animation:fadeIn 0.4s ease}
 .screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* MOBILE */
+@media(max-width:600px){
+  html,body{height:100%}
+  .page{min-height:100%}
+  .quiz-main{
+    padding:16px 12px;
+    align-items:flex-start;
+    min-height:calc(100vh - 60px);
+  }
+  .quiz-card{
+    border-radius:16px;
+    padding:24px 18px 20px 18px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.4);
+  }
+  /* NAME SCREEN */
+  .name-eyebrow{margin-bottom:10px}
+  .name-title{font-size:24px;margin-bottom:6px}
+  .name-sub{font-size:13px;margin-bottom:14px;line-height:1.5}
+  .field-wrap{margin-bottom:10px}
+  .trust-mini{margin-bottom:14px;font-size:11px;gap:10px}
+  #screen-name .btn{width:100%;justify-content:center;padding:15px 24px}
+  /* QUESTION SCREEN */
+  .q-meta{margin-bottom:14px}
+  .q-text{font-size:17px;margin-bottom:14px}
+  .options{gap:8px;margin-bottom:16px}
+  .opt{padding:12px 14px}
+  .opt-text{font-size:13px}
+  .btn-wrap{margin-top:4px}
+  .btn{width:100%;justify-content:center;padding:15px 24px;font-size:15px}
+  .btn-back{font-size:13px}
+  /* MIRROR SCREEN */
+  .mirror-screen-inner{padding:22px 16px;border-radius:14px}
+  .mirror-q{font-size:19px}
+  .mirror-textarea{min-height:90px}
+  /* ANALYSING SCREEN */
+  .analysing-wrap{padding:24px 0}
+  /* Footer */
+  footer{padding:16px}
+}
 
 /* NAME SCREEN — light */
 /* NAME SCREEN */
@@ -243,9 +231,6 @@ footer a{color:inherit;text-decoration:none}
     <div class="seg" id="seg-11"></div>
   </div>
 
-  <!-- SCREENS CONTAINER -->
-  <div class="screens-wrap">
-
   <!-- NAME -->
   <div class="screen active" id="screen-name">
     <div class="name-eyebrow">Before we begin</div>
@@ -317,7 +302,7 @@ footer a{color:inherit;text-decoration:none}
         </a>
       </div>
     </div>
-  </div><!-- end screens-wrap -->
+  </div>
 
 </div>
 </main>
