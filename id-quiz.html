@@ -89,7 +89,7 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
   .mobile-exit{
     display:flex;
     justify-content:flex-end;
-    padding:12px 14px 0 14px;
+    padding:12px 8px 0 14px;
     text-decoration:none;
   }
   .mobile-exit span{
@@ -134,15 +134,21 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
   .trust-mini{margin-bottom:14px;font-size:11px;gap:10px}
   #screen-name .btn{width:100%;justify-content:center;padding:15px 24px}
   /* QUESTION SCREEN */
-  .q-meta{margin-bottom:4px}
-  .q-text{font-size:17px;margin-bottom:6px}
-  .options{gap:7px;margin-bottom:8px}
+  .q-meta{margin-bottom:2px}
+  .q-text{font-size:17px;margin-bottom:4px}
+  .options{gap:4px;margin-bottom:4px}
   .opt{padding:11px 13px}
   .opt-letter{width:24px;height:24px;font-size:11px}
   .opt-text{font-size:13px;padding-top:2px}
   .btn-wrap{margin-top:4px}
   .btn{width:100%;justify-content:center;padding:14px 24px;font-size:15px}
   .btn-back{font-size:13px}
+  /* Single pill navigation */
+  .btn-nav{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;width:100%;padding:14px 16px;}
+  .btn-nav span:first-child{text-align:left;font-size:18px;opacity:0.7}
+  .btn-nav span:last-child{text-align:right;font-size:16px}
+  .btn-nav span:nth-child(2){text-align:center}
+  .btn-back-arrow{cursor:pointer;padding:4px 8px;margin:-4px -8px;}
   /* MIRROR SCREEN */
   .mirror-screen-inner{padding:20px 16px;border-radius:14px}
   .mirror-q{font-size:19px}
@@ -227,6 +233,7 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 .btn:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(184,133,42,0.3)}
 .btn:disabled{opacity:0.35;cursor:not-allowed;transform:none;box-shadow:none}
 .btn-wrap{display:flex;align-items:center;gap:16px;margin-top:4px}
+.btn-nav{display:inline-flex;} /* desktop: btn-nav acts normal */
 .btn-back{background:none;border:none;font-family:var(--sans);font-size:14px;color:var(--text3);cursor:pointer;padding:8px 0;transition:color 0.2s}
 .btn-back:hover{color:var(--text2)}
 
@@ -415,8 +422,11 @@ function showQuestion(){
       ${q.opts.map((o,i)=>`<div class="opt${alreadyAnswered && answers[q.id]===i?' selected':''}" id="opt-${i}" onclick="selectOpt(${q.id},${i})"><div class="opt-letter">${letters[i]}</div><div class="opt-text">${o}</div></div>`).join('')}
     </div>
     <div class="btn-wrap">
-      <button class="btn-back" onclick="goBack()">← Back</button>
-      <button class="btn" id="btn-next" onclick="nextQ(${q.id})" ${alreadyAnswered?'':'disabled'}>Continue →</button>
+      <button class="btn btn-nav" id="btn-next" onclick="nextQ(${q.id})" ${alreadyAnswered?'':'disabled'}>
+        <span class="btn-back-arrow" onclick="event.stopPropagation();goBack()">←</span>
+        <span>Continue</span>
+        <span>→</span>
+      </button>
     </div>`;
   showScreen('screen-q');
   document.body.classList.remove('mirror-active');
