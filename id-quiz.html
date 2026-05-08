@@ -89,14 +89,17 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
   .mobile-exit{
     display:flex;
     justify-content:flex-end;
-    padding:12px 10px 0 14px;
+    padding:12px 10px 4px 14px;
     text-decoration:none;
     font-size:18px;
     font-weight:700;
     color:rgba(0,0,0,0.45);
     line-height:1;
+    position:relative;
+    z-index:10;
+    pointer-events:auto;
   }
-  .mobile-exit span{font-size:inherit;font-weight:inherit;color:inherit;}
+  .mobile-exit span{font-size:inherit;font-weight:inherit;color:inherit;pointer-events:auto;}
   /* Hide nav + progress bar */
   nav{display:none}
   .progress-wrap{display:none}
@@ -352,7 +355,7 @@ const questions=[
   {id:2,signal:'exposure',text:'How much of the work you did 3 years ago could AI realistically handle today?',opts:['Almost none of it','Maybe 20–30%','Probably half','More than I expected']},
   {id:3,signal:'adaptation',text:'When your organisation introduces a new AI tool or workflow, what\'s your honest first reaction?',opts:['Curiosity — I want to understand and use it','Caution — I want to understand it properly first','Resistance — change feels threatening','Unease — I think about what it could mean long term']},
   {id:4,signal:'output',text:'On your best days at work, what makes you feel most valuable?',opts:['Delivering a specific output or result','How I think through problems','The relationships and trust I\'ve built','My ability to lead and adapt to what\'s needed']},
-  {id:6,signal:'linkedin',key:true,text:'How much does your professional identity reflect the real you — versus what's expected of you?',opts:['Completely authentic — it\'s genuinely me','Mostly authentic — with some professional filtering','I present a version of myself that feels professionally safer','It\'s a performance — the real me is quite different']},
+  {id:6,signal:'linkedin',key:true,text:'How much does your professional identity reflect the real you — versus what’s expected of you?',opts:['Completely authentic — it\'s genuinely me','Mostly authentic — with some professional filtering','I present a version of myself that feels professionally safer','It\'s a performance — the real me is quite different']},
   {id:7,signal:'anxiety',key:true,text:'Over the last 6 months, have you felt a quiet uncertainty about where AI may be taking your career?',opts:['No — I feel confident and clear','Occasionally — but I push it aside','Yes — more often than I\'d like to admit','Frequently — it\'s harder to ignore than it used to be']},
   {id:8,signal:'skill',text:'If AI became better than you at your core skill within the next year, which response feels most honest?',opts:['I\'d find a new skill — I\'m defined by adaptability','I\'d struggle — that skill took years to build','I\'d feel lost — that skill is a big part of who I am','I think about this more than I admit']},
   {id:9,signal:'worth',key:true,text:'If your current role changed significantly, how much would it affect how you see yourself?',opts:['Barely — I know who I am beyond my role','Somewhat — it would take adjustment','Quite a lot — work defines how I see myself','Completely — I don\'t know who I\'d be']},
