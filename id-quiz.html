@@ -75,72 +75,52 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 /* MAIN — dark outer, light card */
 .quiz-main{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px}
 .quiz-card{width:100%;max-width:580px;background:var(--bg);border-radius:20px;padding:40px;box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.04)}
+/* Desktop: screens-wrap is transparent passthrough */
+.screens-wrap{display:contents;}
 
-/* MOBILE — full viewport, no scroll, pinned button */
+/* MOBILE — true fullscreen, screens snap replace each other */
 @media(max-width:600px){
   html,body{height:100%;overflow:hidden}
-  .page{height:100%;overflow:hidden}
-  .quiz-main{padding:0;align-items:stretch;overflow:hidden}
+  .page{height:100%;display:flex;flex-direction:column;overflow:hidden}
+  .quiz-main{flex:1;padding:0;overflow:hidden;position:relative;}
   .quiz-card{
-    border-radius:0;
-    padding:20px 20px 0 20px;
-    box-shadow:none;
-    height:100%;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
+    position:absolute;inset:0;border-radius:0;padding:0;
+    box-shadow:none;display:flex;flex-direction:column;
+    overflow:hidden;background:var(--bg);
   }
-  .seg-progress{margin-bottom:16px;flex-shrink:0}
-  .screen.active{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-    min-height:0;
-  }
-  /* Question text + options scroll if needed, button stays pinned */
-  #screen-q{overflow:hidden}
-  .q-meta{margin-bottom:16px;flex-shrink:0}
-  .q-text{font-size:18px;margin-bottom:16px;flex-shrink:0}
-  .options{
-    flex:1;
-    overflow-y:auto;
-    margin-bottom:0;
-    gap:8px;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
+  .seg-progress{flex-shrink:0;margin:14px 20px 8px 20px;}
+  /* Screens wrapper fills space below seg bar */
+  .screens-wrap{flex:1;position:relative;overflow:hidden;min-height:0;}
+  /* All screens absolute — only .active shows */
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;}
+  .screen.active{display:flex;}
+  /* NAME SCREEN */
+  #screen-name{padding:20px 20px 0 20px;overflow-y:auto;justify-content:flex-start;}
+  .name-eyebrow{margin-bottom:10px;flex-shrink:0}
+  .name-title{font-size:26px;margin-bottom:6px;flex-shrink:0}
+  .name-sub{font-size:13px;margin-bottom:16px;line-height:1.5;flex-shrink:0}
+  .field-wrap{margin-bottom:10px;flex-shrink:0}
+  .trust-mini{margin-bottom:14px;font-size:11px;gap:10px;flex-shrink:0}
+  #screen-name .btn{width:100%;justify-content:center;padding:16px 24px;flex-shrink:0;margin-bottom:20px;}
+  /* QUESTION SCREEN */
+  #screen-q{padding:16px 20px 0 20px;display:flex;flex-direction:column;overflow:hidden;}
+  .q-meta{margin-bottom:14px;flex-shrink:0}
+  .q-text{font-size:18px;line-height:1.3;margin-bottom:14px;flex-shrink:0}
+  .options{flex:1;overflow-y:auto;margin-bottom:0;gap:8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:0;}
   .options::-webkit-scrollbar{display:none}
-  .opt{padding:13px 16px}
+  .opt{padding:12px 14px}
   .opt-text{font-size:14px}
-  .btn-wrap{
-    flex-shrink:0;
-    padding:16px 0 20px 0;
-    background:var(--bg);
-    border-top:1px solid var(--border);
-    margin-top:0;
-  }
-  .btn{width:100%;justify-content:center;padding:16px 24px;font-size:15px}
-  /* Name screen mobile */
-  #screen-name{
-    overflow-y:auto;
-    display:flex;
-    flex-direction:column;
-    padding-bottom:20px;
-  }
-  .name-eyebrow{margin-bottom:12px}
-  .name-title{font-size:26px;margin-bottom:6px}
-  .name-sub{font-size:13px;margin-bottom:16px;line-height:1.5}
-  .field-wrap{margin-bottom:12px}
-  .trust-mini{margin-bottom:16px;font-size:11px;gap:10px}
-  #screen-name .btn{width:100%;justify-content:center;padding:16px 24px}
-  /* Mirror screen mobile */
-  .mirror-screen-inner{padding:24px 20px;border-radius:16px}
-  .mirror-textarea{min-height:100px}
-  .mirror-nav{padding:16px 0 20px 0}
-  /* Analysing screen mobile */
-  .analysing-wrap{padding:24px 0}
-  /* Footer hide on mobile to save space */
+  .btn-wrap{flex-shrink:0;padding:14px 0 20px 0;background:var(--bg);border-top:1px solid var(--border);margin-top:8px;}
+  .btn{width:100%;justify-content:center;padding:15px 24px;font-size:15px}
+  /* MIRROR SCREEN */
+  #screen-mirror{padding:16px 20px 0 20px;overflow-y:auto;}
+  .mirror-screen-inner{padding:22px 18px;border-radius:16px}
+  .mirror-textarea{min-height:90px}
+  .mirror-nav{padding:14px 0 20px 0;flex-shrink:0}
+  /* ANALYSING SCREEN */
+  #screen-analysing{padding:20px;overflow-y:auto;}
+  .analysing-wrap{padding:20px 0}
+  /* Footer hidden on mobile */
   footer{display:none}
 }
 
@@ -259,6 +239,9 @@ footer a{color:inherit;text-decoration:none}
     <div class="seg" id="seg-11"></div>
   </div>
 
+  <!-- SCREENS CONTAINER -->
+  <div class="screens-wrap">
+
   <!-- NAME -->
   <div class="screen active" id="screen-name">
     <div class="name-eyebrow">Before we begin</div>
@@ -330,7 +313,7 @@ footer a{color:inherit;text-decoration:none}
         </a>
       </div>
     </div>
-  </div>
+  </div><!-- end screens-wrap -->
 
 </div>
 </main>
