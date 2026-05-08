@@ -85,35 +85,48 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 
 /* MOBILE */
 @media(max-width:600px){
-  /* Mobile exit X — pinned top right of card */
+  /* Mobile exit X — visible row at top of card */
   .mobile-exit{
-    display:block;
-    position:absolute;
-    top:12px;
-    right:14px;
-    font-size:13px;
-    color:rgba(0,0,0,0.25);
+    display:flex;
+    justify-content:flex-end;
+    padding:12px 14px 0 14px;
     text-decoration:none;
-    z-index:10;
-    padding:6px;
-    line-height:1;
-    transition:color 0.2s;
   }
-  html,body{height:100%}
-  .page{min-height:100%}
-  .quiz-main{
-    padding:16px 12px;
+  .mobile-exit span{
+    display:flex;
     align-items:center;
     justify-content:center;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:rgba(0,0,0,0.08);
+    font-size:13px;
+    color:rgba(0,0,0,0.6);
+    font-weight:600;
+  }
+  /* Hide nav + progress bar */
+  nav{display:none}
+  .progress-wrap{display:none}
+  /* Layout — natural scroll works on all phone sizes */
+  .quiz-main{
+    padding:16px 12px;
+    align-items:flex-start;
+    justify-content:flex-start;
+    min-height:100vh;
+  }
+  .quiz-main.name-active{
+    justify-content:center;
+    align-items:center;
     min-height:100vh;
   }
   .quiz-card{
+    width:100%;
     border-radius:16px;
-    padding:24px 18px 20px 18px;
+    padding:0 18px 24px 18px;
     box-shadow:0 12px 40px rgba(0,0,0,0.4);
-    position:relative;
   }
   /* NAME SCREEN */
+  #screen-name{padding-top:32px;padding-bottom:32px}
   .name-eyebrow{margin-bottom:10px}
   .name-title{font-size:24px;margin-bottom:6px}
   .name-sub{font-size:13px;margin-bottom:14px;line-height:1.5}
@@ -121,25 +134,23 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
   .trust-mini{margin-bottom:14px;font-size:11px;gap:10px}
   #screen-name .btn{width:100%;justify-content:center;padding:15px 24px}
   /* QUESTION SCREEN */
-  .q-meta{margin-bottom:8px}
-  .q-text{font-size:17px;margin-bottom:10px}
-  .options{gap:8px;margin-bottom:16px}
-  .opt{padding:12px 14px}
-  .opt-text{font-size:13px}
+  .q-meta{margin-bottom:4px}
+  .q-text{font-size:17px;margin-bottom:6px}
+  .options{gap:7px;margin-bottom:8px}
+  .opt{padding:11px 13px}
+  .opt-letter{width:24px;height:24px;font-size:11px}
+  .opt-text{font-size:13px;padding-top:2px}
   .btn-wrap{margin-top:4px}
-  .btn{width:100%;justify-content:center;padding:15px 24px;font-size:15px}
+  .btn{width:100%;justify-content:center;padding:14px 24px;font-size:15px}
   .btn-back{font-size:13px}
   /* MIRROR SCREEN */
-  .mirror-screen-inner{padding:22px 16px;border-radius:14px}
+  .mirror-screen-inner{padding:20px 16px;border-radius:14px}
   .mirror-q{font-size:19px}
-  .mirror-textarea{min-height:90px}
+  .mirror-textarea{min-height:85px}
   /* ANALYSING SCREEN */
-  .analysing-wrap{padding:24px 0}
+  .analysing-wrap{padding:20px 0}
   /* Footer */
   footer{padding:16px}
-  /* Hide nav + top progress bar — card needs full height */
-  nav{display:none}
-  .progress-wrap{display:none}
 }
 
 /* NAME SCREEN — light */
@@ -239,7 +250,7 @@ footer a{color:inherit;text-decoration:none}
 <main class="quiz-main">
 <div class="quiz-card">
   <!-- MOBILE EXIT BUTTON — only shows when nav is hidden -->
-  <a href="https://shiftid.ai" class="mobile-exit" aria-label="Exit quiz">✕</a>
+  <a href="https://shiftid.ai" class="mobile-exit" aria-label="Exit quiz"><span>✕</span></a>
   <!-- SEGMENTED PROGRESS BAR — 11 segments -->
   <div class="seg-progress" id="seg-progress" style="opacity:0">
     <div class="seg" id="seg-1"></div>
@@ -356,6 +367,10 @@ function checkNameReady(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
+  // Set name-active on load since name screen starts active
+  const main = document.querySelector('.quiz-main');
+  if(main) main.classList.add('name-active');
+
   const nameInput=document.getElementById('user-name');
   const btnName=document.getElementById('btn-name');
   if(nameInput){
@@ -546,6 +561,9 @@ function updateProgress(pct, label){
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  // Centre quiz-main only on name screen
+  const main = document.querySelector('.quiz-main');
+  if(main) main.classList.toggle('name-active', id === 'screen-name');
   window.scrollTo(0,0);
 }
 </script>
