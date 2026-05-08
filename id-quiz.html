@@ -137,6 +137,7 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
   .opt{padding:11px 13px}
   .opt-letter{width:24px;height:24px;font-size:11px}
   .opt-text{font-size:13px;padding-top:2px}
+  .options .opt:last-child{margin-bottom:8px}
   .btn-wrap{margin-top:2px}
   .btn{width:100%;justify-content:center;padding:14px 24px;font-size:15px}
   .btn-back{font-size:13px}
@@ -460,7 +461,7 @@ function nextFromMirror(){
 function goBack(){
   document.body.classList.remove('mirror-active');
   if(phase==='before-mirror'){if(qIndex===0){showScreen('screen-name');updateProgress(0,'Identity Mirror Quiz');return;}qIndex--;}
-  else{if(qIndex===4){showMirror();return;}qIndex--;}
+  else{if(qIndex===4 && !document.getElementById('screen-mirror').classList.contains('active')){showMirror();return;}qIndex--;}
   showQuestion();
 }
 
