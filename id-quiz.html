@@ -75,7 +75,65 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 /* MAIN — dark outer, light card */
 .quiz-main{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px}
 .quiz-card{width:100%;max-width:580px;background:var(--bg);border-radius:20px;padding:40px;box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.04)}
-@media(max-width:600px){.quiz-card{padding:28px 22px;border-radius:16px}}
+
+/* MOBILE — full viewport, no scroll, pinned button */
+@media(max-width:600px){
+  html,body{height:100%;overflow:hidden}
+  .page{height:100%;overflow:hidden}
+  .quiz-main{padding:0;align-items:stretch;overflow:hidden}
+  .quiz-card{
+    border-radius:0;
+    padding:20px 20px 0 20px;
+    box-shadow:none;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .seg-progress{margin-bottom:16px;flex-shrink:0}
+  .screen.active{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    min-height:0;
+  }
+  /* Question text + options scroll if needed, button stays pinned */
+  #screen-q{overflow:hidden}
+  .q-meta{margin-bottom:16px;flex-shrink:0}
+  .q-text{font-size:18px;margin-bottom:16px;flex-shrink:0}
+  .options{
+    flex:1;
+    overflow-y:auto;
+    margin-bottom:0;
+    gap:8px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .options::-webkit-scrollbar{display:none}
+  .opt{padding:13px 16px}
+  .opt-text{font-size:14px}
+  .btn-wrap{
+    flex-shrink:0;
+    padding:16px 0 20px 0;
+    background:var(--bg);
+    border-top:1px solid var(--border);
+    margin-top:0;
+  }
+  .btn{width:100%;justify-content:center;padding:16px 24px;font-size:15px}
+  /* Name screen mobile */
+  #screen-name{overflow-y:auto}
+  .name-title{font-size:26px}
+  .name-sub{font-size:14px;margin-bottom:20px}
+  /* Mirror screen mobile */
+  .mirror-screen-inner{padding:24px 20px;border-radius:16px}
+  .mirror-textarea{min-height:100px}
+  .mirror-nav{padding:16px 0 20px 0}
+  /* Analysing screen mobile */
+  .analysing-wrap{padding:24px 0}
+  /* Footer hide on mobile to save space */
+  footer{display:none}
+}
 
 .screen{display:none;animation:fadeIn 0.4s ease}
 .screen.active{display:block}
@@ -196,7 +254,7 @@ footer a{color:inherit;text-decoration:none}
   <div class="screen active" id="screen-name">
     <div class="name-eyebrow">Before we begin</div>
     <h1 class="name-title">What should we call <em>you?</em></h1>
-    <p class="name-sub">Your result is personalised to you. 11 questions. No signup needed.</p>
+    <p class="name-sub">This isn't a personality test or a career assessment. It's a short reflection on identity, work and AI.</p>
 
     <div class="field-wrap">
       <label>Your first name</label>
@@ -205,7 +263,7 @@ footer a{color:inherit;text-decoration:none}
 
     <div class="trust-mini">
       <span>✓ Free</span>
-      <span>✓ Realtime analysis</span>
+      <span>✓ Personalised in realtime</span>
       <span>✓ Takes 2 minutes</span>
     </div>
 
@@ -224,12 +282,12 @@ footer a{color:inherit;text-decoration:none}
       </div>
       <div class="mirror-label">In your own words</div>
       <div class="mirror-q">What would you lose if your job title disappeared tomorrow?</div>
-      <div class="mirror-hint">Take 30 seconds. Be honest. Nobody else will see this.</div>
+      <div class="mirror-hint">Most professionals never pause long enough to answer this honestly. Take 30 seconds. Be honest. Nobody else will see this.</div>
       <textarea class="mirror-textarea" id="mirror-text" placeholder="Write whatever comes to mind first right now... e.g. I'd lose the sense that my opinion matters. The relationships I've built over years. The feeling of being useful..." maxlength="900" oninput="updateWordCount()"></textarea>
       <div class="mirror-footer">
         <div class="word-count" id="word-count">0 / 150 words</div>
       </div>
-      <div class="mirror-disclaimer">This is a reflective tool, not a clinical assessment. Your result is based on your answers in this moment — it may look different if you take it again. That's not a bug. That's you.<br><br>Your response is stored securely, used only in anonymised form, and never attributed to you. <a href="https://shiftid.ai/privacy" target="_blank" style="color:var(--m-gold)">Privacy Policy</a> · <a href="mailto:privacy@shiftid.ai" style="color:var(--m-gold)">Request deletion</a></div>
+      <div class="mirror-disclaimer">This is a reflective tool, not a clinical assessment. Your result is based on your answers in this moment — it may look different if you take it again. That's not a bug. That's you.<br><br>Your response is stored securely, used only in anonymised form, and never attributed to you.</div>
     </div>
     <div class="mirror-nav">
       <button class="btn-back-mirror" onclick="goBack()">← Back</button>
@@ -273,16 +331,16 @@ footer a{color:inherit;text-decoration:none}
 
 <script>
 const questions=[
-  {id:1,signal:'identity',text:'When someone asks "what do you do?" — what\'s the first thing that comes to mind?',opts:['My job title','The problems I solve','The value I create for people','I usually deflect or say it\'s complicated']},
-  {id:2,signal:'exposure',text:'How much of what you did at work 3 years ago could an AI agent do today?',opts:['Almost none of it','Maybe 20–30%','Probably half','Honestly, most of it']},
-  {id:3,signal:'worth',key:true,text:'If your job title disappeared tomorrow, how would your sense of self-worth be affected?',opts:['Barely — I know who I am beyond my role','Somewhat — it would take adjustment','Significantly — my role is central to how I see myself','Completely — I don\'t know who I\'d be']},
+  {id:1,signal:'identity',text:'When someone asks "what do you do?" — what feels most natural to say first?',opts:['My job title','The problems I solve','The value I create for people','I usually deflect or say it\'s complicated']},
+  {id:2,signal:'exposure',text:'How much of the work you did 3 years ago could AI realistically handle today?',opts:['Almost none of it','Maybe 20–30%','Probably half','More than I expected']},
+  {id:3,signal:'adaptation',text:'When your organisation introduces a new AI tool or workflow, what\'s your honest first reaction?',opts:['Curiosity — I want to understand and use it','Caution — I want to understand it properly first','Resistance — change feels threatening','Unease — I think about what it could mean long term']},
   {id:4,signal:'output',text:'On your best days at work, what makes you feel most valuable?',opts:['Delivering a specific output or result','How I think through problems','The relationships and trust I\'ve built','My ability to lead and adapt to what\'s needed']},
-  {id:6,signal:'anxiety',key:true,text:'In the last 6 months, have you felt a quiet unease about where AI is taking your career — even if you haven\'t said it out loud?',opts:['No — I feel confident and clear','Occasionally — but I push it aside','Yes — more often than I\'d like to admit','Constantly — it\'s affecting how I show up']},
-  {id:7,signal:'skill',text:'If AI could do your core skill better than you by next year, which feels most true?',opts:['I\'d find a new skill — I\'m defined by adaptability','I\'d struggle — that skill took years to build','I\'d feel lost — that skill is a big part of who I am','I\'m already thinking about this and don\'t have an answer']},
-  {id:8,signal:'linkedin',text:'How much does your LinkedIn profile reflect who you actually are — vs who you need to appear to be?',opts:['Completely authentic — it\'s genuinely me','Mostly me with some professional polish','It\'s a performance — the real me is different','I haven\'t thought about it but now I\'m uncomfortable']},
-  {id:9,signal:'adaptation',text:'When your organisation introduces a new AI tool or process, what\'s your honest first reaction?',opts:['Curiosity — I want to understand and use it','Caution — I assess before I engage','Resistance — change feels threatening','Anxiety — I worry about what it means for my role']},
-  {id:10,signal:'self',key:true,text:'Outside of work, how clearly can you describe who you are?',opts:['Very clearly — I have a strong sense of self beyond my career','Somewhat — work and identity blur more than I\'d like','Not very clearly — most of my identity is career-related','I find this question genuinely difficult to answer']},
-  {id:11,signal:'action',text:'If you knew AI would replace 60% of your current role within 2 years — what would you do today?',opts:['Start building — I\'d pivot immediately with clarity','Research — I\'d gather information before acting','Wait and see — I\'d hope it doesn\'t affect me','Panic — I genuinely don\'t know where I\'d start']}
+  {id:6,signal:'linkedin',key:true,text:'How much does your professional identity reflect who you actually are — versus who you feel expected to be?',opts:['Completely authentic — it\'s genuinely me','Mostly authentic — with some professional filtering','I present a version of myself that feels professionally safer','It\'s a performance — the real me is quite different']},
+  {id:7,signal:'anxiety',key:true,text:'Over the last 6 months, have you felt a quiet uncertainty about where AI may be taking your career?',opts:['No — I feel confident and clear','Occasionally — but I push it aside','Yes — more often than I\'d like to admit','Frequently — it\'s harder to ignore than it used to be']},
+  {id:8,signal:'skill',text:'If AI became better than you at your core skill within the next year, which response feels most honest?',opts:['I\'d find a new skill — I\'m defined by adaptability','I\'d struggle — that skill took years to build','I\'d feel lost — that skill is a big part of who I am','I think about this more than I admit']},
+  {id:9,signal:'worth',key:true,text:'If your current role changed significantly, how much would it affect how you see yourself?',opts:['Barely — I know who I am beyond my role','Somewhat — it would take adjustment','Quite a lot — work defines how I see myself','Completely — I don\'t know who I\'d be']},
+  {id:10,signal:'self',key:true,text:'Outside of work, how clearly do you feel connected to who you are?',opts:['Very clearly — I have a strong sense of self beyond my career','Somewhat — work and identity blur more than I\'d like','Not very clearly — most of my identity is career-related','I find this question genuinely difficult to answer']},
+  {id:11,signal:'action',text:'If AI reshaped most of your current role within 2 years, what feels like your most honest next move?',opts:['Start building — I\'d move early and intentionally','Research first — I\'d need clarity before acting','Wait and see — I\'d hope the impact stays manageable','I genuinely wouldn\'t know where to begin']}
 ];
 
 let userName='',userCountry='',userDept='',userRole='',answers={},mirrorText='',qIndex=0,phase='before-mirror';
@@ -324,7 +382,7 @@ function showQuestion(){
   updateProgress(Math.round((qNum/11)*100),`Question ${qNum} of 11`);
 
   const letters=['A','B','C','D'];
-  const labels={identity:'Identity',exposure:'AI Exposure',worth:'Self-Worth',output:'Value Source',anxiety:'Awareness',skill:'Skill Layer',linkedin:'Professional Layer',adaptation:'Adaptability',self:'Core Self',action:'Readiness'};
+  const labels={identity:'Identity',exposure:'AI Exposure',worth:'Self-Worth',output:'Value Source',anxiety:'Awareness',skill:'Skill Layer',linkedin:'Professional Identity',adaptation:'Adaptability',self:'Core Self',action:'Direction'};
   const alreadyAnswered = answers[q.id] !== undefined;
 
   document.getElementById('screen-q').innerHTML=`
