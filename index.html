@@ -223,6 +223,17 @@ nav {
   text-align: center;
   padding: 130px 24px 88px;
 }
+.hero-linkedin-trust {
+  font-size: 12px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
 .hero-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
@@ -334,6 +345,7 @@ nav {
 }
 .rotator-text em { color: var(--gold); font-style: italic; }
 .rotator-dots { display: flex; gap: 8px; }
+@media(max-width:600px){.rotator-text{min-height:72px;display:flex;align-items:center;justify-content:center;}.rotator-inner{padding:32px 24px;gap:16px;}}
 .r-dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: rgba(255,255,255,0.12);
@@ -662,7 +674,7 @@ footer {
   <div class="logo">Shift<span>ID</span></div>
   <div style="display:flex;align-items:center;gap:16px">
     <a href="https://shiftid.ai/ai-report" style="font-size:14px;color:#9994B0;text-decoration:none;font-weight:400;transition:color 0.2s" onmouseover="this.style.color='#EAE8F2'" onmouseout="this.style.color='#9994B0'">Free AI Report</a>
-    <a href="https://shiftid.ai/id-quiz" class="nav-btn">Take Free Quiz →</a>
+    <a href="https://shiftid.ai/id-quiz" class="nav-btn">Take ShiftID Quiz →</a>
   </div>
 </nav>
 
@@ -672,26 +684,32 @@ footer {
 <section class="hero">
   <div class="hero-eyebrow">
     <span class="eyebrow-dot"></span>
-    Built for LinkedIn Professionals
+    WHEN YOUR ROLE DISAPPEARS, WHO STAYS
+    <span class="eyebrow-dot"></span>
   </div>
 
   <h1>
-    AI is replacing jobs.<br>
-    Will it replace <em>you?</em>
+    AI is reshaping your role.<br>
+    <em>What it exposes in you matters more.</em>
   </h1>
 
   <div class="hero-sub">
-    <p>This quiz discovers exactly how much of your role AI can already do. Some professionals are already seeing <span class="hero-stat">60–70%</span> of their weekly tasks automated without realising it. Most won't see it coming until it's too late.</p>
+    <p>This reflection quiz reveals how much of your role AI can already handle — and where your identity is attached to it. Some professionals are already seeing <span class="hero-stat">60–70%</span> of their work shift without noticing. Most only realise once the change becomes personal.</p>
   </div>
 
   <div class="hero-cta-wrap">
     <a href="https://shiftid.ai/id-quiz" class="btn btn-hero large">
-      Take the 2-Minute Free Quiz →
+      Take ShiftID Quiz →
     </a>
     <div class="trust-line">
+      <span>✓ Free</span>
       <span>✓ 11 questions</span>
-      <span>✓ Personalised analysis in realtime</span>
+      <span>✓ Personalised reflection in realtime</span>
       <span>✓ No signup needed</span>
+    </div>
+    <div class="hero-linkedin-trust">
+      <span class="eyebrow-dot" style="display:inline-block;margin-right:6px"></span>
+      Built for Professionals Navigating AI Change
     </div>
     <div class="social-proof">
       <div class="avatars">
@@ -791,7 +809,7 @@ footer {
 
     <div style="text-align:center">
       <p class="pre-cta">That's not a career problem. That's an identity problem.</p>
-      <a href="https://shiftid.ai/id-quiz" class="btn">Check where you stand →</a>
+      <a href="https://shiftid.ai/id-quiz" class="btn">See your ShiftID pattern →</a>
     </div>
   </div>
 </section>
@@ -803,9 +821,9 @@ footer {
   <div class="section-inner narrow" style="text-align:center">
 
     <div class="s-label">The Identity Mirror Quiz</div>
-    <h2 class="quiz-title">Find out <em>exactly</em> how replaceable<br>your work really is</h2>
+    <h2 class="quiz-title">Find out <em>exactly</em> how exposed<br>your role already is to AI</h2>
     <p class="s-sub">
-      11 questions. Personalised analysis in realtime. You'll get a clear breakdown of where your identity is most exposed — and where AI has quietly taken over.
+      11 reflective questions. A personalised breakdown of where your identity is most attached — and where AI may already be changing it.
     </p>
 
     <div class="quiz-steps">
@@ -824,11 +842,11 @@ footer {
     </div>
 
     <p class="pre-cta">Most people are shocked by their result.</p>
-    <a href="https://shiftid.ai/id-quiz" class="btn large">Take the Free Quiz →</a>
+    <a href="https://shiftid.ai/id-quiz" class="btn large">See your ShiftID pattern →</a>
 
     <div class="trust-line" style="margin-top:14px">
       <span>✓ No account needed</span>
-      <span>✓ Personalised analysis in realtime</span>
+      <span>✓ Personalised reflection in realtime</span>
       <span>✓ 3,200+ professionals</span>
     </div>
 
@@ -890,13 +908,13 @@ footer {
         <ul class="path-list">
           <li>Your self-worth exists independent of output</li>
           <li>Your identity survives any role change</li>
-          <li>Knows exactly who they are without the title</li>
+          <li>Knows who they are beyond the title</li>
         </ul>
       </div>
     </div>
 
     <div style="text-align:center">
-      <p class="pre-cta">The problem is — most people don't know where they stand.</p>
+      <p class="pre-cta">The problem is — most professionals don't know where they stand.</p>
       <a href="https://shiftid.ai/id-quiz" class="btn">Check where you stand →</a>
     </div>
   </div>
@@ -909,7 +927,7 @@ footer {
   <div class="section-inner narrow" style="text-align:center">
     <h2 class="s-title">What happens after you click</h2>
     <p class="s-sub">
-      Three stages. Go as deep as you need. Each one builds on the last. From identifying the fight to shifting out of it.
+      Three stages. Go as deep as you need. Each one builds on the last — from recognising the Mental Fight to moving into the Mental Shift.
     </p>
   </div>
 </section>
@@ -931,7 +949,7 @@ footer {
           <p class="stage-desc">
             The quiz maps your identity and your job role AI risk score — you get an instant, personalised report.
             Most people have never seen themselves this clearly.
-            No jargon. No waffle. Just a mirror.
+            No jargon. No waffle. Just an honest mirror.
           </p>
           <span style="display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap"><span class="stage-chip">Reveal your identity</span><a href="https://shiftid.ai/id-quiz" style="font-size:14px;color:var(--gold);font-weight:500;text-decoration:none">✦ Start here — it's free</a></span>
         </div>
@@ -945,8 +963,8 @@ footer {
           <div class="stage-tag">Stage 2 · Unlock</div>
           <div class="stage-title">Understand your pattern</div>
           <p class="stage-desc">
-            Go deeper with our analysis tool. Share your raw thoughts, fears, and assumptions.
-            No filters needed — the AI analyses and reflects back the patterns you can't see yourself and gives you a clear roadmap.
+            Go deeper psychologically. Explore the patterns, assumptions and thoughts shaping how you respond to change.
+            AI reflects back the blind spots and identity signals most professionals never notice in themselves.
           </p>
           <span class="stage-chip">Unlock your pattern</span>
         </div>
@@ -960,8 +978,8 @@ footer {
           <div class="stage-tag" id="stage3-tag">Stage 3 · Shift</div>
           <div class="stage-title">Confusion to Clarity</div>
           <p class="stage-desc">
-            When you brain dump your thoughts to AI, it synthesises, organises and makes sense of it faster than your mind can alone — giving you a clear, structured path forward.
-            You stop reacting to AI and start directing it.
+            Move from reaction to direction. AI helps you cut through the noise, recognise what matters and move with more clarity.
+            You stop reacting to AI — and start directing it.
           </p>
           <span class="stage-chip">Shift your identity</span>
         </div>
@@ -976,10 +994,10 @@ footer {
 ════════════════════════════ -->
 <section class="bordered reveal" style="border:1px solid rgba(212,168,75,0.55);border-radius:16px;margin:0 24px">
   <div class="section-inner narrow" style="text-align:center">
-    <h2 class="s-title">We built the systems.<br>Then we watched roles change.</h2>
+    <h2 class="s-title">We built the systems.<br>Then we watched certainty disappear.</h2>
 
     <p class="founder-body">
-      We've spent over 30 years inside enterprise systems — helping organisations automate work, adopt AI, and scale. Then something changed.
+      We've spent over 30 years inside enterprise systems — helping organisations automate work, adopt AI, and scale. Then the ground started shifting underneath the people inside them.
     </p>
 
     <p class="founder-body" style="margin-top:20px">
@@ -987,11 +1005,11 @@ footer {
     </p>
 
     <p class="founder-body" style="margin-top:20px">
-      What's shifting now isn't just how work gets done — it's how roles hold value. When roles become fluid, identity becomes exposed.
+      What's changing now isn't just how work gets done — it's what makes people feel valuable. When roles become fluid, identity becomes exposed.
     </p>
 
     <p class="founder-body" style="margin-top:20px">
-      <span class="founder-gold-inline">If what you do can change this quickly — what are you actually identifying with?</span>
+      <span class="founder-gold-inline">If what you do can change this quickly — what is your identity really built on?</span>
     </p>
 
     <p class="founder-body" style="margin-top:20px">
@@ -1007,13 +1025,14 @@ footer {
   <div class="section-inner narrow" style="text-align:center">
     <h2 class="s-title">Ready to find out<br><em>who you are</em> without your job title?</h2>
     <p class="s-sub" style="margin-bottom:20px">
-      11 questions. Personalised analysis in realtime. Built for professionals who want to know exactly where they stand.
+      11 reflective questions. A personalised breakdown in realtime. Most professionals won't question their identity until change forces them to. Built for those navigating AI change.
     </p>
     <p class="consequence" style="margin-top:0;margin-bottom:28px">Every day you wait, AI is making that decision for you.</p>
-    <a href="https://shiftid.ai/id-quiz" class="btn large">Take the Free Quiz →</a>
+    <a href="https://shiftid.ai/id-quiz" class="btn large">Take ShiftID Quiz →</a>
     <div class="trust-line" style="margin-top:16px">
+      <span>✓ Free</span>
       <span>✓ No account</span>
-      <span>✓ Personalised analysis in realtime</span>
+      <span>✓ Personalised reflection in realtime</span>
       <span>✓ 3,200+ professionals</span>
     </div>
   </div>
