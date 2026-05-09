@@ -80,26 +80,11 @@ body.mirror-active .quiz-card{background:var(--m-bg);box-shadow:none;padding:0}
 .screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-/* Mobile exit button — hidden on desktop */
-.mobile-exit{display:none}
 
 /* MOBILE */
 @media(max-width:600px){
   /* Mobile exit X — visible row at top of card */
-  .mobile-exit{
-    display:flex;
-    justify-content:flex-end;
-    padding:12px 10px 4px 14px;
-    text-decoration:none;
-    font-size:18px;
-    font-weight:700;
-    color:rgba(0,0,0,0.45);
-    line-height:1;
-    position:relative;
-    z-index:10;
-    pointer-events:auto;
-  }
-  .mobile-exit span{font-size:inherit;font-weight:inherit;color:inherit;pointer-events:auto;}
+
   /* Hide nav + progress bar */
   nav{display:none}
   .progress-wrap{display:none}
@@ -244,7 +229,6 @@ footer a{color:inherit;text-decoration:none}
 <nav>
   <a href="https://shiftid.ai" style="text-decoration:none"><div class="logo">Shift<span>ID</span></div></a>
   <div class="nav-progress" id="nav-progress">Identity Mirror Quiz</div>
-  <a href="https://shiftid.ai" style="font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;letter-spacing:0.5px;transition:color 0.2s" onmouseover="this.style.color='rgba(255,255,255,0.7)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">✕ Exit</a>
 </nav>
 <div class="progress-wrap">
   <div class="progress-fill" id="progress-bar" style="width:0%"></div>
@@ -252,8 +236,6 @@ footer a{color:inherit;text-decoration:none}
 
 <main class="quiz-main">
 <div class="quiz-card">
-  <!-- MOBILE EXIT BUTTON — only shows when nav is hidden -->
-  <a href="https://shiftid.ai" class="mobile-exit" aria-label="Exit quiz"><span>✕</span></a>
   <!-- SEGMENTED PROGRESS BAR — 11 segments -->
   <div class="seg-progress" id="seg-progress" style="opacity:0">
     <div class="seg" id="seg-1"></div>
