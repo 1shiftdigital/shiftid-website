@@ -791,10 +791,11 @@ footer {
 .sr-prompt-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:10px}
 
 .sr-lock-pill{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:8px 18px;font-size:12px;font-weight:500;color:var(--text2);white-space:nowrap}
-.sr-prompt-body{position:relative;min-height:80px;overflow:hidden;margin-top:8px}
-.sr-prompt-body .sr-blurred-content{font-size:13px;color:var(--text2);line-height:1.7}
-.sr-prompt-body .sr-lock-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding-bottom:8px;justify-content:center;background:linear-gradient(to bottom,transparent 0%,var(--bg2) 55%)}
-.sr-prompt-card.locked .sr-prompt-body .sr-lock-overlay{background:linear-gradient(to bottom,transparent 0%,var(--bg3) 55%)}
+.sr-free-pill{background:rgba(212,168,75,0.08);border-color:rgba(212,168,75,0.2);color:var(--gold)}
+.sr-prompt-body{position:relative;min-height:100px;overflow:hidden;margin-top:8px}
+.sr-prompt-body .sr-blurred-content{font-size:13px;color:var(--text2);line-height:1.7;filter:blur(2.5px);opacity:0.8;user-select:none;pointer-events:none}
+.sr-prompt-body .sr-lock-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding-bottom:12px;justify-content:center;background:linear-gradient(to bottom,transparent 0%,var(--bg2) 60%)}
+.sr-prompt-card.locked .sr-prompt-body .sr-lock-overlay{background:linear-gradient(to bottom,transparent 0%,var(--bg3) 60%)}
 .sr-prompt-card.locked .sr-lock-pill{background:var(--bg3)}
 
 @media(max-width:600px){
@@ -987,7 +988,7 @@ footer {
       </div>
       <div class="q-step">
         <div class="q-num">3</div>
-        <div class="q-text">Get your personalised AI prompts</div>
+        <div class="q-text">Go deeper into your pattern</div>
       </div>
     </div>
 
@@ -1018,7 +1019,7 @@ footer {
           </div>
           <div class="sr-pattern-row">
             <span class="sr-pattern-pill">Your pattern</span>
-            <span class="sr-pattern-name">The Quiet Doubter</span>
+            <span class="sr-pattern-name">The Expert Under Pressure</span>
           </div>
         </div>
 
@@ -1045,8 +1046,8 @@ footer {
 
         <!-- ROLE SELECTOR STATIC -->
         <div class="sr-role-selector">
-          <div class="sr-role-eyebrow">Personalise your prompts</div>
-          <div class="sr-role-title">Tell us your role — we'll tailor every prompt to it</div>
+          <div class="sr-role-eyebrow">Personalise your report</div>
+          <div class="sr-role-title">Tell us your role — we'll tailor every reflection to it</div>
           <div class="sr-role-sub">Select your country, department and role. We'll generate your personalised reflection and prompts from your specific quiz answers.</div>
           <div class="sr-role-grid">
             <div class="sr-role-col">
@@ -1071,7 +1072,7 @@ footer {
               </div>
             </div>
           </div>
-          <div class="sr-role-btn">Update my prompts →</div>
+          <div class="sr-role-btn">Update my reflection →</div>
           <div class="sr-role-hint">Available on your result page after completing the quiz</div>
         </div>
 
@@ -1183,71 +1184,71 @@ footer {
         <div class="sr-blurred-card">
           <div class="sr-blurred-label">Your personalised reflection</div>
           <div class="sr-analysis-fade-wrap">
-            <div class="sr-analysis-text">The uncertainty you feel isn't career anxiety — it's identity anxiety. Your sense of professional worth is closely tied to being the expert in the room. As AI begins to replicate that expertise, the ground feels less stable. This isn't weakness. It's information. Your pattern shows something important about where your identity is most attached — and where the real work begins. The Quiet Doubter pattern emerges when someone has built real expertise but hasn't yet separated that expertise from their sense of self-worth. The disruption you're feeling is the gap between those two things becoming visible. Most professionals never name this clearly — and that's exactly why it keeps recurring.</div>
+            <div class="sr-analysis-text">The uncertainty you feel isn't a career problem — it's an identity signal. Your sense of professional worth is closely tied to being the expert in the room. As AI begins to replicate that expertise, the ground feels less stable. This isn't weakness. It's information. Your pattern shows something important about where your identity is most attached — and where the real work begins. The Expert Under Pressure pattern emerges when someone has built real expertise but hasn't yet separated that expertise from their sense of self-worth. The disruption you're feeling is the gap between those two things becoming visible. Most professionals never name this clearly — and that's exactly why it keeps recurring.</div>
             <div class="sr-analysis-fade"></div>
           </div>
           <div class="sr-lock-overlay">
-            <div class="sr-lock-pill">🔒 Complete the quiz to reveal your full reflection</div>
+            <div class="sr-lock-pill sr-free-pill">→ Personalised from your role selection above</div>
           </div>
         </div>
 
         <!-- 6. FREE PROMPT 1 — visible title, blurred content -->
         <div class="sr-prompt-card" style="min-height:140px">
-          <div class="sr-prompt-badge free">Free prompt</div>
+          <div class="sr-prompt-badge free">Initial Reflection</div>
           <div class="sr-prompt-title">Your personal value statement</div>
           <div class="sr-prompt-body">
-            <div class="sr-blurred-content">I am a Financial Analyst and a Quiet Doubter. AI tools including Planful and Workiva now automate financial modelling and reporting. My core expertise is being commoditised. Help me identify and articulate what I provide that these tools cannot — specifically around strategic judgement, cross-functional business partnering, and the instincts that come from years of interpreting financial patterns in context...</div>
-            <div class="sr-lock-overlay"><div class="sr-lock-pill">🔒 Select your role above to reveal</div></div>
+            <div class="sr-blurred-content">I am a Financial Analyst and an Expert Under Pressure. AI tools including Planful and Workiva now automate financial modelling and reporting. My core expertise is being commoditised. Help me identify and articulate what I provide that these tools cannot — specifically around strategic judgement, cross-functional business partnering, and the instincts that come from years of interpreting financial patterns in context...</div>
+            <div class="sr-lock-overlay"><div class="sr-lock-pill sr-free-pill">→ Personalised from your role selection above</div></div>
           </div>
         </div>
 
         <!-- 7. FREE PROMPT 2 — visible title, blurred content -->
         <div class="sr-prompt-card" style="min-height:140px">
-          <div class="sr-prompt-badge free">Free prompt</div>
+          <div class="sr-prompt-badge free">Initial Reflection</div>
           <div class="sr-prompt-title">Your honest 18-month career question</div>
           <div class="sr-prompt-body">
-            <div class="sr-blurred-content">Based on my Quiet Doubter pattern, what is the one honest question I should be asking myself about the next 18 months that I'm probably not asking? I want you to name it directly — not reassure me. Help me face what I'm circling around without looking at directly...</div>
-            <div class="sr-lock-overlay"><div class="sr-lock-pill">🔒 Select your role above to reveal</div></div>
+            <div class="sr-blurred-content">Based on my Expert Under Pressure pattern, what is the one honest question I should be asking myself about the next 18 months that I'm probably not asking? I want you to name it directly — not reassure me. Help me face what I'm circling around without looking at directly...</div>
+            <div class="sr-lock-overlay"><div class="sr-lock-pill sr-free-pill">→ Personalised from your role selection above</div></div>
           </div>
         </div>
 
         <!-- 8. LOCKED PROMPT 3 -->
         <div class="sr-prompt-card locked" style="min-height:140px">
-          <div class="sr-prompt-badge locked-badge">Stage 1 · ShiftID Reflection Prompt</div>
+          <div class="sr-prompt-badge free">Deeper Reflection</div>
           <div class="sr-prompt-title">Reframe your professional narrative</div>
           <div class="sr-prompt-body">
             <div class="sr-blurred-content">My identity as a Financial Analyst is closely tied to technical expertise that AI is beginning to replicate. Help me reframe my professional narrative — not by ignoring this, but by building on what AI cannot do. Write me a 3-sentence positioning statement that reflects genuine value rather than defended expertise...</div>
-            <div class="sr-lock-overlay"><div class="sr-lock-pill">🔒 Continue Reflection</div></div>
+            <div class="sr-lock-overlay"><div class="sr-lock-pill sr-free-pill">🔒 Unlock Next Layer</div></div>
           </div>
         </div>
 
         <!-- 9. LOCKED PROMPT 4 -->
         <div class="sr-prompt-card locked" style="min-height:140px">
-          <div class="sr-prompt-badge locked-badge">Stage 1 · ShiftID Reflection Prompt</div>
+          <div class="sr-prompt-badge free">Deeper Reflection</div>
           <div class="sr-prompt-title">Your specific next move</div>
           <div class="sr-prompt-body">
-            <div class="sr-blurred-content">I am a Quiet Doubter with a Financial Analyst background. I understand the threat is real but haven't translated that understanding into action. Based on my pattern, what is the single most valuable thing I could do in the next 90 days — not to protect my job, but to reposition myself ahead of the shift?</div>
-            <div class="sr-lock-overlay"><div class="sr-lock-pill">🔒 Continue Reflection</div></div>
+            <div class="sr-blurred-content">I am an Expert Under Pressure with a Financial Analyst background. I understand the threat is real but haven't translated that understanding into action. Based on my pattern, what is the single most valuable thing I could do in the next 90 days — not to protect my job, but to reposition myself ahead of the shift?</div>
+            <div class="sr-lock-overlay"><div class="sr-lock-pill sr-free-pill">🔒 Unlock Next Layer</div></div>
           </div>
         </div>
 
         <!-- 10. LOCKED PROMPT 5 -->
         <div class="sr-prompt-card locked" style="min-height:140px">
-          <div class="sr-prompt-badge locked-badge">Stage 1 · ShiftID Reflection Prompt</div>
+          <div class="sr-prompt-badge free">Deeper Reflection</div>
           <div class="sr-prompt-title">Who are you without the title</div>
           <div class="sr-prompt-body">
-            <div class="sr-blurred-content">There is a conversation I am avoiding — with myself, with my manager, or with someone close to me — about where my career is heading in the next two years. Based on my Quiet Doubter pattern, help me identify what that conversation is and give me an opening line to start it...</div>
-            <div class="sr-lock-overlay"><div class="sr-lock-pill">🔒 Continue Reflection</div></div>
+            <div class="sr-blurred-content">There is a conversation I am avoiding — with myself, with my manager, or with someone close to me — about where my career is heading in the next two years. Based on my Expert Under Pressure pattern, help me identify what that conversation is and give me an opening line to start it...</div>
+            <div class="sr-lock-overlay"><div class="sr-lock-pill sr-free-pill">🔒 Unlock Next Layer</div></div>
           </div>
         </div>
 
         <!-- 11. LOCKED PROMPT 6 -->
         <div class="sr-prompt-card locked" style="border-bottom:none">
-          <div class="sr-prompt-badge locked-badge">Stage 1 · ShiftID Reflection Prompt</div>
+          <div class="sr-prompt-badge free">Deeper Reflection</div>
           <div class="sr-prompt-title">The conversation you are avoiding</div>
           <div class="sr-prompt-body">
             <div class="sr-blurred-content">If my role as a Financial Analyst disappeared tomorrow and I had to introduce myself at a professional event without using my title, my employer or my technical skills — who would I say I am? Help me explore this honestly and build a response that feels true rather than performed...</div>
-            <div class="sr-lock-overlay"><div class="sr-lock-pill">🔒 Continue Reflection</div></div>
+            <div class="sr-lock-overlay"><div class="sr-lock-pill sr-free-pill">🔒 Unlock Next Layer</div></div>
           </div>
         </div>
 
@@ -1336,7 +1337,7 @@ footer {
           <div class="stage-tag">Stage 1 . Reveal</div>
           <div class="stage-title">See yourself clearly</div>
           <p class="stage-desc">
-            The quiz maps your identity and your job role AI risk score — you get an instant, personalised report.
+            The quiz maps your identity and your job role AI risk score — you get an instant, personalised reflection.
             Most people have never seen themselves this clearly.
             No jargon. No waffle. Just an honest mirror.
           </p>
