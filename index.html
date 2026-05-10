@@ -711,6 +711,65 @@ footer {
 .sr-pattern-fade{position:absolute;bottom:0;left:0;right:0;height:48px;background:linear-gradient(to bottom,transparent 0%,var(--bg2) 100%);pointer-events:none}
 
 /* Analysis fade — text visible then fades into blur */
+
+/* Role selector static */
+.sr-exposure-source{font-size:10px;color:var(--text3);margin-top:12px;text-align:right;letter-spacing:0.3px}
+.sr-role-selector{padding:24px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.sr-role-eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:8px}
+.sr-role-title{font-family:var(--serif);font-size:clamp(16px,2.5vw,20px);font-weight:400;color:var(--text);text-align:center;margin-bottom:8px}
+.sr-role-sub{font-size:13px;color:var(--text3);text-align:center;line-height:1.6;margin-bottom:20px}
+.sr-role-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.sr-role-col{}
+.sr-role-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.sr-role-dropdown{background:var(--bg);border:1.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;opacity:0.6;cursor:not-allowed}
+.sr-role-dropdown span{font-size:13px;color:var(--text)}
+.sr-role-chevron{color:var(--text3);font-size:12px}
+.sr-role-btn{background:var(--bg);border:1.5px solid rgba(212,168,75,0.2);border-radius:10px;padding:12px;text-align:center;font-size:13px;font-weight:600;color:var(--gold);opacity:0.5;cursor:not-allowed;margin-bottom:10px}
+.sr-role-hint{font-size:11px;color:var(--text3);text-align:center}
+@media(max-width:600px){.sr-role-grid{grid-template-columns:1fr}.sr-role-dropdown span{font-size:12px}}
+
+
+/* Scroll box */
+.sr-scroll-hint{font-size:12px;font-weight:600;color:var(--text2);text-align:center;margin-bottom:10px;letter-spacing:1px}
+.sample-report-scroll{max-height:600px;overflow-y:auto;border-radius:20px;scrollbar-width:thin;scrollbar-color:rgba(212,168,75,0.3) transparent;-webkit-overflow-scrolling:touch}
+.sample-report-scroll::-webkit-scrollbar{width:4px}
+.sample-report-scroll::-webkit-scrollbar-track{background:transparent}
+.sample-report-scroll::-webkit-scrollbar-thumb{background:rgba(212,168,75,0.3);border-radius:4px}
+
+/* Role data cards */
+.sr-role-data-card{padding:20px 24px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.sr-role-data-card.human{background:#0D1A14}
+.sr-role-data-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+
+/* Already automated */
+.sr-auto-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)}
+.sr-auto-item:last-child{border-bottom:none}
+.sr-auto-dot{color:#E05050;font-weight:700;font-size:14px;flex-shrink:0}
+
+/* AI Agents */
+.sr-agents{display:flex;flex-direction:column;gap:10px}
+.sr-agent{background:var(--bg3);border-radius:12px;padding:14px 16px}
+.sr-agent-name{font-size:14px;font-weight:600;color:var(--gold);margin-bottom:4px}
+.sr-agent-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:4px}
+.sr-agent-users{font-size:11px;color:var(--text3)}
+
+/* What needs human */
+.sr-human-items{display:flex;flex-direction:column;gap:8px}
+.sr-human-item{font-size:13px;color:var(--text2);padding-left:14px;position:relative;line-height:1.5}
+.sr-human-item::before{content:'•';position:absolute;left:0;color:#3EC88A}
+
+/* Timeline */
+.sr-timeline{display:flex;flex-direction:column;gap:10px}
+.sr-tl-row{display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center}
+.sr-tl-label{font-size:12px;color:var(--text3)}
+.sr-tl-bar-wrap{background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden}
+.sr-tl-bar{padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.85);white-space:nowrap}
+
+@media(max-width:600px){
+  .sample-report-scroll{max-height:500px}
+  .sr-tl-row{grid-template-columns:60px 1fr}
+}
+
 .sr-analysis-fade-wrap{position:relative;max-height:160px;overflow:hidden}
 .sr-analysis-text{font-size:13px;color:var(--text2);line-height:1.75}
 .sr-analysis-fade{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to bottom,transparent 0%,var(--bg2) 100%);pointer-events:none}
@@ -743,12 +802,7 @@ footer {
 <!-- ═══════════════════════════
      S0 — ANNOUNCEMENT BAR
 ════════════════════════════ -->
-<a href="https://shiftid.ai/ai-report" style="display:block;background:rgba(212,168,75,0.12);border-bottom:1px solid rgba(212,168,75,0.2);padding:10px 24px;text-align:center;transition:background 0.2s;text-decoration:none" onmouseover="this.style.background='rgba(212,168,75,0.18)'" onmouseout="this.style.background='rgba(212,168,75,0.12)'" id="announce-bar">
-  <span style="font-size:13px;font-weight:500;color:#D4A84B;display:inline-flex;align-items:center;gap:8px;justify-content:center">
-    <span style="width:6px;height:6px;border-radius:50%;background:#D4A84B;display:inline-block;flex-shrink:0;animation:blink 2s infinite"></span>
-    <span id="announce-msg">New: See which AI agents are targeting your role right now →</span>
-  </span>
-</a>
+
 
 <!-- ═══════════════════════════
      S1 — NAV
@@ -756,7 +810,6 @@ footer {
 <nav>
   <div class="logo">Shift<span>ID</span></div>
   <div style="display:flex;align-items:center;gap:16px">
-    <a href="https://shiftid.ai/ai-report" style="font-size:14px;color:#9994B0;text-decoration:none;font-weight:400;transition:color 0.2s" onmouseover="this.style.color='#EAE8F2'" onmouseout="this.style.color='#9994B0'">Free AI Report</a>
     <a href="https://shiftid.ai/id-quiz" class="nav-btn">Take ShiftID Quiz →</a>
   </div>
 </nav>
@@ -937,6 +990,8 @@ footer {
         Example result — what you'll see
       </div>
 
+      <div class="sr-scroll-hint">↓ Scroll to explore your full report preview</div>
+      <div class="sample-report-scroll">
       <div class="sample-report">
 
         <!-- 1. HEADER -->
@@ -979,6 +1034,38 @@ footer {
           </div>
         </div>
 
+        <!-- ROLE SELECTOR STATIC -->
+        <div class="sr-role-selector">
+          <div class="sr-role-eyebrow">Personalise your prompts</div>
+          <div class="sr-role-title">Tell us your role — we'll tailor every prompt to it</div>
+          <div class="sr-role-sub">Select your country, department and role. We'll generate your personalised reflection and prompts from your specific quiz answers.</div>
+          <div class="sr-role-grid">
+            <div class="sr-role-col">
+              <div class="sr-role-label">Country</div>
+              <div class="sr-role-dropdown">
+                <span>United Kingdom</span>
+                <span class="sr-role-chevron">▾</span>
+              </div>
+            </div>
+            <div class="sr-role-col">
+              <div class="sr-role-label">Department</div>
+              <div class="sr-role-dropdown">
+                <span>Finance</span>
+                <span class="sr-role-chevron">▾</span>
+              </div>
+            </div>
+            <div class="sr-role-col">
+              <div class="sr-role-label">Role / Title</div>
+              <div class="sr-role-dropdown">
+                <span>Financial Analyst</span>
+                <span class="sr-role-chevron">▾</span>
+              </div>
+            </div>
+          </div>
+          <div class="sr-role-btn">Update my prompts →</div>
+          <div class="sr-role-hint">Available on your result page after completing the quiz</div>
+        </div>
+
         <!-- 4. AI EXPOSURE SCORE -->
         <div class="sr-exposure-card">
           <div class="sr-exposure-top">
@@ -1011,6 +1098,76 @@ footer {
               <span class="sr-exp-pct">25%</span>
             </div>
           </div>
+          <div class="sr-exposure-source">Example only — your score is calculated from your quiz answers</div>
+        </div>
+
+        <!-- ALREADY AUTOMATED -->
+        <div class="sr-role-data-card">
+          <div class="sr-role-data-label">Already automated in this role today</div>
+          <div class="sr-role-data-items">
+            <div class="sr-auto-item"><span class="sr-auto-dot">→</span>Report generation and dashboards</div>
+            <div class="sr-auto-item"><span class="sr-auto-dot">→</span>SQL query writing</div>
+            <div class="sr-auto-item"><span class="sr-auto-dot">→</span>Data cleaning and transformation</div>
+          </div>
+        </div>
+
+        <!-- AI AGENTS -->
+        <div class="sr-role-data-card">
+          <div class="sr-role-data-label">AI agents live in this role right now</div>
+          <div class="sr-agents">
+            <div class="sr-agent">
+              <div class="sr-agent-name">Julius AI</div>
+              <div class="sr-agent-desc">Analyses datasets, writes SQL, builds charts and explains findings in plain English</div>
+              <div class="sr-agent-users">200K+ analysts</div>
+            </div>
+            <div class="sr-agent">
+              <div class="sr-agent-name">Akkio</div>
+              <div class="sr-agent-desc">No-code predictive analytics — builds models from uploaded data automatically</div>
+              <div class="sr-agent-users">10K+ businesses</div>
+            </div>
+            <div class="sr-agent">
+              <div class="sr-agent-name">Obviously AI</div>
+              <div class="sr-agent-desc">Automated machine learning and forecasting from spreadsheet data</div>
+              <div class="sr-agent-users">15K+ users</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WHAT NEEDS HUMAN -->
+        <div class="sr-role-data-card human">
+          <div class="sr-role-data-label" style="color:#3EC88A">What still needs a human in this role</div>
+          <div class="sr-human-items">
+            <div class="sr-human-item">Framing the right business question</div>
+            <div class="sr-human-item">Communicating insight to non-technical stakeholders</div>
+            <div class="sr-human-item">Identifying data quality issues before they matter</div>
+            <div class="sr-human-item">Business context that gives data meaning</div>
+          </div>
+        </div>
+
+        <!-- 18 MONTH TIMELINE -->
+        <div class="sr-role-data-card">
+          <div class="sr-role-data-label">18-month disruption timeline</div>
+          <div class="sr-timeline">
+            <div class="sr-tl-row">
+              <div class="sr-tl-label">Now</div>
+              <div class="sr-tl-bar-wrap">
+                <div class="sr-tl-bar" style="width:63%;background:#E05050">63% of tasks automated</div>
+              </div>
+            </div>
+            <div class="sr-tl-row">
+              <div class="sr-tl-label">6 months</div>
+              <div class="sr-tl-bar-wrap">
+                <div class="sr-tl-bar" style="width:77%;background:#D4A84B">77% of tasks automated</div>
+              </div>
+            </div>
+            <div class="sr-tl-row">
+              <div class="sr-tl-label">18 months</div>
+              <div class="sr-tl-bar-wrap">
+                <div class="sr-tl-bar" style="width:88%;background:#9994B0">88% of tasks automated</div>
+              </div>
+            </div>
+          </div>
+          <div class="sr-exposure-source" style="margin-top:16px">Example only — your data is generated from your role selection</div>
         </div>
 
         <!-- 5. PERSONAL ANALYSIS — first 3 lines visible, rest blurred -->
@@ -1028,7 +1185,7 @@ footer {
         <!-- 6. FREE PROMPT 1 — visible title, blurred content -->
         <div class="sr-prompt-card" style="min-height:140px">
           <div class="sr-prompt-badge free">Free prompt</div>
-          <div class="sr-prompt-title">What AI can't replicate in your role</div>
+          <div class="sr-prompt-title">Your personal value statement</div>
           <div class="sr-prompt-body">
             <div class="sr-blurred-content">I am a Financial Analyst and a Quiet Doubter. AI tools including Planful and Workiva now automate financial modelling and reporting. My core expertise is being commoditised. Help me identify and articulate what I provide that these tools cannot — specifically around strategic judgement, cross-functional business partnering, and the instincts that come from years of interpreting financial patterns in context...</div>
             <div class="sr-lock-overlay"><div class="sr-lock-pill">🔒 Select your role above to reveal</div></div>
@@ -1280,7 +1437,7 @@ footer {
 /* ── Announcement bar rotation ── */
 const announcements = [
   'New: See which AI agents are targeting your role right now →',
-  'Free Report: AI disruption by role, country and department →',
+
   'How exposed is your role to agentic AI? Find out free →'
 ];
 let aIdx = 0;
