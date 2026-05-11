@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShiftID — Your Identity Report</title>
+<title>ShiftID — Your Reflection</title>
 <meta name="description" content="Discover your professional identity pattern in the age of AI. The Identity Mirror Quiz gives you a personalised analysis of where you stand and what to do next.">
 <meta property="og:title" content="ShiftID — The Identity Mirror Quiz">
 <meta property="og:description" content="In the age of agentic AI, the most important question for any professional isn't 'will AI take my job?' It's 'who am I without my job title?' Take the free 2-minute quiz.">
@@ -138,9 +138,9 @@ nav{padding:14px 32px;display:flex;align-items:center;justify-content:space-betw
 .save-email-btn:hover{background:var(--gold2)}
 .save-result-note{font-size:11px;color:var(--text3)}
 /* LOCKED CARDS */
-.locked-card{position:relative;overflow:hidden}
+.locked-card{position:relative;overflow:hidden;min-height:140px}
 .locked-label{color:var(--text3) !important}
-.locked-text{filter:blur(4px);user-select:none;pointer-events:none;opacity:0.5;max-height:80px;overflow:hidden}
+.locked-text{filter:blur(3px);user-select:none;pointer-events:none;opacity:0.7;max-height:90px;overflow:hidden}
 .locked-blur-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to bottom,transparent 0%,var(--bg2) 40%);padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px}
 .locked-blur-msg{font-size:13px;color:var(--text2);font-weight:500}
 .unlock-btn{display:inline-flex;align-items:center;background:var(--gold);color:var(--bg);font-family:var(--sans);font-size:13px;font-weight:700;padding:10px 24px;border-radius:60px;text-decoration:none;transition:background 0.2s}
@@ -229,6 +229,16 @@ footer a{color:var(--text3);text-decoration:none}
   .personalise-selects{grid-template-columns:1fr}
   nav{padding:12px 16px}
 }
+
+/* DEEPER BOX + UNLOCK CTA */
+.deeper-box{border:2px solid rgba(212,168,75,0.6);border-radius:20px;overflow:hidden;margin:0 0 20px;background:rgba(212,168,75,0.03);box-shadow:0 0 40px rgba(212,168,75,0.12)}
+.deeper-box .prompt-card{border-radius:0;border:none;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:0}
+.deeper-box .prompt-card:last-child{border-bottom:none}
+.deeper-unlock-cta{text-align:center;margin:20px 0;display:flex;flex-direction:column;align-items:center;gap:12px}
+.deeper-unlock-btn{display:inline-block;background:var(--gold);color:#07060D;font-family:var(--sans);font-size:16px;font-weight:700;padding:18px 52px;border-radius:50px;text-decoration:none;transition:all 0.25s;letter-spacing:-0.2px}
+.deeper-unlock-btn:hover{background:#F0CB6A;transform:translateY(-2px);box-shadow:0 10px 28px rgba(184,133,42,0.3)}
+.btn-finger{filter:brightness(0);font-style:normal}
+.deeper-unlock-trust{display:flex;gap:16px;font-size:12px;color:var(--text3);flex-wrap:wrap;justify-content:center}
 </style>
 </head>
 <body>
@@ -277,7 +287,6 @@ const patterns = {
   leader:  { pill:'Your Pattern', name:'The Identity-First Leader',  opening:'', bars:[], consequence:'', prompts:{free:[{title:'',text:''},{title:'',text:''}],locked:[]}, nextStep:'share',  ctaTitle:'', ctaSub:'' }
 };
 
-// ── PARSE DATA
 // ── PARSE DATA — sessionStorage first, URL params as fallback ──
 let userName, patternKey, quizData = {};
 try {
@@ -286,8 +295,8 @@ try {
     const d = JSON.parse(stored);
     userName = d.name || 'Your';
     patternKey = d.pattern || 'expert';
-    quizData = d; // Store all quiz answers for API call
-    sessionStorage.removeItem('shiftid_result');
+    quizData = d;
+    // NOTE: do NOT removeItem here — wait until localStorage is confirmed written below
   } else {
     const params = new URLSearchParams(window.location.search);
     userName = params.get('n') || params.get('name') || 'Your';
@@ -300,6 +309,7 @@ try {
 }
 
 // ── GENERATE RESULT ID + STORE IN LOCALSTORAGE ──
+// Only THEN clear sessionStorage — so the guard always has at least one valid source
 function generateResultId(){
   return Math.random().toString(36).substring(2,9) + Date.now().toString(36);
 }
@@ -308,13 +318,18 @@ try {
   const existing = JSON.parse(localStorage.getItem('shiftid_result_data') || '{}');
   if(existing.resultId){
     resultId = existing.resultId;
+    // localStorage already has data — safe to clear sessionStorage now
+    try { sessionStorage.removeItem('shiftid_result'); } catch(e){}
   } else {
     resultId = generateResultId();
     const toStore = { ...quizData, resultId, pattern: patternKey, name: userName };
     localStorage.setItem('shiftid_result_data', JSON.stringify(toStore));
+    // localStorage confirmed written — now safe to clear sessionStorage
+    try { sessionStorage.removeItem('shiftid_result'); } catch(e){}
   }
 } catch(e) {
   resultId = generateResultId();
+  // Storage failed entirely — leave sessionStorage intact as fallback
 }
 
 const userRole = '';
@@ -329,8 +344,8 @@ const report = document.getElementById('report-content');
 report.innerHTML = `
   <!-- HEADER -->
   <div class="report-header">
-    <div class="report-eyebrow">Identity Mirror Report</div>
-    <div class="report-name">${userName}<em>'s</em> Identity Report</div>
+    <div class="report-eyebrow">ShiftID — Identity Pattern Mirror</div>
+    <div class="report-name">${userName}'s <em>Reflection</em></div>
     <div class="report-date">${roleDisplay}${locationDisplay} · Generated ${today}</div>
   </div>
 
@@ -345,7 +360,7 @@ report.innerHTML = `
 
   <!-- BARS -->
   <div class="bars-card">
-    <div class="bars-title">Your Identity Pattern — Four Dimensions</div>
+    <div class="bars-title">Identity dimensions</div>
     ${pattern.bars.map(b=>`
       <div class="bar-row">
         <div class="bar-meta">
@@ -367,9 +382,9 @@ report.innerHTML = `
 
   <!-- PERSONALISE PROMPTS -->
   <div class="personalise-block">
-    <div class="personalise-label">Personalise your prompts</div>
-    <div class="personalise-title">Tell us your role — we'll tailor every prompt to it</div>
-    <div class="personalise-sub">Select your country, department and role. We'll generate your personalised analysis and prompts from your specific quiz answers — takes about 5 seconds.</div>
+    <div class="personalise-label">Personalise your report</div>
+    <div class="personalise-title">Tell us your role — we'll tailor every reflection to it</div>
+    <div class="personalise-sub">Select your country, department and role. We'll generate your personalised reflection from your specific quiz answers.</div>
     <div class="personalise-selects">
       <div class="p-sel-wrap">
         <label>Country</label>
@@ -405,7 +420,7 @@ report.innerHTML = `
         </select>
       </div>
     </div>
-    <button class="personalise-btn" id="personalise-btn" onclick="applyPersonalisation()" disabled>Update my prompts →</button>
+    <button class="personalise-btn" id="personalise-btn" onclick="showEmailPopup()" disabled>Update my reflection →</button>
   </div>
 
   <!-- EXPOSURE CARD — appears after role selection -->
@@ -423,10 +438,7 @@ report.innerHTML = `
       <div class="exp-tasks-label">Already automated in this role today</div>
       <div id="exp-tasks"></div>
     </div>
-    <div class="exposure-link">
-      Want the full breakdown including AI agents and 18-month timeline?
-      <a href="https://shiftid.ai/ai-report" target="_blank" rel="noopener">See your full AI Role Report →</a>
-    </div>
+    <div class="exposure-source">Example data shown — your score is generated from your role selection</div>
   </div>
 
   <!-- ANALYSIS PROGRESS BAR — shows during API call -->
@@ -447,17 +459,17 @@ report.innerHTML = `
   <!-- PROMPTS -->
   <div class="prompts-section" id="prompts-section">
     <div class="prompts-header">
-      <div class="prompts-label">AI Prompts for Your Pattern</div>
+      <div class="prompts-label">Your Personalised Reflection</div>
       <div class="prompts-title" id="prompts-title">Built for ${pattern.name}</div>
-      <div class="prompts-sub" id="prompts-sub">Select your country, department and role. We'll generate your personalised prompts from your quiz answers — takes a few seconds.</div>
+      <div class="prompts-sub" id="prompts-sub">Your reflection is built from your specific quiz answers and role. Select your role above to personalise it.</div>
     </div>
 
     <!-- WHY USE THESE PROMPTS -->
     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px 22px;margin-bottom:20px;display:flex;gap:16px;align-items:flex-start">
       <div style="font-size:22px;flex-shrink:0;margin-top:2px">💡</div>
       <div>
-        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">Why use these prompts?</div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.7">Your quiz answers revealed something specific about you. These prompts take that directly into ChatGPT or Claude — which can go as deep as you need, answer your follow-up questions, and help you think it through in real time. <strong style="color:var(--text)">Tap "Open in ChatGPT" — the prompt is already filled in. Just press send.</strong></div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px">How to use your reflection</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">Your reflection was built from your specific quiz answers. Each piece takes directly into ChatGPT or Claude — which can go as deep as you need and help you think it through in real time. <strong style="color:var(--text)">Tap "Open in ChatGPT" — your reflection is already filled in. Just press send.</strong></div>
       </div>
     </div>
 
@@ -467,19 +479,19 @@ report.innerHTML = `
       <!-- EMAIL CAPTURE OVERLAY — fires when prompts load -->
       <div id="email-overlay" style="display:none;position:absolute;inset:0;z-index:10;border-radius:16px;background:linear-gradient(to bottom,rgba(7,6,13,0.0) 0%,rgba(7,6,13,0.97) 22%);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center">
 
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Your prompts are ready</div>
-        <div style="font-family:var(--serif);font-size:clamp(18px,2.5vw,22px);font-weight:400;margin-bottom:8px;line-height:1.3">Enter your email to continue reading</div>
-        <div style="font-size:13px;color:var(--text2);margin-bottom:22px;line-height:1.6;max-width:340px">Your prompts were built from your specific quiz answers. Enter your email to read them in full and save your result — so you can access everything on any device, any time.</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Save your reflection</div>
+        <div style="font-family:var(--serif);font-size:clamp(18px,2.5vw,22px);font-weight:400;margin-bottom:8px;line-height:1.3">Your personalised reflection is ready</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:22px;line-height:1.6;max-width:340px">Enter your email — we'll send you a link so you can return to it anytime.</div>
         <div style="display:flex;gap:8px;width:100%;max-width:400px;margin-bottom:8px;flex-wrap:wrap">
           <input type="email" id="overlay-email" placeholder="your@email.com" style="flex:1;min-width:200px;background:var(--bg3);border:1px solid rgba(212,168,75,0.3);border-radius:10px;padding:12px 14px;font-family:var(--sans);font-size:14px;color:var(--text);outline:none">
-          <button onclick="saveAndUnlock()" style="background:var(--gold);color:var(--bg);font-family:var(--sans);font-size:14px;font-weight:700;padding:12px 20px;border-radius:10px;border:none;cursor:pointer;white-space:nowrap;transition:background 0.2s">Save & continue →</button>
+          <button onclick="saveAndUnlock()" style="background:var(--gold);color:var(--bg);font-family:var(--sans);font-size:14px;font-weight:700;padding:12px 20px;border-radius:10px;border:none;cursor:pointer;white-space:nowrap;transition:background 0.2s">Save my reflection →</button>
         </div>
-        <div style="font-size:11px;color:var(--text3)">No spam. Just your result link and prompts.</div>
+        <div style="font-size:11px;color:var(--text3)">✓ Free &nbsp;✓ No spam &nbsp;✓ Unsubscribe anytime</div>
       </div>
 
       <!-- FREE PROMPT 1 — shows preview, rest blurred until email -->
       <div class="prompt-card" id="prompt-card-0">
-        <div class="prompt-card-label">✓ FREE — PROMPT 1 OF 6</div>
+        <div class="prompt-card-label">INITIAL REFLECTION</div>
         <div class="prompt-card-title" id="prompt-title-0">Select your role above</div>
         <!-- PREVIEW — always visible -->
         <div class="prompt-card-text" id="prompt-preview-0" style="margin-bottom:0">Your personalised prompt will appear here once you select your role above and click Update.</div>
@@ -508,7 +520,7 @@ report.innerHTML = `
 
       <!-- FREE PROMPT 2 — hidden until email captured -->
       <div class="prompt-card" id="prompt-card-1" style="display:none">
-        <div class="prompt-card-label">✓ FREE — PROMPT 2 OF 6</div>
+        <div class="prompt-card-label">INITIAL REFLECTION</div>
         <div class="prompt-card-title" id="prompt-title-1">Select your role above</div>
         <div class="prompt-card-text" id="prompt-text-1"></div>
         <div class="prompt-actions" id="prompt-actions-1">
@@ -524,49 +536,102 @@ report.innerHTML = `
         </div>
       </div>
 
+
+      <!-- ROLE DATA BLOCK 1 — after Free Prompt 1 -->
+      <div id="rd-block-1" style="display:none;margin:12px 0">
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 24px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:14px">Already automated in this role today</div>
+          <div id="rd-automated"></div>
+        </div>
+      </div>
+
     </div><!-- end prompts-overlay-wrap -->
+
+    <!-- ROLE DATA BLOCK 2 — after Free Prompt 2 -->
+    <div id="rd-block-2" style="display:none;margin:12px 0">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 24px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:14px">AI agents live in this role right now</div>
+        <div id="rd-agents" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+    </div>
+
+    <!-- UNLOCK CTA ABOVE -->
+    <div class="deeper-unlock-cta" id="unlock">
+      <a href="#" onclick="initiateStripePayment()" class="deeper-unlock-btn">🔒 Unlock Next Layer — $27 <span class="btn-finger">👇</span></a>
+      <div class="deeper-unlock-trust">
+        <span>✓ Instant access</span>
+        <span>✓ Yours to keep</span>
+      </div>
+    </div>
+
+    <!-- DEEPER REFLECTION GOLD BOX -->
+    <div class="deeper-box">
 
     <!-- LOCKED PROMPT 3 -->
     <div class="prompt-card locked-card" id="prompt-card-2">
-      <div class="prompt-card-label locked-label">🔒 PROMPT 3 OF 6 — LOCKED</div>
+      <div class="prompt-card-label">DEEPER REFLECTION</div>
       <div class="prompt-card-title" id="prompt-title-2">Reframe your professional narrative</div>
       <div class="prompt-card-text locked-text" id="prompt-text-2">I am a [ROLE]. My professional identity has been built around [what their Mirror revealed]...</div>
       <div class="locked-blur-overlay">
-        <div class="locked-blur-msg">Unlock all 4 prompts</div>
-        <a href="#unlock" class="unlock-btn" onclick="scrollToUnlock()">Unlock for £14 →</a>
+        <div class="locked-blur-msg">🔒 Continue...</div>
+      </div>
+    </div>
+
+    <!-- ROLE DATA BLOCK 3 — after Locked Prompt 3 -->
+    <div id="rd-block-3" style="display:none;margin:12px 0">
+      <div style="background:#0D1A14;border:1px solid rgba(62,200,138,0.15);border-radius:14px;padding:20px 24px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3EC88A;margin-bottom:14px">What still needs a human in this role</div>
+        <div id="rd-human"></div>
       </div>
     </div>
 
     <!-- LOCKED PROMPT 4 -->
     <div class="prompt-card locked-card" id="prompt-card-3">
-      <div class="prompt-card-label locked-label">🔒 PROMPT 4 OF 6 — LOCKED</div>
+      <div class="prompt-card-label">DEEPER REFLECTION</div>
       <div class="prompt-card-title" id="prompt-title-3">Your specific next move</div>
       <div class="prompt-card-text locked-text" id="prompt-text-3">The analysis above identified something specific about where your identity lives...</div>
       <div class="locked-blur-overlay">
-        <div class="locked-blur-msg">Unlock all 4 prompts</div>
-        <a href="#unlock" class="unlock-btn" onclick="scrollToUnlock()">Unlock for £14 →</a>
+        <div class="locked-blur-msg">🔒 Continue...</div>
+      </div>
+    </div>
+
+    <!-- ROLE DATA BLOCK 4 — after Locked Prompt 4 -->
+    <div id="rd-block-4" style="display:none;margin:12px 0">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 24px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:14px">18-month disruption timeline</div>
+        <div id="rd-timeline" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div style="font-size:10px;color:var(--text3);margin-top:12px;text-align:right">Based on published AI displacement research</div>
       </div>
     </div>
 
     <!-- LOCKED PROMPT 5 -->
     <div class="prompt-card locked-card" id="prompt-card-4">
-      <div class="prompt-card-label locked-label">🔒 PROMPT 5 OF 6 — LOCKED</div>
-      <div class="prompt-card-title" id="prompt-title-4">The conversation you are avoiding</div>
-      <div class="prompt-card-text locked-text" id="prompt-text-4">There is a conversation I have not had yet. Possibly with my manager. Possibly with myself...</div>
+      <div class="prompt-card-label">DEEPER REFLECTION</div>
+      <div class="prompt-card-title" id="prompt-title-4">Who are you without the title</div>
+      <div class="prompt-card-text locked-text" id="prompt-text-4">My Mirror response identified something I had not quite said out loud...</div>
       <div class="locked-blur-overlay">
-        <div class="locked-blur-msg">Unlock all 4 prompts</div>
-        <a href="#unlock" class="unlock-btn" onclick="scrollToUnlock()">Unlock for £14 →</a>
+        <div class="locked-blur-msg">🔒 Continue...</div>
       </div>
     </div>
 
     <!-- LOCKED PROMPT 6 -->
     <div class="prompt-card locked-card" id="prompt-card-5">
-      <div class="prompt-card-label locked-label">🔒 PROMPT 6 OF 6 — LOCKED</div>
-      <div class="prompt-card-title" id="prompt-title-5">Who are you without the title</div>
-      <div class="prompt-card-text locked-text" id="prompt-text-5">My Mirror response identified something I had not quite said out loud...</div>
+      <div class="prompt-card-label">DEEPER REFLECTION</div>
+      <div class="prompt-card-title" id="prompt-title-5">The conversation you are avoiding</div>
+      <div class="prompt-card-text locked-text" id="prompt-text-5">There is a conversation I have not had yet. Possibly with my manager. Possibly with myself...</div>
       <div class="locked-blur-overlay">
-        <div class="locked-blur-msg">Unlock all 4 prompts</div>
-        <a href="#unlock" class="unlock-btn" onclick="scrollToUnlock()">Unlock for £14 →</a>
+        <div class="locked-blur-msg">🔒 Continue...</div>
+      </div>
+    </div><!-- end locked prompt 6 -->
+
+    </div><!-- end deeper-box -->
+
+    <!-- UNLOCK CTA BELOW -->
+    <div class="deeper-unlock-cta">
+      <a href="#" onclick="initiateStripePayment()" class="deeper-unlock-btn">🔒 Unlock Next Layer — $27 <span class="btn-finger">👆</span></a>
+      <div class="deeper-unlock-trust">
+        <span>✓ Instant access</span>
+        <span>✓ Yours to keep</span>
       </div>
     </div>
 
@@ -609,7 +674,7 @@ report.innerHTML = `
   <div class="final-cta">
     <h2 id="cta-title-h2"></h2>
     <p>${pattern.ctaSub}</p>
-    <a href="#" class="cta-btn" id="stage-btn">Go deeper with Stage 2 →</a>
+    <a href="https://shiftid.ai/stage2" class="cta-btn" id="stage-btn">Stage 2 — Decode your pattern →</a>
     <div class="curiosity-line">Most people who read this come back within 48 hours.<br>Not because we asked them to — but because the question doesn't leave you alone.</div>
   </div>
 
@@ -817,6 +882,9 @@ function renderExposureCard(role, country){
   ).join('');
 
   card.classList.add('visible');
+
+  // Render role data blocks
+  renderRoleDataBlocks(role, Object.keys(rolesByDept).find(d => rolesByDept[d].includes(role)) || '', score);
 }
 
 function onPersonaliseChange(){
@@ -1596,6 +1664,133 @@ window.addEventListener('scroll', ()=>{
     if(wrap) wrap.style.minHeight = '420px';
   }
 });
+// ── EMAIL POPUP ──
+function showEmailPopup(){
+  const country = document.getElementById('p-country').value;
+  const dept = document.getElementById('p-dept').value;
+  const role = document.getElementById('p-role').value;
+  if(!country || !role || !dept) return;
+  
+  // Store selections for use after email capture
+  window._pendingCountry = country;
+  window._pendingDept = dept;
+  window._pendingRole = role;
+  
+  const overlay = document.getElementById('email-popup-overlay');
+  overlay.style.display = 'flex';
+  setTimeout(()=>{ document.getElementById('popup-email').focus(); }, 100);
+}
+
+function submitEmailPopup(){
+  const email = document.getElementById('popup-email').value.trim();
+  if(!email || !email.includes('@')){ 
+    document.getElementById('popup-email').focus();
+    return;
+  }
+  const consent = document.getElementById('popup-consent').checked;
+  
+  // Close popup
+  document.getElementById('email-popup-overlay').style.display = 'none';
+  
+  // Store email for GHL
+  window.capturedEmail = email;
+  window.marketingConsent = consent;
+  
+  // Fire applyPersonalisation with stored values
+  document.getElementById('p-country').value = window._pendingCountry;
+  // Trigger dept change to populate roles
+  document.getElementById('p-dept').value = window._pendingDept;
+  onDeptPersonalise();
+  setTimeout(()=>{
+    document.getElementById('p-role').value = window._pendingRole;
+    applyPersonalisation();
+  }, 100);
+}
+
+// ── RENDER ROLE DATA BLOCKS ──
+function renderRoleDataBlocks(role, dept, score){
+  const rd = roleData[role];
+  const pd = promptData[dept];
+  if(!rd && !pd){ return; }
+
+  // Already automated — from roleData.tasks
+  const automated = document.getElementById('rd-automated');
+  if(automated && rd && rd.tasks){
+    automated.innerHTML = rd.tasks.map(t=>
+      `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)"><span style="color:var(--red);font-weight:700;font-size:15px">→</span>${t}</div>`
+    ).join('');
+  }
+
+  // AI Agents — from promptData[dept].agents (string names)
+  const agentsEl = document.getElementById('rd-agents');
+  if(agentsEl && pd && pd.agents){
+    agentsEl.innerHTML = pd.agents.map(a=>
+      `<div style="background:var(--bg3);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:13px;font-weight:600;color:var(--gold)">${a}</span>
+        <span style="font-size:12px;color:var(--text2)">— active in this role now</span>
+      </div>`
+    ).join('');
+  }
+
+  // What still needs a human — generated from pattern + exposure score
+  const humanEl = document.getElementById('rd-human');
+  if(humanEl){
+    const humanNeeds = getHumanEdge(dept, score);
+    humanEl.innerHTML = humanNeeds.map(e=>
+      `<div style="font-size:13px;color:var(--text2);padding-left:16px;position:relative;line-height:1.5;margin-bottom:8px"><span style="position:absolute;left:0;color:#3EC88A">•</span>${e}</div>`
+    ).join('');
+  }
+
+  // 18-month timeline — calculated from score
+  const timelineEl = document.getElementById('rd-timeline');
+  if(timelineEl && rd){
+    const now = rd.score;
+    const six = Math.min(99, Math.round(now * 1.12));
+    const eighteen = Math.min(99, Math.round(now * 1.22));
+    const colours = ['#3EC88A','#D4A84B','#E05050'];
+    const labels = ['Now','6 months','18 months'];
+    const vals = [now, six, eighteen];
+    timelineEl.innerHTML = vals.map((v,i)=>
+      `<div style="display:grid;grid-template-columns:80px 1fr;gap:12px;align-items:center">
+        <span style="font-size:12px;color:var(--text3)">${labels[i]}</span>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden">
+          <div style="width:${v}%;padding:6px 12px;border-radius:6px;background:${colours[i]};font-size:11px;font-weight:600;color:rgba(255,255,255,0.85)">${v}% of tasks automated</div>
+        </div>
+      </div>`
+    ).join('');
+  }
+
+  // Show individual blocks
+  ['rd-block-1','rd-block-2','rd-block-3','rd-block-4'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'block';
+  });
+}
+
+function getHumanEdge(dept, score){
+  const edgeMap = {
+    'Software Engineering': ['System architecture judgement','Cross-team technical communication','Mentoring and engineering culture'],
+    'Data & Analytics': ['Framing the right business question','Communicating insight to non-technical stakeholders','Business context that gives data meaning'],
+    'Marketing & Content': ['Brand positioning and cultural judgement','Strategic campaign decisions','Client and agency relationships'],
+    'Finance & Accounting': ['Complex financial judgement in ambiguous situations','Board-level narrative and storytelling','Regulatory interpretation and professional trust'],
+    'HR & People': ['Navigating sensitive people situations','Organisational trust and culture shaping','Complex employee relations judgement'],
+    'Legal & Compliance': ['Legal strategy and risk judgement','Client relationship and negotiation','Regulatory interpretation in novel situations'],
+    'Product Management': ['Vision and strategy setting','Stakeholder alignment and influence','Customer empathy and product intuition'],
+    'Sales & Business Dev': ['Relationship building and trust','Complex negotiation and deal structuring','Understanding unstated customer needs'],
+    'Operations': ['Crisis judgement and escalation decisions','Cross-functional leadership','Process change management'],
+    'Consulting & Strategy': ['Framing ambiguous problems','Client trust and relationship depth','Synthesising insight into actionable strategy'],
+    'Healthcare & Clinical': ['Clinical safety judgement','Patient relationship and trust','Ethical decision-making in complex cases'],
+    'Education & Training': ['Learner motivation and coaching','Curriculum design for complex outcomes','Facilitating human insight and behaviour change']
+  };
+  return edgeMap[dept] || ['Strategic judgement','Relationship building','Complex problem framing'];
+}
+
+// ── STRIPE PAYMENT ──
+function initiateStripePayment(){
+  // TODO: wire to Stripe checkout
+  // Pass: userEmail, pattern, role, userName
+  alert('Stripe payment coming soon — $27 for full reflection unlock');
+}
 </script>
 </body>
 </html>
