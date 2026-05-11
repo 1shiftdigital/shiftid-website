@@ -470,17 +470,24 @@ function showAnalysing(){
   setTimeout(()=>{
     const pattern=calculatePattern();
 
-    // ── SESSION TOKEN — for Worker request signing ──
+    // ── SESSION TOKEN — must match Worker generateExpectedToken exactly ──
     const _ts = Date.now();
     const _secret = 'shiftid_s3cr3t_2026';
+    // Round 1 — FNV-1a style
     const _str = _ts + ':' + _secret;
-    let _hash = 0;
+    let _h1 = 0x811c9dc5;
     for (let i = 0; i < _str.length; i++) {
-      const chr = _str.charCodeAt(i);
-      _hash = ((_hash << 5) - _hash) + chr;
-      _hash |= 0;
+      _h1 ^= _str.charCodeAt(i);
+      _h1 = Math.imul(_h1, 0x01000193) >>> 0;
     }
-    const _token = Math.abs(_hash).toString(36);
+    // Round 2 — reversed secret mix
+    const _str2 = _secret.split('').reverse().join('') + ':' + _ts;
+    let _h2 = 0xc4ceb9fe;
+    for (let i = 0; i < _str2.length; i++) {
+      _h2 ^= _str2.charCodeAt(i);
+      _h2 = Math.imul(_h2, 0x01000193) >>> 0;
+    }
+    const _token = ((_h1 ^ _h2) >>> 0).toString(36) + (_h1 >>> 0).toString(36);
 
     // Store token in sessionStorage for result page to use
     try { sessionStorage.setItem('shiftid_token', JSON.stringify({_token, _ts})); } catch(e){}
@@ -527,7 +534,7 @@ function showAnalysing(){
     } catch(e){}
 
     // Short URL — just name and pattern as fallback
-    window.location.href='https://shiftid.ai/id-result?p='+encodeURIComponent(pattern)+'&n='+encodeURIComponent(userName);
+    window.location.href='https://shiftid.ai/id-result.html?p='+encodeURIComponent(pattern)+'&n='+encodeURIComponent(userName);
   },4500);
 }
 
