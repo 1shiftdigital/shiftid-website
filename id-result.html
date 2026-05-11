@@ -269,9 +269,10 @@ footer a{color:var(--text3);text-decoration:none}
     const hasLocal = localStorage.getItem('shiftid_result_data');
     const params = new URLSearchParams(window.location.search);
     const hasUrlId = params.get('id');
+    const hasUrlPattern = params.get('p'); // quiz redirects with ?p= — valid entry
 
-    // Valid entry: came from quiz (session) OR returning via saved link (local+id)
-    if(!hasSession && !hasLocal && !hasUrlId){
+    // Valid entry: session OR localStorage OR ?id= return link OR ?p= fresh from quiz
+    if(!hasSession && !hasLocal && !hasUrlId && !hasUrlPattern){
       window.location.replace('https://shiftid.ai/id-quiz');
     }
   } catch(e){

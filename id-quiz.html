@@ -506,9 +506,19 @@ function showAnalysing(){
 
     // Store full data in sessionStorage — much more reliable on mobile than long URLs
     try {
-      sessionStorage.setItem('shiftid_result', JSON.stringify({
+      const resultPayload = JSON.stringify({
         name: userName,
         pattern: pattern,
+        mirror: mirrorText.substring(0,200),
+        a1:answers[1]||0, a2:answers[2]||0, a3:answers[3]||0,
+        a4:answers[4]||0, a6:answers[6]||0, a7:answers[7]||0,
+        a8:answers[8]||0, a9:answers[9]||0, a10:answers[10]||0, a11:answers[11]||0
+      });
+      sessionStorage.setItem('shiftid_result', resultPayload);
+      // Belt-and-braces: also write to localStorage — mobile Safari can wipe sessionStorage on navigation
+      const resultId = Math.random().toString(36).substring(2,9) + Date.now().toString(36);
+      localStorage.setItem('shiftid_result_data', JSON.stringify({
+        name: userName, pattern: pattern, resultId: resultId,
         mirror: mirrorText.substring(0,200),
         a1:answers[1]||0, a2:answers[2]||0, a3:answers[3]||0,
         a4:answers[4]||0, a6:answers[6]||0, a7:answers[7]||0,
