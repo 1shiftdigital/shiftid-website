@@ -344,6 +344,7 @@ const questions=[
   {id:8,signal:'skill',text:'If AI became better than you at your core skill within the next year, which response feels most honest?',opts:['I\'d find a new skill — I\'m defined by adaptability','I\'d struggle — that skill took years to build','I\'d feel lost — that skill is a big part of who I am','I think about this more than I admit']},
   {id:9,signal:'worth',key:true,text:'If your current role changed significantly, how much would it affect how you see yourself?',opts:['Barely — I know who I am beyond my role','Somewhat — it would take adjustment','Quite a lot — work defines how I see myself','Completely — I don\'t know who I\'d be']},
   {id:10,signal:'self',key:true,text:'Outside of work, how clearly do you feel connected to who you are?',opts:['Very clearly — I have a strong sense of self beyond my career','Somewhat — work and identity blur more than I\'d like','Not very clearly — most of my identity is career-related','I find this question genuinely difficult to answer']},
+  {id:'10b',signal:'idea',text:'Do you have an idea you\'d explore — something to pivot toward, if you had the clarity and the tools?',subtext:'So Stage 3 fits your situation, not someone else\'s.',opts:['Yes — I have something in mind','No — focused on my role right now','I\'m open — if someone suggests it, or the right idea surfaces']},
   {id:11,signal:'action',text:'If AI reshaped most of your current role within 2 years, what feels like your most honest next move?',opts:['Start building — I\'d move early and intentionally','Research first — I\'d need clarity before acting','Wait and see — I\'d hope the impact stays manageable','I genuinely wouldn\'t know where to begin']}
 ];
 
@@ -399,6 +400,7 @@ function showQuestion(){
       <div class="q-of">${labels[q.signal]||''}</div>
     </div>
     <div class="q-text">${q.text}</div>
+    ${q.subtext?`<div style="font-size:13px;font-weight:300;color:var(--m-text2,#9994B0);margin:-8px 0 16px;line-height:1.6;font-style:italic">${q.subtext}</div>`:''}
     <div class="options" id="opts-wrap">
       ${q.opts.map((o,i)=>`<div class="opt${alreadyAnswered && answers[q.id]===i?' selected':''}" id="opt-${i}" onclick="selectOpt(${q.id},${i})"><div class="opt-letter">${letters[i]}</div><div class="opt-text">${o}</div></div>`).join('')}
     </div>
@@ -470,24 +472,17 @@ function showAnalysing(){
   setTimeout(()=>{
     const pattern=calculatePattern();
 
-    // ── SESSION TOKEN — must match Worker generateExpectedToken exactly ──
+    // ── SESSION TOKEN — for Worker request signing ──
     const _ts = Date.now();
     const _secret = 'shiftid_s3cr3t_2026';
-    // Round 1 — FNV-1a style
     const _str = _ts + ':' + _secret;
-    let _h1 = 0x811c9dc5;
+    let _hash = 0;
     for (let i = 0; i < _str.length; i++) {
-      _h1 ^= _str.charCodeAt(i);
-      _h1 = Math.imul(_h1, 0x01000193) >>> 0;
+      const chr = _str.charCodeAt(i);
+      _hash = ((_hash << 5) - _hash) + chr;
+      _hash |= 0;
     }
-    // Round 2 — reversed secret mix
-    const _str2 = _secret.split('').reverse().join('') + ':' + _ts;
-    let _h2 = 0xc4ceb9fe;
-    for (let i = 0; i < _str2.length; i++) {
-      _h2 ^= _str2.charCodeAt(i);
-      _h2 = Math.imul(_h2, 0x01000193) >>> 0;
-    }
-    const _token = ((_h1 ^ _h2) >>> 0).toString(36) + (_h1 >>> 0).toString(36);
+    const _token = Math.abs(_hash).toString(36);
 
     // Store token in sessionStorage for result page to use
     try { sessionStorage.setItem('shiftid_token', JSON.stringify({_token, _ts})); } catch(e){}
@@ -513,28 +508,20 @@ function showAnalysing(){
 
     // Store full data in sessionStorage — much more reliable on mobile than long URLs
     try {
-      const resultPayload = JSON.stringify({
+      sessionStorage.setItem('shiftid_result', JSON.stringify({
         name: userName,
         pattern: pattern,
         mirror: mirrorText.substring(0,200),
         a1:answers[1]||0, a2:answers[2]||0, a3:answers[3]||0,
         a4:answers[4]||0, a6:answers[6]||0, a7:answers[7]||0,
-        a8:answers[8]||0, a9:answers[9]||0, a10:answers[10]||0, a11:answers[11]||0
-      });
-      sessionStorage.setItem('shiftid_result', resultPayload);
-      // Belt-and-braces: also write to localStorage — mobile Safari can wipe sessionStorage on navigation
-      const resultId = Math.random().toString(36).substring(2,9) + Date.now().toString(36);
-      localStorage.setItem('shiftid_result_data', JSON.stringify({
-        name: userName, pattern: pattern, resultId: resultId,
-        mirror: mirrorText.substring(0,200),
-        a1:answers[1]||0, a2:answers[2]||0, a3:answers[3]||0,
-        a4:answers[4]||0, a6:answers[6]||0, a7:answers[7]||0,
-        a8:answers[8]||0, a9:answers[9]||0, a10:answers[10]||0, a11:answers[11]||0
+        a8:answers[8]||0, a9:answers[9]||0, a10:answers[10]||0,
+        a10b:answers['10b']!==undefined?answers['10b']:1,
+        a11:answers[11]||0
       }));
     } catch(e){}
 
     // Short URL — just name and pattern as fallback
-    window.location.href='https://shiftid.ai/id-result.html?p='+encodeURIComponent(pattern)+'&n='+encodeURIComponent(userName);
+    window.location.href='https://shiftid.ai/id-result?p='+encodeURIComponent(pattern)+'&n='+encodeURIComponent(userName);
   },4500);
 }
 
